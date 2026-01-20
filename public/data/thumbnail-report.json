@@ -1,0 +1,366 @@
+{
+  "processedAt": "2026-01-06T14:15:45.330Z",
+  "processed": 120,
+  "successProject": 59,
+  "successOg": 10,
+  "improvedFromBad": 0,
+  "failed": 51,
+  "samples": [
+    {
+      "name": "Lucy-Ruth Hathaway",
+      "url": "https://www.lucyruthfood.com/sweet",
+      "thumbnailUrl": "https://images.squarespace-cdn.com/content/v1/535ae3d9e4b0fbad919f6826/1507193132379-7PR71N3OO3MJ4QAE8IXU/Jam+Roly+Poly1.jpg",
+      "source": "project@home"
+    },
+    {
+      "name": "Anne Valeur",
+      "url": "https://www.pudderagency.com/kreative/anne-valeur",
+      "thumbnailUrl": "https://www.pudderagency.com/0",
+      "source": "project@/index"
+    },
+    {
+      "name": "Pudder Agency",
+      "url": "https://www.pudderagency.com",
+      "thumbnailUrl": "https://www.pudderagency.com/0",
+      "source": "project@/index"
+    },
+    {
+      "name": "Kelsey McClellan",
+      "url": "https://www.kelseymcclellan.com/food",
+      "thumbnailUrl": "https://images.squarespace-cdn.com/content/v1/5eed0b55bb27655754d05ec7/aa49edfd-a164-4901-9a20-16928ad40bea/WEB_20250822_THATSAWRAP10187.jpg",
+      "source": "project@/projects"
+    },
+    {
+      "name": "Rikky Fernandes Food & Beverage",
+      "url": "https://www.heyrikky.com/food-beverage",
+      "thumbnailUrl": "https://images.squarespace-cdn.com/content/v1/5fecd92396a9ec7fa136d27d/1754684820313-L8QTZ8FZHXGVD2DA65SP/Rikky-Fernandes-2025-1466-Tula.jpg",
+      "source": "project@home"
+    },
+    {
+      "name": "Jen Beauchesne",
+      "url": "https://www.jenbeauchesne.com/food",
+      "thumbnailUrl": "https://images.squarespace-cdn.com/content/v1/541842e4e4b0a6f04e490043/1713287908786-34UPLDF7VGVXNV16OABC/image-asset.jpeg",
+      "source": "project@home"
+    },
+    {
+      "name": "Adrian Morris",
+      "url": "https://adrianmorris.co",
+      "thumbnailUrl": "https://images.squarespace-cdn.com/content/v1/572a66403c44d88ebcbbc45c/1570792920066-U1R8C94WMJL6WODNP5JW/DSCF2623.jpg",
+      "source": "project@/work"
+    },
+    {
+      "name": "Emily Hawkes",
+      "url": "https://www.2dcreativeartists.com/emily-hawkes-food",
+      "thumbnailUrl": "https://www.2dcreativeartists.com/_assets/img/2D-white.png",
+      "source": "project@/index"
+    },
+    {
+      "name": "studio aico",
+      "url": "https://studioaico.nl/work",
+      "thumbnailUrl": "https://studioaico.nl/quality_auto/51515e_c2dcb9930f0046049c533922eee0cf64~mv2.jpg",
+      "source": "project@/work"
+    },
+    {
+      "name": "Pat Bates & Associates",
+      "url": "https://patbates.com/artists/lennart-weibull/food-drinks",
+      "thumbnailUrl": "https://pat-bates-bucket.nyc3.cdn.digitaloceanspaces.com/media/_transform/artists/toby-mitchell/hybrid-spaces/_1000x1000_fit_center-center_none/344350/TobyMitchell2025_FORA_JELLICOE_LOUNGE_0349.webp",
+      "source": "project@/index"
+    },
+    {
+      "name": "Claudia Ficca",
+      "url": "https://www.claudiaficca.com/dessert",
+      "thumbnailUrl": "https://www.claudiaficca.com/1798/0-0-0/33951211-901c-44ab-9fc6-d8f74136d435/1/1/Honey_Drip.jpg?fjkss=exp=2082782188~hmac=776bd10a04fcfbf3bf2847782e2d61ff763b555af680b61ffa9462a0fb5ab37e&1200",
+      "source": "project@home"
+    },
+    {
+      "name": "Julia Stotz",
+      "url": "https://juliastotz.com/Food-and-Drink",
+      "thumbnailUrl": "https://freight.cargo.site/t/original/i/fcaf175ad4711bd1467cd019097550caf0a3bc55a7c970fb93274577d3cc0ae6/ItalianHandGestures_5888-2.jpg",
+      "source": "project@/index"
+    },
+    {
+      "name": "Rodeo Production",
+      "url": "https://rodeoproduction.com/en",
+      "thumbnailUrl": "https://rodeoproduction.com/app/uploads/Screenshot-2024-02-15-at-5.16.00-PM-980x545.png",
+      "source": "project@home"
+    },
+    {
+      "name": "Limonata Creative",
+      "url": "https://www.limonatacreative.com/food-drink",
+      "thumbnailUrl": "https://images.squarespace-cdn.com/content/v1/654a9ba6b74b05029515f786/75020760-7e8f-4eb6-81e5-7254a59741d3/Limonata_AmjulJune20240414_LR.jpg?format=2500w",
+      "source": "project@home"
+    },
+    {
+      "name": "Molly Fairhurst",
+      "url": "https://mollyfairhurst.com/sketchbook",
+      "thumbnailUrl": "https://freight.cargo.site/t/original/i/0af129e0ac0e5f6634a68b0d288542108f21f481b2cf685dd6ae3c13368ecdc4/molly-fairhurst-cursor-1.png",
+      "source": "project@/projects"
+    },
+    {
+      "name": "Amber Vittoria",
+      "url": "https://www.ambervittoria.com",
+      "thumbnailUrl": "https://www.ambervittoria.com/quality_auto/fee571_87cc771211e045308051f162c74a6d5d~mv2.jpg",
+      "source": "project@home"
+    },
+    {
+      "name": "Rafaela Pascotto",
+      "url": "https://www.behance.net/rafaelapascotto",
+      "thumbnailUrl": "https://a5.behance.net/0b3b7308b77715824801c2877564a6b3fbc51075/img/footer/creator-pro-upsell-banner-border.webp",
+      "source": "project@/works"
+    },
+    {
+      "name": "Asahi Nagata",
+      "url": "https://illoirro.com",
+      "thumbnailUrl": "https://cdn.myportfolio.com/1b4c1eb6-38ac-4397-b9a9-629e03b35f88/af13ce71-e492-4165-8c7b-61e04a883a42_car_5x4.jpg?h=d2d9fe6de34b1138e0adc56ee7ec2612",
+      "source": "project@/work"
+    },
+    {
+      "name": "Alice Meteignier",
+      "url": "https://alicemeteignier.fr",
+      "thumbnailUrl": "https://media.cargocollective.com/1/14/464647/headerimg/nom.jpg",
+      "source": "project@/archive"
+    },
+    {
+      "name": "Julia GR",
+      "url": "https://www.juliagr.com",
+      "thumbnailUrl": "https://images.squarespace-cdn.com/content/v1/5b684d6712b13f4790fa0e92/1739999975281-RKXNXEFYCYR8UG53EXCH/Zoe_Maltais-246.jpg",
+      "source": "project@/portfolio"
+    },
+    {
+      "name": "Roman Muradov",
+      "url": "https://bluebed.net",
+      "thumbnailUrl": "https://freight.cargo.site/w/1000/i/F2729328781878619212802171536424/screenshot-0925492026.jpg",
+      "source": "og@home"
+    },
+    {
+      "name": "Egle Zvirblyte",
+      "url": "https://www.eglezvirblyte.com",
+      "thumbnailUrl": "https://images.squarespace-cdn.com/content/v1/559bca71e4b0088fa296663e/1697362166933-07GT7VM5D99HNHZQHM22/JulesCesure-Egle-Roeselare-12+s.jpg",
+      "source": "project@/work"
+    },
+    {
+      "name": "INGALAND",
+      "url": "https://inga.land",
+      "thumbnailUrl": "https://f810ae3f76d2f6b08e6ebbacf44c6f29-12414.sites.k-hosting.co.uk/inga.land/media/site/ec1dcf5d20-1747152451/bugz-web-1-1920x.png",
+      "source": "og@home"
+    },
+    {
+      "name": "benê",
+      "url": "https://www.bene.studio",
+      "thumbnailUrl": "https://images.squarespace-cdn.com/content/v1/5434d388e4b057b36958fbf4/ed71d17f-cbd8-43b9-a0b2-b43b7aa9865d/IMG_3844.JPG?format=2500w",
+      "source": "project@/works"
+    },
+    {
+      "name": "Joe Taylor",
+      "url": "https://www.joetaylor.work",
+      "thumbnailUrl": "https://images.squarespace-cdn.com/content/v1/5a99c1114cde7ad86990cfd2/1741000224822-4H8N6WMWUKCE2NZ4A2AT/OTE_Illo_v1.jpg",
+      "source": "project@home"
+    }
+  ],
+  "failures": [
+    {
+      "name": "Ted Cavanaugh",
+      "url": "https://tedandchelsea.com/INGREDIENTS/2/thumbs"
+    },
+    {
+      "name": "STUDIO DUBOIS-DIDCOCK Food",
+      "url": "https://www.duboisdidcock.com/food"
+    },
+    {
+      "name": "Colin Campbell",
+      "url": "https://www.colincampbellstudio.co.uk/Graphic-Food/thumbs"
+    },
+    {
+      "name": "Duotone",
+      "url": "http://www.duotone.fi/portfolio/category/photography"
+    },
+    {
+      "name": "Sarah Anne Ward",
+      "url": "https://www.sarahanneward.com/Food/thumbs"
+    },
+    {
+      "name": "Jonathan Knowles",
+      "url": "https://jknowles.com/home"
+    },
+    {
+      "name": "Gabrielle Sykes",
+      "url": "https://www.gabriellesykes.com"
+    },
+    {
+      "name": "JooHee Yoon",
+      "url": "https://jooheeyoon.com/index.html"
+    },
+    {
+      "name": "Lou Escobar",
+      "url": "https://louescobar.com"
+    },
+    {
+      "name": "Liv Lee",
+      "url": "https://www.instagram.com/liv.leeee"
+    },
+    {
+      "name": "Candice Gray",
+      "url": "https://www.instagram.com/candicegray_textiles"
+    },
+    {
+      "name": "tuyo.art",
+      "url": "https://www.instagram.com/tuyo.art"
+    },
+    {
+      "name": "Paul Juno",
+      "url": "http://www.pauljunoart.com/agate-painting"
+    },
+    {
+      "name": "David Shrigley",
+      "url": "http://davidshrigley.com/category/drawing-painting"
+    },
+    {
+      "name": "Joe Taylor Static",
+      "url": "https://www.joetaylor.work/still"
+    },
+    {
+      "name": "Myungsik Jang",
+      "url": "https://myungsikjang.com"
+    },
+    {
+      "name": "Max Loeffler",
+      "url": "https://maxloeffler.com"
+    },
+    {
+      "name": "princesshidir",
+      "url": "https://www.instagram.com/princesshidir"
+    },
+    {
+      "name": "Jaison Klimesch",
+      "url": "https://jaisonklimesch.com"
+    },
+    {
+      "name": "Giacomo Bagnara",
+      "url": "https://www.giacomobagnara.com"
+    },
+    {
+      "name": "Patrik Mollwing",
+      "url": "https://www.mollwing.com"
+    },
+    {
+      "name": "Studio Feixen Fonts",
+      "url": "https://fonts.studiofeixen.ch"
+    },
+    {
+      "name": "Gradient",
+      "url": "https://wearegradient.net"
+    },
+    {
+      "name": "ALT Type Foundry",
+      "url": "https://alt-type.com"
+    },
+    {
+      "name": "Power Type",
+      "url": "https://power-type.com/neue-power"
+    },
+    {
+      "name": "F37 Foundry",
+      "url": "https://www.f37foundry.com/fonts"
+    },
+    {
+      "name": "Kurppa Hosk Type",
+      "url": "https://khtype.com"
+    },
+    {
+      "name": "SUVA Type Foundry",
+      "url": "https://www.suvatypefoundry.ee"
+    },
+    {
+      "name": "TYPE.WELTKERN",
+      "url": "https://www.weltkern.com/typeface"
+    },
+    {
+      "name": "newglyph",
+      "url": "https://newglyph.com/classic-collection/#font-grid"
+    },
+    {
+      "name": "Formula Type",
+      "url": "https://www.formulatype.com"
+    },
+    {
+      "name": "PLAYTYPE",
+      "url": "https://playtype.com"
+    },
+    {
+      "name": "NAUM Type Foundry",
+      "url": "https://naumtype.com"
+    },
+    {
+      "name": "Pizza Typefaces",
+      "url": "https://typefaces.pizza"
+    },
+    {
+      "name": "groteskly.yours",
+      "url": "https://www.instagram.com/groteskly.yours"
+    },
+    {
+      "name": "Mass-Driver",
+      "url": "https://mass-driver.com/typefaces"
+    },
+    {
+      "name": "Peregrin Studio",
+      "url": "https://peregrinstudio.com/typefaces"
+    },
+    {
+      "name": "Fontwerk",
+      "url": "https://fontwerk.com/en/fonts"
+    },
+    {
+      "name": "A is for",
+      "url": "https://aisforfonts.com/french-type-foundries"
+    },
+    {
+      "name": "BoukRA",
+      "url": "https://bouk.work"
+    },
+    {
+      "name": "Studio Feixen Fonts Noi Grotesk",
+      "url": "https://fonts.studiofeixen.ch/noi-grotesk"
+    },
+    {
+      "name": "Typeverything",
+      "url": "https://typeverything.com"
+    },
+    {
+      "name": "Bibliothèque",
+      "url": "https://bibliothequedesign.com"
+    },
+    {
+      "name": "Hey",
+      "url": "https://heystudio.es/work"
+    },
+    {
+      "name": "Studio Feixen",
+      "url": "https://www.studiofeixen.ch"
+    },
+    {
+      "name": "Kyle Johnson",
+      "url": "https://kjphotos.com"
+    },
+    {
+      "name": "Buffet",
+      "url": "https://buffet.digital"
+    },
+    {
+      "name": "Lorena Dini",
+      "url": "https://www.lorenadini.com"
+    },
+    {
+      "name": "Martí Sans",
+      "url": "http://martisans.com"
+    },
+    {
+      "name": "DOMA",
+      "url": "https://doma02.com/projetos"
+    },
+    {
+      "name": "Akatre",
+      "url": "https://www.akatre.com"
+    }
+  ]
+}

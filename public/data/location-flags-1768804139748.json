@@ -1,0 +1,30 @@
+{
+  "fixed": 37,
+  "flagged": 4,
+  "sample": [
+    {
+      "id": "choice-https-choice-studio",
+      "name": "Choice",
+      "country": "Emirados Árabes",
+      "city": "Dubai"
+    },
+    {
+      "id": "guillotina-estudio-http-guillotinaestudio-com",
+      "name": "Guillotina Estudio",
+      "country": "Espanha",
+      "city": "A Coruña"
+    },
+    {
+      "id": "museparadox-https-www-museparadox-com",
+      "name": "Maxime",
+      "country": "N/A",
+      "city": "France"
+    },
+    {
+      "id": "max-loeffler-https-maxloeffler-com",
+      "name": "Max Loeffler",
+      "country": "Alemanha",
+      "city": "Germany. —"
+    }
+  ]
+}

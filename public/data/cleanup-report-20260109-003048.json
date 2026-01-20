@@ -1,0 +1,2064 @@
+{
+  "timestamp": "20260109-003048",
+  "totalBefore": 509,
+  "removedDuplicates": [
+    {
+      "key": "both__both.studio",
+      "kept": {
+        "name": "Both",
+        "url": "https://both.studio/",
+        "score": 11
+      },
+      "dropped": {
+        "name": "Both",
+        "url": "https://both.studio/Work",
+        "score": 9
+      }
+    },
+    {
+      "key": "with you__with-you.studio",
+      "kept": {
+        "name": "With You",
+        "url": "https://with-you.studio/",
+        "score": 11
+      },
+      "dropped": {
+        "name": "With You",
+        "url": "https://with-you.studio/work",
+        "score": 4
+      }
+    },
+    {
+      "key": "gravita__somosgravita.com",
+      "kept": {
+        "name": "Grávita",
+        "url": "https://somosgravita.com/proyectos",
+        "score": 4
+      },
+      "dropped": {
+        "name": "Grávita",
+        "url": "https://somosgravita.com/",
+        "score": 4
+      }
+    },
+    {
+      "key": "nguyen gobber__nguyengobber.com",
+      "kept": {
+        "name": "Nguyen Gobber",
+        "url": "https://nguyengobber.com/projects",
+        "score": 9
+      },
+      "dropped": {
+        "name": "Nguyen Gobber",
+        "url": "https://nguyengobber.com/",
+        "score": 9
+      }
+    },
+    {
+      "key": "blaze type__blazetype.eu",
+      "kept": {
+        "name": "Blaze Type",
+        "url": "https://blazetype.eu/the-box",
+        "score": 9
+      },
+      "dropped": {
+        "name": "Blaze Type",
+        "url": "https://blazetype.eu/",
+        "score": 9
+      }
+    }
+  ],
+  "trimmedAreas": [],
+  "fixedUrls": [
+    {
+      "name": "Pharus Design",
+      "from": "http://pharusdesign.com",
+      "to": "https://pharusdesign.com/"
+    },
+    {
+      "name": "Dia",
+      "from": "http://dia.tv",
+      "to": "https://dia.tv/"
+    },
+    {
+      "name": "YUKIKO",
+      "from": "http://y-u-k-i-k-o.com",
+      "to": "https://y-u-k-i-k-o.com/"
+    },
+    {
+      "name": "Lennart Sendebruijn",
+      "from": "https://lennartsendebruijn.com",
+      "to": "https://lennartsendebruijn.com/"
+    },
+    {
+      "name": "Estúdio Margem",
+      "from": "http://estudiomargem.com.br",
+      "to": "https://estudiomargem.com.br/"
+    },
+    {
+      "name": "Desisto",
+      "from": "http://desisto.pt",
+      "to": "https://desisto.pt/"
+    },
+    {
+      "name": "Yeaaah Studio",
+      "from": "https://www.yeaaah-studio.com/gallery",
+      "to": "https://yeaaah-studio.com/gallery"
+    },
+    {
+      "name": "Lecube",
+      "from": "http://www.lecube.tv",
+      "to": "https://lecube.tv/"
+    },
+    {
+      "name": "Land",
+      "from": "http://studio.workbyland.com",
+      "to": "https://studio.workbyland.com/"
+    },
+    {
+      "name": "Opala Rosa Choque",
+      "from": "http://opalarosachoque.in",
+      "to": "https://opalarosachoque.in/"
+    },
+    {
+      "name": "Whynot Associates",
+      "from": "http://whynotassociates.com/?in=selected",
+      "to": "https://whynotassociates.com/?in=selected"
+    },
+    {
+      "name": "Mother Design",
+      "from": "https://www.motherdesign.com",
+      "to": "https://motherdesign.com/"
+    },
+    {
+      "name": "Nomint",
+      "from": "https://www.nomint.com",
+      "to": "https://nomint.com/"
+    },
+    {
+      "name": "Playground Paris",
+      "from": "https://playgroundparis.com",
+      "to": "https://playgroundparis.com/"
+    },
+    {
+      "name": "JKR Global",
+      "from": "https://www.jkrglobal.com/work",
+      "to": "https://jkrglobal.com/work"
+    },
+    {
+      "name": "Mishko",
+      "from": "http://mishko.co/about",
+      "to": "https://mishko.co/about"
+    },
+    {
+      "name": "Gretathorkels",
+      "from": "http://gretathorkels.net",
+      "to": "https://gretathorkels.net/"
+    },
+    {
+      "name": "Danilo Campos",
+      "from": "https://www.danilocampos.com.br/work",
+      "to": "https://danilocampos.com.br/work"
+    },
+    {
+      "name": "Lindsay",
+      "from": "http://www.lindsay.fr",
+      "to": "https://lindsay.fr/"
+    },
+    {
+      "name": "Muokka",
+      "from": "http://www.muokkaa.com",
+      "to": "https://muokkaa.com/"
+    },
+    {
+      "name": "Untitled Macao",
+      "from": "http://untitledmacao.com",
+      "to": "https://untitledmacao.com/"
+    },
+    {
+      "name": "Young Jerks",
+      "from": "http://www.youngjerks.com",
+      "to": "https://youngjerks.com/"
+    },
+    {
+      "name": "Rocío Galarza",
+      "from": "https://www.rociogalarza.com",
+      "to": "https://rociogalarza.com/"
+    },
+    {
+      "name": "Maarten Donders",
+      "from": "http://maartendonders.com",
+      "to": "https://maartendonders.com/"
+    },
+    {
+      "name": "Jason Galea",
+      "from": "http://www.jasongalea.com",
+      "to": "https://jasongalea.com/"
+    },
+    {
+      "name": "Joshua Noom",
+      "from": "http://www.joshuanoom.com",
+      "to": "https://joshuanoom.com/"
+    },
+    {
+      "name": "Lucadinapoli",
+      "from": "http://www.lucadinapoli.net",
+      "to": "https://lucadinapoli.net/"
+    },
+    {
+      "name": "Yuka Idu",
+      "from": "https://www.yukaidu.com",
+      "to": "https://yukaidu.com/"
+    },
+    {
+      "name": "Gina Kiel",
+      "from": "http://www.ginakiel.com",
+      "to": "https://ginakiel.com/"
+    },
+    {
+      "name": "Ellen Porteus",
+      "from": "https://www.ellenporteus.com",
+      "to": "https://ellenporteus.com/"
+    },
+    {
+      "name": "Orit Oor",
+      "from": "https://www.oritoor.com",
+      "to": "https://oritoor.com/"
+    },
+    {
+      "name": "Nomad",
+      "from": "https://www.nomadstudio.com",
+      "to": "https://nomadstudio.com/"
+    },
+    {
+      "name": "Further",
+      "from": "https://www.further.group",
+      "to": "https://further.group/"
+    },
+    {
+      "name": "Gretel",
+      "from": "https://gretelny.com",
+      "to": "https://gretelny.com/"
+    },
+    {
+      "name": "Collins",
+      "from": "https://wearecollins.com",
+      "to": "https://wearecollins.com/"
+    },
+    {
+      "name": "Landor",
+      "from": "https://landor.com",
+      "to": "https://landor.com/"
+    },
+    {
+      "name": "Koto",
+      "from": "https://koto.com",
+      "to": "https://koto.com/"
+    },
+    {
+      "name": "Studio Dumbar",
+      "from": "https://studiodumbar.com",
+      "to": "https://studiodumbar.com/"
+    },
+    {
+      "name": "Frost*collective",
+      "from": "https://www.frostcollective.com.au/projects",
+      "to": "https://frostcollective.com.au/projects"
+    },
+    {
+      "name": "Violaine & Jérémy",
+      "from": "https://violaineetjeremy.fr",
+      "to": "https://violaineetjeremy.fr/"
+    },
+    {
+      "name": "molistudio",
+      "from": "http://www.molistudio.com",
+      "to": "https://molistudio.com/"
+    },
+    {
+      "name": "Bold",
+      "from": "http://www.boldscandinavia.com/work",
+      "to": "https://boldscandinavia.com/work"
+    },
+    {
+      "name": "Lundgren+Lindqvist",
+      "from": "https://www.lundgrenlindqvist.se",
+      "to": "https://lundgrenlindqvist.se/"
+    },
+    {
+      "name": "Bibliothèque",
+      "from": "https://bibliothequedesign.com/all-projects/",
+      "to": "https://bibliothequedesign.com/all-projects"
+    },
+    {
+      "name": "Tomi Leppänen",
+      "from": "https://tomileppanen.com",
+      "to": "https://tomileppanen.com/"
+    },
+    {
+      "name": "Bond",
+      "from": "https://bond-agency.com",
+      "to": "https://bond-agency.com/"
+    },
+    {
+      "name": "The Colour Club",
+      "from": "https://thecolourclub.com.au",
+      "to": "https://thecolourclub.com.au/"
+    },
+    {
+      "name": "Studio Sly",
+      "from": "https://studiosly.com.au",
+      "to": "https://studiosly.com.au/"
+    },
+    {
+      "name": "Shore",
+      "from": "https://www.madebyshore.com/",
+      "to": "https://madebyshore.com/"
+    },
+    {
+      "name": "SocioDesign",
+      "from": "https://sociodesign.co.uk",
+      "to": "https://sociodesign.co.uk/"
+    },
+    {
+      "name": "Bienal",
+      "from": "https://bienal.mx",
+      "to": "https://bienal.mx/"
+    },
+    {
+      "name": "Abraham Lule",
+      "from": "https://www.workbylule.com",
+      "to": "https://workbylule.com/"
+    },
+    {
+      "name": "Vicente Silva",
+      "from": "https://vicentesilva.com",
+      "to": "https://vicentesilva.com/"
+    },
+    {
+      "name": "Atto",
+      "from": "https://atto.si",
+      "to": "https://atto.si/"
+    },
+    {
+      "name": "Daan Rietbergen",
+      "from": "https://daanrietbergen.com",
+      "to": "https://daanrietbergen.com/"
+    },
+    {
+      "name": "fagerström",
+      "from": "https://www.fagerstrom.studio",
+      "to": "https://fagerstrom.studio/"
+    },
+    {
+      "name": "Studio Sentempo",
+      "from": "https://www.studiosentempo.com",
+      "to": "https://studiosentempo.com/"
+    },
+    {
+      "name": "Human - Studio",
+      "from": "https://byhuman.mx",
+      "to": "https://byhuman.mx/"
+    },
+    {
+      "name": "Both",
+      "from": "https://both.studio",
+      "to": "https://both.studio/"
+    },
+    {
+      "name": "Sociedad Anonima",
+      "from": "https://sociedadanonima.mx/#materia",
+      "to": "https://sociedadanonima.mx/"
+    },
+    {
+      "name": "Firmalt",
+      "from": "https://firmalt.com",
+      "to": "https://firmalt.com/"
+    },
+    {
+      "name": "Futura",
+      "from": "https://byfutura.com/projects/",
+      "to": "https://byfutura.com/projects"
+    },
+    {
+      "name": "Stelios Ypsilantis",
+      "from": "http://www.steliosyps.com",
+      "to": "https://steliosyps.com/"
+    },
+    {
+      "name": "Rich Baird",
+      "from": "https://www.richardbaird.co.uk",
+      "to": "https://richardbaird.co.uk/"
+    },
+    {
+      "name": "MADE THOUGHT",
+      "from": "https://www.madethought.com",
+      "to": "https://madethought.com/"
+    },
+    {
+      "name": "Taller A.M",
+      "from": "https://alejandromagallanes.com",
+      "to": "https://alejandromagallanes.com/"
+    },
+    {
+      "name": "HUESO",
+      "from": "https://hueso.co",
+      "to": "https://hueso.co/"
+    },
+    {
+      "name": "Stranger & Stranger",
+      "from": "https://www.strangerandstranger.com",
+      "to": "https://strangerandstranger.com/"
+    },
+    {
+      "name": "Olssøn Barbieri",
+      "from": "https://olssonbarbieri.com",
+      "to": "https://olssonbarbieri.com/"
+    },
+    {
+      "name": "Studio8585",
+      "from": "https://www.studio8585.com/work",
+      "to": "https://studio8585.com/work"
+    },
+    {
+      "name": "HBW",
+      "from": "https://www.hbw.works",
+      "to": "https://hbw.works/"
+    },
+    {
+      "name": "Thought & Found",
+      "from": "https://thoughtandfound.co",
+      "to": "https://thoughtandfound.co/"
+    },
+    {
+      "name": "Compagnie et cie",
+      "from": "https://compagnieetcie.com",
+      "to": "https://compagnieetcie.com/"
+    },
+    {
+      "name": "Monumento",
+      "from": "https://monumento.co",
+      "to": "https://monumento.co/"
+    },
+    {
+      "name": "South",
+      "from": "https://www.studiosouth.co.nz",
+      "to": "https://studiosouth.co.nz/"
+    },
+    {
+      "name": "Atolón de Mororoa",
+      "from": "http://www.atolondemororoa.com",
+      "to": "https://atolondemororoa.com/"
+    },
+    {
+      "name": "Pop & Pac",
+      "from": "http://www.pop-pac.com",
+      "to": "https://pop-pac.com/"
+    },
+    {
+      "name": "Lotta Nieminen",
+      "from": "https://www.lottanieminen.com",
+      "to": "https://lottanieminen.com/"
+    },
+    {
+      "name": "Saint Urbain",
+      "from": "https://www.sainturbain.com/projects",
+      "to": "https://sainturbain.com/projects"
+    },
+    {
+      "name": "Skinn",
+      "from": "https://www.skinn.be/nl",
+      "to": "https://skinn.be/nl"
+    },
+    {
+      "name": "errorerror.studio",
+      "from": "https://www.errorerror.studio/work",
+      "to": "https://errorerror.studio/work"
+    },
+    {
+      "name": "Rejane Dal Bello",
+      "from": "http://rejanedalbello.com",
+      "to": "https://rejanedalbello.com/"
+    },
+    {
+      "name": "Moscow Mule",
+      "from": "https://moscowmule.team",
+      "to": "https://moscowmule.team/"
+    },
+    {
+      "name": "With You",
+      "from": "https://www.with-you.studio",
+      "to": "https://with-you.studio/"
+    },
+    {
+      "name": "SPGD",
+      "from": "https://www.sp-gd.com",
+      "to": "https://sp-gd.com/"
+    },
+    {
+      "name": "Play",
+      "from": "https://www.play.studio",
+      "to": "https://play.studio/"
+    },
+    {
+      "name": "Neubau",
+      "from": "https://neubauberlin.com",
+      "to": "https://neubauberlin.com/"
+    },
+    {
+      "name": "Querida",
+      "from": "http://www.querida.si",
+      "to": "https://querida.si/"
+    },
+    {
+      "name": "Stink Studios",
+      "from": "https://www.stinkstudios.com/work",
+      "to": "https://stinkstudios.com/work"
+    },
+    {
+      "name": "Lit Create",
+      "from": "https://litcreate.com",
+      "to": "https://litcreate.com/"
+    },
+    {
+      "name": "Bruno Oppido",
+      "from": "http://www.brunooppido.com",
+      "to": "https://brunooppido.com/"
+    },
+    {
+      "name": "João Linneu",
+      "from": "https://joaolinneu.com",
+      "to": "https://joaolinneu.com/"
+    },
+    {
+      "name": "The New Company",
+      "from": "https://www.thenewcompany.com",
+      "to": "https://thenewcompany.com/"
+    },
+    {
+      "name": "A LINE",
+      "from": "https://www.aline.studio/work",
+      "to": "https://aline.studio/work"
+    },
+    {
+      "name": "JOSH SCHAUB",
+      "from": "http://www.joshschaub.ch",
+      "to": "https://joshschaub.ch/"
+    },
+    {
+      "name": "Nando Costa",
+      "from": "https://www.nandocosta.com",
+      "to": "https://nandocosta.com/"
+    },
+    {
+      "name": "Matt Willey",
+      "from": "https://mattwilley.co.uk",
+      "to": "https://mattwilley.co.uk/"
+    },
+    {
+      "name": "Claudia Draghia",
+      "from": "https://claudiadraghia.ro",
+      "to": "https://claudiadraghia.ro/"
+    },
+    {
+      "name": "ESTUDIO CRU",
+      "from": "https://www.estudiocru.com/projetos",
+      "to": "https://estudiocru.com/projetos"
+    },
+    {
+      "name": "Wieden+Kennedy São Paulo",
+      "from": "http://www.wksaopaulo.com.br/pt/trabalhos",
+      "to": "https://wksaopaulo.com.br/pt/trabalhos"
+    },
+    {
+      "name": "Vinicius Theodoro",
+      "from": "https://theodoro.work",
+      "to": "https://theodoro.work/"
+    },
+    {
+      "name": "Yan Graller",
+      "from": "https://yangraller.cargo.site",
+      "to": "https://yangraller.cargo.site/"
+    },
+    {
+      "name": "Sobes",
+      "from": "https://olasobiecki.com",
+      "to": "https://olasobiecki.com/"
+    },
+    {
+      "name": "Codea Studio",
+      "from": "https://codeastudio.com",
+      "to": "https://codeastudio.com/"
+    },
+    {
+      "name": "Confederation",
+      "from": "https://www.confederationstudio.com",
+      "to": "https://confederationstudio.com/"
+    },
+    {
+      "name": "Fionn Breen",
+      "from": "https://www.fionnbreen.com/tag/system",
+      "to": "https://fionnbreen.com/tag/system"
+    },
+    {
+      "name": "Holographik",
+      "from": "https://www.holographik.co",
+      "to": "https://holographik.co/"
+    },
+    {
+      "name": "Standard Projects",
+      "from": "https://www.standard-projects.com/work",
+      "to": "https://standard-projects.com/work"
+    },
+    {
+      "name": "Ana Mirats",
+      "from": "https://anamirats.com",
+      "to": "https://anamirats.com/"
+    },
+    {
+      "name": "Regular Practice",
+      "from": "https://www.regularpractice.co.uk/projects",
+      "to": "https://regularpractice.co.uk/projects"
+    },
+    {
+      "name": "Ingrid Picanyol Studio",
+      "from": "https://ingridpicanyol.com",
+      "to": "https://ingridpicanyol.com/"
+    },
+    {
+      "name": "A Friend of Mine",
+      "from": "https://afom.com.au",
+      "to": "https://afom.com.au/"
+    },
+    {
+      "name": "Mike Lamont",
+      "from": "https://www.mike.computer",
+      "to": "https://mike.computer/"
+    },
+    {
+      "name": "Duties XYZ",
+      "from": "https://www.duties.xyz",
+      "to": "https://duties.xyz/"
+    },
+    {
+      "name": "Réplica",
+      "from": "https://replica.studio",
+      "to": "https://replica.studio/"
+    },
+    {
+      "name": "TRIBORO",
+      "from": "https://triborodesign.com",
+      "to": "https://triborodesign.com/"
+    },
+    {
+      "name": "GrandArmy",
+      "from": "https://www.grandarmy.com/work",
+      "to": "https://grandarmy.com/work"
+    },
+    {
+      "name": "Hype Type Studio",
+      "from": "https://hypetype.studio",
+      "to": "https://hypetype.studio/"
+    },
+    {
+      "name": "Mohammed Samad",
+      "from": "https://mosamad.xyz",
+      "to": "https://mosamad.xyz/"
+    },
+    {
+      "name": "Superestudio",
+      "from": "https://www.superestudio.tv/branding.php",
+      "to": "https://superestudio.tv/branding.php"
+    },
+    {
+      "name": "Sawdust",
+      "from": "https://sawdust.works",
+      "to": "https://sawdust.works/"
+    },
+    {
+      "name": "Fix Studio",
+      "from": "https://fix.studio",
+      "to": "https://fix.studio/"
+    },
+    {
+      "name": "Humberto Cunha",
+      "from": "https://humbertocunha.com",
+      "to": "https://humbertocunha.com/"
+    },
+    {
+      "name": "fred trevor design",
+      "from": "https://www.fredtrevor.design",
+      "to": "https://fredtrevor.design/"
+    },
+    {
+      "name": "Guillotina Estudio",
+      "from": "http://guillotinaestudio.com",
+      "to": "https://guillotinaestudio.com/"
+    },
+    {
+      "name": "Relajaelcoco",
+      "from": "https://www.relajaelcoco.com/works",
+      "to": "https://relajaelcoco.com/works"
+    },
+    {
+      "name": "Order Design",
+      "from": "https://www.orderdesign.co.uk",
+      "to": "https://orderdesign.co.uk/"
+    },
+    {
+      "name": "Zk",
+      "from": "https://zhengkai.info",
+      "to": "https://zhengkai.info/"
+    },
+    {
+      "name": "Landscape",
+      "from": "https://thisislandscape.com",
+      "to": "https://thisislandscape.com/"
+    },
+    {
+      "name": "CLIM STUDIO",
+      "from": "https://www.studioclim.com",
+      "to": "https://studioclim.com/"
+    },
+    {
+      "name": "Bleed",
+      "from": "https://bleed.com",
+      "to": "https://bleed.com/"
+    },
+    {
+      "name": "brigade__cynophile",
+      "from": "https://felicite.land",
+      "to": "https://felicite.land/"
+    },
+    {
+      "name": "Scheffe",
+      "from": "https://www.scheffeshields.com",
+      "to": "https://scheffeshields.com/"
+    },
+    {
+      "name": "With You",
+      "from": "https://www.with-you.studio/work",
+      "to": "https://with-you.studio/work"
+    },
+    {
+      "name": "Never Now",
+      "from": "http://www.nevernow.com.au",
+      "to": "https://nevernow.com.au/"
+    },
+    {
+      "name": "Korak Studio",
+      "from": "https://korakstudio.com",
+      "to": "https://korakstudio.com/"
+    },
+    {
+      "name": "House of Gul",
+      "from": "https://www.houseofgul.com",
+      "to": "https://houseofgul.com/"
+    },
+    {
+      "name": "Alright Studio",
+      "from": "https://alright.studio",
+      "to": "https://alright.studio/"
+    },
+    {
+      "name": "Dima Shiryaev",
+      "from": "https://dimashiryaev.tumblr.com",
+      "to": "https://dimashiryaev.tumblr.com/"
+    },
+    {
+      "name": "Valentin Guilbaud",
+      "from": "https://www.valentinguilbaud.com",
+      "to": "https://valentinguilbaud.com/"
+    },
+    {
+      "name": "Søren Rose Studio",
+      "from": "https://www.sorenrose.com/all",
+      "to": "https://sorenrose.com/all"
+    },
+    {
+      "name": "Zuzanna Rogatty",
+      "from": "http://rogatty.com",
+      "to": "https://rogatty.com/"
+    },
+    {
+      "name": "AKQA",
+      "from": "https://www.akqa.com/work",
+      "to": "https://akqa.com/work"
+    },
+    {
+      "name": "Paul Santiago",
+      "from": "http://paul-santiago.us",
+      "to": "https://paul-santiago.us/"
+    },
+    {
+      "name": "Emily Stevens Studio",
+      "from": "https://www.emilystevens.co",
+      "to": "https://emilystevens.co/"
+    },
+    {
+      "name": "Favorit Studio",
+      "from": "https://favorit.studio",
+      "to": "https://favorit.studio/"
+    },
+    {
+      "name": "Cub Studio",
+      "from": "https://www.cubstudio.com/portfolio",
+      "to": "https://cubstudio.com/portfolio"
+    },
+    {
+      "name": "The Mill",
+      "from": "https://www.themill.com/work",
+      "to": "https://themill.com/work"
+    },
+    {
+      "name": "PLUSMINUS studio",
+      "from": "https://www.plusminus.studio/work",
+      "to": "https://plusminus.studio/work"
+    },
+    {
+      "name": "André Portnoy",
+      "from": "https://andreportnoy.com",
+      "to": "https://andreportnoy.com/"
+    },
+    {
+      "name": "Cris Mascort",
+      "from": "https://crismascort.com",
+      "to": "https://crismascort.com/"
+    },
+    {
+      "name": "Marx Design",
+      "from": "https://marxdesign.co.nz",
+      "to": "https://marxdesign.co.nz/"
+    },
+    {
+      "name": "Decade",
+      "from": "https://decadenewyork.com",
+      "to": "https://decadenewyork.com/"
+    },
+    {
+      "name": "Auge Design",
+      "from": "https://auge-design.com",
+      "to": "https://auge-design.com/"
+    },
+    {
+      "name": "Wedge",
+      "from": "https://www.wedge.work",
+      "to": "https://wedge.work/"
+    },
+    {
+      "name": "Grávita",
+      "from": "https://somosgravita.com",
+      "to": "https://somosgravita.com/"
+    },
+    {
+      "name": "Base Design",
+      "from": "https://www.basedesign.com/work",
+      "to": "https://basedesign.com/work"
+    },
+    {
+      "name": "Caserne",
+      "from": "https://www.caserne.com/work",
+      "to": "https://caserne.com/work"
+    },
+    {
+      "name": "Studio Feixen",
+      "from": "https://www.studiofeixen.ch",
+      "to": "https://studiofeixen.ch/"
+    },
+    {
+      "name": "Bluemarkvoices",
+      "from": "https://bluemarkvoices.tumblr.com",
+      "to": "https://bluemarkvoices.tumblr.com/"
+    },
+    {
+      "name": "Duzi Studio",
+      "from": "https://www.duzi.studio/?utm_source=theessential.design&utm_medium=referral&utm_campaign=esntial_external_link",
+      "to": "https://duzi.studio/"
+    },
+    {
+      "name": "John Colver",
+      "from": "https://www.johncolver.world/home",
+      "to": "https://johncolver.world/home"
+    },
+    {
+      "name": "Seachange",
+      "from": "https://www.seachange.studio/work",
+      "to": "https://seachange.studio/work"
+    },
+    {
+      "name": "Studio Nari",
+      "from": "https://www.studionari.co.uk",
+      "to": "https://studionari.co.uk/"
+    },
+    {
+      "name": "newkid",
+      "from": "https://newkid.services",
+      "to": "https://newkid.services/"
+    },
+    {
+      "name": "Catherine Zask",
+      "from": "https://www.catherinezask.com/image/zask_poster_2002_cap-vert_rvb",
+      "to": "https://catherinezask.com/image/zask_poster_2002_cap-vert_rvb"
+    },
+    {
+      "name": "Output",
+      "from": "https://www.studio-output.com/work",
+      "to": "https://studio-output.com/work"
+    },
+    {
+      "name": "MAKEBARDO",
+      "from": "https://www.makebardo.com",
+      "to": "https://makebardo.com/"
+    },
+    {
+      "name": "Studio Lenzing",
+      "from": "https://www.studiolenzing.com/work",
+      "to": "https://studiolenzing.com/work"
+    },
+    {
+      "name": "iconwerk",
+      "from": "https://www.iconwerk.com",
+      "to": "https://iconwerk.com/"
+    },
+    {
+      "name": "Leichtfried",
+      "from": "https://www.leichtfried.com/work/?lang=en",
+      "to": "https://leichtfried.com/work?lang=en"
+    },
+    {
+      "name": "alejandrogavancho.com",
+      "from": "https://alejandrogavancho.com",
+      "to": "https://alejandrogavancho.com/"
+    },
+    {
+      "name": "Never Sit Still",
+      "from": "https://neversitstill.com",
+      "to": "https://neversitstill.com/"
+    },
+    {
+      "name": "Joakim Jansson",
+      "from": "http://sanscolour.com",
+      "to": "https://sanscolour.com/"
+    },
+    {
+      "name": "k-u-l-a-c-h-e-k",
+      "from": "https://k-u-l-a-c-h-e-k.tumblr.com",
+      "to": "https://k-u-l-a-c-h-e-k.tumblr.com/"
+    },
+    {
+      "name": "Jordan Sowers",
+      "from": "https://jordansowers.com",
+      "to": "https://jordansowers.com/"
+    },
+    {
+      "name": "flodagostini",
+      "from": "https://florencedagostini.com",
+      "to": "https://florencedagostini.com/"
+    },
+    {
+      "name": "Bonfim",
+      "from": "https://bonfim.work",
+      "to": "https://bonfim.work/"
+    },
+    {
+      "name": "Experimental Jetset",
+      "from": "https://www.jetset.nl/preview",
+      "to": "https://jetset.nl/preview"
+    },
+    {
+      "name": "Rosa Eduardo Studio",
+      "from": "https://rosaeduardo.com",
+      "to": "https://rosaeduardo.com/"
+    },
+    {
+      "name": "Nuncajamas",
+      "from": "https://www.nuncajamas.co",
+      "to": "https://nuncajamas.co/"
+    },
+    {
+      "name": "George&Harrison",
+      "from": "https://www.georgeandharrison.nl",
+      "to": "https://georgeandharrison.nl/"
+    },
+    {
+      "name": "Gulp Studio",
+      "from": "https://www.gulpstudio.com/works",
+      "to": "https://gulpstudio.com/works"
+    },
+    {
+      "name": "Sergi Delgado",
+      "from": "https://www.sergidelgado.com",
+      "to": "https://sergidelgado.com/"
+    },
+    {
+      "name": "Eduardo Tallia",
+      "from": "https://www.figma.com/proto/zlH44lFbzBkfWopD3qJtuN/Portfolio?type=design&node-id=1028-3317&t=4mPXU5AdQEYLEbz1-0&scaling=scale-down-width&page-id=80%3A296&starting-point-node-id=1033%3A5604&disable-default-keyboard-nav=1&hide-ui=1",
+      "to": "https://figma.com/proto/zlH44lFbzBkfWopD3qJtuN/Portfolio?type=design&node-id=1028-3317&t=4mPXU5AdQEYLEbz1-0&scaling=scale-down-width&page-id=80%3A296&starting-point-node-id=1033%3A5604&disable-default-keyboard-nav=1&hide-ui=1"
+    },
+    {
+      "name": "Cacá Barabás",
+      "from": "https://cacabarabas.com",
+      "to": "https://cacabarabas.com/"
+    },
+    {
+      "name": "Kyle Dreier",
+      "from": "https://www.dreier.com",
+      "to": "https://dreier.com/"
+    },
+    {
+      "name": "Kyle Johnson",
+      "from": "https://kjphotos.com",
+      "to": "https://kjphotos.com/"
+    },
+    {
+      "name": "RYAN EDY",
+      "from": "https://www.ryanedy.com",
+      "to": "https://ryanedy.com/"
+    },
+    {
+      "name": "FRANCISCO NOGUEIRA",
+      "from": "https://francisconogueira.com",
+      "to": "https://francisconogueira.com/"
+    },
+    {
+      "name": "MOWIE KAY",
+      "from": "https://www.mowiekay.com",
+      "to": "https://mowiekay.com/"
+    },
+    {
+      "name": "Marcus Eriksson",
+      "from": "https://themarcus.com",
+      "to": "https://themarcus.com/"
+    },
+    {
+      "name": "ANDRÉ JOSSELIN",
+      "from": "https://josselin.de",
+      "to": "https://josselin.de/"
+    },
+    {
+      "name": "Photo Margaret",
+      "from": "https://www.photomargaret.com/gallery1708food",
+      "to": "https://photomargaret.com/gallery1708food"
+    },
+    {
+      "name": "Sébastien Dubois-Didcock",
+      "from": "https://www.behance.net/sduboisd",
+      "to": "https://behance.net/sduboisd"
+    },
+    {
+      "name": "Coke Bartrina",
+      "from": "https://cokebartrina.com",
+      "to": "https://cokebartrina.com/"
+    },
+    {
+      "name": "Y + J",
+      "from": "https://www.yasuandjunko.com/conceptual",
+      "to": "https://yasuandjunko.com/conceptual"
+    },
+    {
+      "name": "Galembeck",
+      "from": "http://galembeck.com.br/comidas",
+      "to": "https://galembeck.com.br/comidas"
+    },
+    {
+      "name": "Thalía Gochez",
+      "from": "https://www.instagram.com/thaliagochez/?hl=pt",
+      "to": "https://instagram.com/thaliagochez?hl=pt"
+    },
+    {
+      "name": "Noel Barnhurst",
+      "from": "http://www.noelbarnhurst.com",
+      "to": "https://noelbarnhurst.com/"
+    },
+    {
+      "name": "Penny De Los Santos",
+      "from": "https://www.pennydelossantos.com/#a=0&at=0&mi=2&pt=1&pi=10000&s=19&p=1",
+      "to": "https://pennydelossantos.com/"
+    },
+    {
+      "name": "Magali Polverino",
+      "from": "https://www.magalipolverino.com",
+      "to": "https://magalipolverino.com/"
+    },
+    {
+      "name": "Martí Sans",
+      "from": "http://martisans.com",
+      "to": "https://martisans.com/"
+    },
+    {
+      "name": "Pablo Merchan",
+      "from": "https://www.pablomerchan.com",
+      "to": "https://pablomerchan.com/"
+    },
+    {
+      "name": "Buffet",
+      "from": "https://buffet.digital",
+      "to": "https://buffet.digital/"
+    },
+    {
+      "name": "Lorena Dini",
+      "from": "https://www.lorenadini.com",
+      "to": "https://lorenadini.com/"
+    },
+    {
+      "name": "Group Art Management",
+      "from": "https://www.instagram.com/groupartmgt",
+      "to": "https://instagram.com/groupartmgt"
+    },
+    {
+      "name": "Tyler Twins Photo",
+      "from": "https://www.tylertwins.com/editorial-1",
+      "to": "https://tylertwins.com/editorial-1"
+    },
+    {
+      "name": "Geordie Wood",
+      "from": "https://geordiewood.com",
+      "to": "https://geordiewood.com/"
+    },
+    {
+      "name": "Sarah Hopp",
+      "from": "https://sarahhopp.com",
+      "to": "https://sarahhopp.com/"
+    },
+    {
+      "name": "Hinda Fahre",
+      "from": "http://www.hindafahre.com",
+      "to": "https://hindafahre.com/"
+    },
+    {
+      "name": "Lena Smirnova",
+      "from": "https://lena.show",
+      "to": "https://lena.show/"
+    },
+    {
+      "name": "MO Studio",
+      "from": "https://www.moneal.com/commissions",
+      "to": "https://moneal.com/commissions"
+    },
+    {
+      "name": "Sam Horine",
+      "from": "https://www.samhorine.com/projects",
+      "to": "https://samhorine.com/projects"
+    },
+    {
+      "name": "Akatre",
+      "from": "https://www.akatre.com",
+      "to": "https://akatre.com/"
+    },
+    {
+      "name": "Canvas Agency",
+      "from": "https://thecanvasagency.com",
+      "to": "https://thecanvasagency.com/"
+    },
+    {
+      "name": "Gabriel Bianchini",
+      "from": "http://www.gabrielbianchini.com/commissioned",
+      "to": "https://gabrielbianchini.com/commissioned"
+    },
+    {
+      "name": "Rodrigo Maltchique",
+      "from": "https://rodrigomaltchique.com",
+      "to": "https://rodrigomaltchique.com/"
+    },
+    {
+      "name": "Will Robson-Scott",
+      "from": "https://www.willrobsonscott.co.uk",
+      "to": "https://willrobsonscott.co.uk/"
+    },
+    {
+      "name": "Nikon's Small World",
+      "from": "https://www.nikonsmallworld.com",
+      "to": "https://nikonsmallworld.com/"
+    },
+    {
+      "name": "Oliver Hooson",
+      "from": "https://oliverhooson.com",
+      "to": "https://oliverhooson.com/"
+    },
+    {
+      "name": "B&A",
+      "from": "https://www.ba-reps.com/photographers",
+      "to": "https://ba-reps.com/photographers"
+    },
+    {
+      "name": "Filipe Redondo",
+      "from": "https://www.filiperedondo.com/2505033-nike#16",
+      "to": "https://filiperedondo.com/2505033-nike"
+    },
+    {
+      "name": "NIXON",
+      "from": "http://www.nixonfreire.com",
+      "to": "https://nixonfreire.com/"
+    },
+    {
+      "name": "Mercure Studio",
+      "from": "https://mercurestudio.com/?utm_source=extension&utm_medium=click&utm_campaign=muzli",
+      "to": "https://mercurestudio.com/"
+    },
+    {
+      "name": "Matthew Fisher",
+      "from": "https://mfisher.com",
+      "to": "https://mfisher.com/"
+    },
+    {
+      "name": "Derrick Ofosu Boateng",
+      "from": "https://www.instagram.com/derrick_o_boateng",
+      "to": "https://instagram.com/derrick_o_boateng"
+    },
+    {
+      "name": "Laird and Good Company",
+      "from": "https://lairdandgoodcompany.com",
+      "to": "https://lairdandgoodcompany.com/"
+    },
+    {
+      "name": "BONAPARTE",
+      "from": "https://www.bonaparte.tv",
+      "to": "https://bonaparte.tv/"
+    },
+    {
+      "name": "JULIAN",
+      "from": "https://www.julianfinney.com",
+      "to": "https://julianfinney.com/"
+    },
+    {
+      "name": "DeadHungry",
+      "from": "https://deadhungry.co",
+      "to": "https://deadhungry.co/"
+    },
+    {
+      "name": "Teresa C Freitas",
+      "from": "https://www.teresacfreitas.com/commissioned",
+      "to": "https://teresacfreitas.com/commissioned"
+    },
+    {
+      "name": "Cody James",
+      "from": "https://www.codyjamesphoto.com",
+      "to": "https://codyjamesphoto.com/"
+    },
+    {
+      "name": "Trunk Archive",
+      "from": "https://www.trunkarchive.com",
+      "to": "https://trunkarchive.com/"
+    },
+    {
+      "name": "Museparadox",
+      "from": "https://www.museparadox.com",
+      "to": "https://museparadox.com/"
+    },
+    {
+      "name": "ALEX JOSEPH",
+      "from": "https://www.photographyalex.com/recentwork#4",
+      "to": "https://photographyalex.com/recentwork"
+    },
+    {
+      "name": "CLM Agency",
+      "from": "https://www.clm-agency.com",
+      "to": "https://clm-agency.com/"
+    },
+    {
+      "name": "Shoot Film Magazine",
+      "from": "https://www.shootfilmmagazine.com",
+      "to": "https://shootfilmmagazine.com/"
+    },
+    {
+      "name": "Matty Aylward",
+      "from": "https://www.mattywordup.com",
+      "to": "https://mattywordup.com/"
+    },
+    {
+      "name": "Sebastian Nevols",
+      "from": "https://www.sebastiannevols.com",
+      "to": "https://sebastiannevols.com/"
+    },
+    {
+      "name": "BRUNA CASTANHEIRA",
+      "from": "https://www.brunacastanheira.com.br/category/fashion",
+      "to": "https://brunacastanheira.com.br/category/fashion"
+    },
+    {
+      "name": "pat martin",
+      "from": "https://www.patmartin.co",
+      "to": "https://patmartin.co/"
+    },
+    {
+      "name": "Xuebing Du",
+      "from": "https://www.xuebingdu.com",
+      "to": "https://xuebingdu.com/"
+    },
+    {
+      "name": "Tommy Ton",
+      "from": "https://www.tommyton.com",
+      "to": "https://tommyton.com/"
+    },
+    {
+      "name": "Hannes Becker",
+      "from": "https://www.hannesbecker.com",
+      "to": "https://hannesbecker.com/"
+    },
+    {
+      "name": "Elizabeth Weinberg",
+      "from": "https://www.elizabethweinberg.com",
+      "to": "https://elizabethweinberg.com/"
+    },
+    {
+      "name": "Nirav Patel",
+      "from": "http://www.niravpatelphoto.com",
+      "to": "https://niravpatelphoto.com/"
+    },
+    {
+      "name": "Franck Bohbot",
+      "from": "https://franckbohbot.com",
+      "to": "https://franckbohbot.com/"
+    },
+    {
+      "name": "Golden Retriever",
+      "from": "https://www.goldenretriever.studio",
+      "to": "https://goldenretriever.studio/"
+    },
+    {
+      "name": "Sporty & Rich",
+      "from": "https://www.sportyandrich.com/pages/collections",
+      "to": "https://sportyandrich.com/pages/collections"
+    },
+    {
+      "name": "JIMI",
+      "from": "http://www.jimiherrtage.com",
+      "to": "https://jimiherrtage.com/"
+    },
+    {
+      "name": "ARTWORLD",
+      "from": "https://artworld.agency",
+      "to": "https://artworld.agency/"
+    },
+    {
+      "name": "MAHANEELA",
+      "from": "https://www.mahaneela.com/commercial-photography",
+      "to": "https://mahaneela.com/commercial-photography"
+    },
+    {
+      "name": "BRSK",
+      "from": "https://www.brskphoto.com/portfolio/C0000f8HSweTlH1A/G0000XQ.hwmEMMHo",
+      "to": "https://brskphoto.com/portfolio/C0000f8HSweTlH1A/G0000XQ.hwmEMMHo"
+    },
+    {
+      "name": "Fred Othero",
+      "from": "https://fredothero.com",
+      "to": "https://fredothero.com/"
+    },
+    {
+      "name": "Cake Film & Photography",
+      "from": "https://cakefilm.nl",
+      "to": "https://cakefilm.nl/"
+    },
+    {
+      "name": "Marcus Smith",
+      "from": "https://www.marcus-smith.com",
+      "to": "https://marcus-smith.com/"
+    },
+    {
+      "name": "Making Pictures",
+      "from": "https://making-pictures.com",
+      "to": "https://making-pictures.com/"
+    },
+    {
+      "name": "Concrete Rep",
+      "from": "https://concreterep.com",
+      "to": "https://concreterep.com/"
+    },
+    {
+      "name": "Yavez Anthonio",
+      "from": "https://yavezanthonio.com",
+      "to": "https://yavezanthonio.com/"
+    },
+    {
+      "name": "Dmitry Bocharov",
+      "from": "https://www.dmitrybocharov.com",
+      "to": "https://dmitrybocharov.com/"
+    },
+    {
+      "name": "Jonpaul Douglass",
+      "from": "https://www.jonpauldouglass.com",
+      "to": "https://jonpauldouglass.com/"
+    },
+    {
+      "name": "Rafael Astorga",
+      "from": "https://www.rafaelastorga.com",
+      "to": "https://rafaelastorga.com/"
+    },
+    {
+      "name": "Tom Joy",
+      "from": "https://tomjoy.co.uk",
+      "to": "https://tomjoy.co.uk/"
+    },
+    {
+      "name": "Seb Barros",
+      "from": "https://sebbarros.com",
+      "to": "https://sebbarros.com/"
+    },
+    {
+      "name": "Angelo Dal Bó",
+      "from": "http://www.angelodalbo.com",
+      "to": "https://angelodalbo.com/"
+    },
+    {
+      "name": "Cait Oppermann",
+      "from": "http://caitoppermann.com",
+      "to": "https://caitoppermann.com/"
+    },
+    {
+      "name": "Tom van Schelven",
+      "from": "https://van-schelven.com",
+      "to": "https://van-schelven.com/"
+    },
+    {
+      "name": "Sam Robinson",
+      "from": "https://sam-robinson.com",
+      "to": "https://sam-robinson.com/"
+    },
+    {
+      "name": "Benjamin Lennox",
+      "from": "https://www.benjaminlennox.film",
+      "to": "https://benjaminlennox.film/"
+    },
+    {
+      "name": "Micaiah Carter",
+      "from": "https://micaiahcarter.com",
+      "to": "https://micaiahcarter.com/"
+    },
+    {
+      "name": "The Masons",
+      "from": "https://www.meetthemasons.co.uk/brandstories",
+      "to": "https://meetthemasons.co.uk/brandstories"
+    },
+    {
+      "name": "Tara Garnell",
+      "from": "https://www.taragarnell.com",
+      "to": "https://taragarnell.com/"
+    },
+    {
+      "name": "Rob Lawson",
+      "from": "https://roblawson.com",
+      "to": "https://roblawson.com/"
+    },
+    {
+      "name": "Jesse Hunniford",
+      "from": "https://www.jessehunniford.com",
+      "to": "https://jessehunniford.com/"
+    },
+    {
+      "name": "Tim Tadder",
+      "from": "https://www.timtadder.com/portfolios-tim-tadder",
+      "to": "https://timtadder.com/portfolios-tim-tadder"
+    },
+    {
+      "name": "Willson Project",
+      "from": "https://willsonproject.com",
+      "to": "https://willsonproject.com/"
+    },
+    {
+      "name": "STUDIO DUBOIS-DIDCOCK",
+      "from": "https://www.duboisdidcock.com",
+      "to": "https://duboisdidcock.com/"
+    },
+    {
+      "name": "Leslie Grow",
+      "from": "https://www.lesliegrow.com/food",
+      "to": "https://lesliegrow.com/food"
+    },
+    {
+      "name": "Leslie Grow Products",
+      "from": "https://www.lesliegrow.com/products",
+      "to": "https://lesliegrow.com/products"
+    },
+    {
+      "name": "Rikky Fernandes",
+      "from": "https://www.heyrikky.com/still-life",
+      "to": "https://heyrikky.com/still-life"
+    },
+    {
+      "name": "Mari Juliano",
+      "from": "https://www.marijuliano.com",
+      "to": "https://marijuliano.com/"
+    },
+    {
+      "name": "Warren Ryley",
+      "from": "https://www.warrenryley.co.uk/drinks-portfolio",
+      "to": "https://warrenryley.co.uk/drinks-portfolio"
+    },
+    {
+      "name": "MAX SIEDENTOPF",
+      "from": "https://maxsiedentopf.com",
+      "to": "https://maxsiedentopf.com/"
+    },
+    {
+      "name": "Beau Grealy",
+      "from": "https://www.beaugrealy.com/work",
+      "to": "https://beaugrealy.com/work"
+    },
+    {
+      "name": "Marzia Gamba",
+      "from": "https://www.marziagamba.com",
+      "to": "https://marziagamba.com/"
+    },
+    {
+      "name": "Saskia Wilson",
+      "from": "https://saskiawilson.com",
+      "to": "https://saskiawilson.com/"
+    },
+    {
+      "name": "DavidLee Studios",
+      "from": "https://www.davidleestudios.net/new-work",
+      "to": "https://davidleestudios.net/new-work"
+    },
+    {
+      "name": "Ashley Klinger & Co.",
+      "from": "https://www.ashleyklinger.com/photographers/marcus-nilsson/lifestyle",
+      "to": "https://ashleyklinger.com/photographers/marcus-nilsson/lifestyle"
+    },
+    {
+      "name": "Tropico Photo",
+      "from": "https://www.tropicophoto.com/color-factory",
+      "to": "https://tropicophoto.com/color-factory"
+    },
+    {
+      "name": "Jenny Wichman",
+      "from": "http://www.jennywichman.com/beauty",
+      "to": "https://jennywichman.com/beauty"
+    },
+    {
+      "name": "Ficca + Luciano",
+      "from": "https://www.ficcaluciano.com/food-drink",
+      "to": "https://ficcaluciano.com/food-drink"
+    },
+    {
+      "name": "Marçal Vaquer",
+      "from": "https://www.marssal.net",
+      "to": "https://marssal.net/"
+    },
+    {
+      "name": "DavidLee Studios Photos",
+      "from": "https://www.davidleestudios.net/photos",
+      "to": "https://davidleestudios.net/photos"
+    },
+    {
+      "name": "Andy Donohoe",
+      "from": "http://www.andydonohoe.com/projects",
+      "to": "https://andydonohoe.com/projects"
+    },
+    {
+      "name": "Fernando Gómez",
+      "from": "https://www.fernando-gomez.com/green",
+      "to": "https://fernando-gomez.com/green"
+    },
+    {
+      "name": "Jake Stangel",
+      "from": "https://jakestangel.com",
+      "to": "https://jakestangel.com/"
+    },
+    {
+      "name": "David Robert Elliott",
+      "from": "https://davidrobertelliott.com",
+      "to": "https://davidrobertelliott.com/"
+    },
+    {
+      "name": "Autumn Sonnichsen",
+      "from": "https://www.autumnsonnichsen.com",
+      "to": "https://autumnsonnichsen.com/"
+    },
+    {
+      "name": "Jenni Helin",
+      "from": "https://www.helinfoodphotography.co.uk",
+      "to": "https://helinfoodphotography.co.uk/"
+    },
+    {
+      "name": "Made Productions",
+      "from": "https://thisismade.se/#foogallery-7134/p:2",
+      "to": "https://thisismade.se/"
+    },
+    {
+      "name": "Vava",
+      "from": "https://www.vavaribeiro.com",
+      "to": "https://vavaribeiro.com/"
+    },
+    {
+      "name": "MARK NEWTON",
+      "from": "https://www.marknewton.com",
+      "to": "https://marknewton.com/"
+    },
+    {
+      "name": "Ryan Pfluger",
+      "from": "https://www.ryanpfluger.com",
+      "to": "https://ryanpfluger.com/"
+    },
+    {
+      "name": "Tara Donne",
+      "from": "https://www.taradonne.com/lifestyle-photography",
+      "to": "https://taradonne.com/lifestyle-photography"
+    },
+    {
+      "name": "Brooke Holm",
+      "from": "https://www.brookeholm.com",
+      "to": "https://brookeholm.com/"
+    },
+    {
+      "name": "Gustav Almestål",
+      "from": "https://almestal.com",
+      "to": "https://almestal.com/"
+    },
+    {
+      "name": "Anders Kylberg",
+      "from": "https://www.kylberg.com",
+      "to": "https://kylberg.com/"
+    },
+    {
+      "name": "Kevin Cremens",
+      "from": "https://www.kevincremens.com/ingredients",
+      "to": "https://kevincremens.com/ingredients"
+    },
+    {
+      "name": "STUDIO DUBOIS-DIDCOCK Food",
+      "from": "https://www.duboisdidcock.com/food",
+      "to": "https://duboisdidcock.com/food"
+    },
+    {
+      "name": "Lucy-Ruth Hathaway",
+      "from": "https://www.lucyruthfood.com/sweet",
+      "to": "https://lucyruthfood.com/sweet"
+    },
+    {
+      "name": "Colin Campbell",
+      "from": "https://www.colincampbellstudio.co.uk/Graphic-Food/thumbs",
+      "to": "https://colincampbellstudio.co.uk/Graphic-Food/thumbs"
+    },
+    {
+      "name": "Anne Valeur",
+      "from": "https://www.pudderagency.com/kreative/anne-valeur",
+      "to": "https://pudderagency.com/kreative/anne-valeur"
+    },
+    {
+      "name": "Pudder Agency",
+      "from": "https://www.pudderagency.com",
+      "to": "https://pudderagency.com/"
+    },
+    {
+      "name": "Jen Beauchesne",
+      "from": "https://www.jenbeauchesne.com/food",
+      "to": "https://jenbeauchesne.com/food"
+    },
+    {
+      "name": "Kelsey McClellan",
+      "from": "https://www.kelseymcclellan.com/food",
+      "to": "https://kelseymcclellan.com/food"
+    },
+    {
+      "name": "Rikky Fernandes Food & Beverage",
+      "from": "https://www.heyrikky.com/food-beverage",
+      "to": "https://heyrikky.com/food-beverage"
+    },
+    {
+      "name": "Duotone",
+      "from": "http://www.duotone.fi/portfolio/category/photography",
+      "to": "https://duotone.fi/portfolio/category/photography"
+    },
+    {
+      "name": "Adrian Morris",
+      "from": "https://adrianmorris.co",
+      "to": "https://adrianmorris.co/"
+    },
+    {
+      "name": "Emily Hawkes",
+      "from": "https://www.2dcreativeartists.com/emily-hawkes-food",
+      "to": "https://2dcreativeartists.com/emily-hawkes-food"
+    },
+    {
+      "name": "Sarah Anne Ward",
+      "from": "https://www.sarahanneward.com/Food/thumbs",
+      "to": "https://sarahanneward.com/Food/thumbs"
+    },
+    {
+      "name": "Claudia Ficca",
+      "from": "https://www.claudiaficca.com/dessert",
+      "to": "https://claudiaficca.com/dessert"
+    },
+    {
+      "name": "Gabrielle Sykes",
+      "from": "https://www.gabriellesykes.com",
+      "to": "https://gabriellesykes.com/"
+    },
+    {
+      "name": "Limonata Creative",
+      "from": "https://www.limonatacreative.com/food-drink",
+      "to": "https://limonatacreative.com/food-drink"
+    },
+    {
+      "name": "Lou Escobar",
+      "from": "https://louescobar.com",
+      "to": "https://louescobar.com/"
+    },
+    {
+      "name": "Amber Vittoria",
+      "from": "https://www.ambervittoria.com",
+      "to": "https://ambervittoria.com/"
+    },
+    {
+      "name": "Alice Meteignier",
+      "from": "https://alicemeteignier.fr",
+      "to": "https://alicemeteignier.fr/"
+    },
+    {
+      "name": "Rafaela Pascotto",
+      "from": "https://www.behance.net/rafaelapascotto",
+      "to": "https://behance.net/rafaelapascotto"
+    },
+    {
+      "name": "Asahi Nagata",
+      "from": "https://illoirro.com",
+      "to": "https://illoirro.com/"
+    },
+    {
+      "name": "Liv Lee",
+      "from": "https://www.instagram.com/liv.leeee",
+      "to": "https://instagram.com/liv.leeee"
+    },
+    {
+      "name": "Candice Gray",
+      "from": "https://www.instagram.com/candicegray_textiles",
+      "to": "https://instagram.com/candicegray_textiles"
+    },
+    {
+      "name": "tuyo.art",
+      "from": "https://www.instagram.com/tuyo.art",
+      "to": "https://instagram.com/tuyo.art"
+    },
+    {
+      "name": "Paul Juno",
+      "from": "http://www.pauljunoart.com/agate-painting",
+      "to": "https://pauljunoart.com/agate-painting"
+    },
+    {
+      "name": "David Shrigley",
+      "from": "http://davidshrigley.com/category/drawing-painting",
+      "to": "https://davidshrigley.com/category/drawing-painting"
+    },
+    {
+      "name": "Julia GR",
+      "from": "https://www.juliagr.com",
+      "to": "https://juliagr.com/"
+    },
+    {
+      "name": "Roman Muradov",
+      "from": "https://bluebed.net",
+      "to": "https://bluebed.net/"
+    },
+    {
+      "name": "INGALAND",
+      "from": "https://inga.land",
+      "to": "https://inga.land/"
+    },
+    {
+      "name": "Egle Zvirblyte",
+      "from": "https://www.eglezvirblyte.com",
+      "to": "https://eglezvirblyte.com/"
+    },
+    {
+      "name": "Joe Taylor",
+      "from": "https://www.joetaylor.work",
+      "to": "https://joetaylor.work/"
+    },
+    {
+      "name": "Joe Taylor Static",
+      "from": "https://www.joetaylor.work/still",
+      "to": "https://joetaylor.work/still"
+    },
+    {
+      "name": "benê",
+      "from": "https://www.bene.studio",
+      "to": "https://bene.studio/"
+    },
+    {
+      "name": "Martyna Makes",
+      "from": "https://www.martynamakes.com",
+      "to": "https://martynamakes.com/"
+    },
+    {
+      "name": "Daniel Triendl",
+      "from": "https://www.danieltriendl.com",
+      "to": "https://danieltriendl.com/"
+    },
+    {
+      "name": "Aran Quinn",
+      "from": "https://aranquinn.com",
+      "to": "https://aranquinn.com/"
+    },
+    {
+      "name": "princesshidir",
+      "from": "https://www.instagram.com/princesshidir",
+      "to": "https://instagram.com/princesshidir"
+    },
+    {
+      "name": "Max Loeffler",
+      "from": "https://maxloeffler.com",
+      "to": "https://maxloeffler.com/"
+    },
+    {
+      "name": "Myungsik Jang",
+      "from": "https://myungsikjang.com",
+      "to": "https://myungsikjang.com/"
+    },
+    {
+      "name": "POCKO",
+      "from": "https://www.pocko.com",
+      "to": "https://pocko.com/"
+    },
+    {
+      "name": "Rachel Fitzgerald",
+      "from": "https://rachel-fitzgerald.com",
+      "to": "https://rachel-fitzgerald.com/"
+    },
+    {
+      "name": "Grazi Barth Studio",
+      "from": "https://grazibarth.com.br",
+      "to": "https://grazibarth.com.br/"
+    },
+    {
+      "name": "Lufe Studio",
+      "from": "https://lufe.studio",
+      "to": "https://lufe.studio/"
+    },
+    {
+      "name": "Jaison Klimesch",
+      "from": "https://jaisonklimesch.com",
+      "to": "https://jaisonklimesch.com/"
+    },
+    {
+      "name": "Pattern Club",
+      "from": "https://patternclub.io",
+      "to": "https://patternclub.io/"
+    },
+    {
+      "name": "Clara Candelot",
+      "from": "https://claracandelot.com",
+      "to": "https://claracandelot.com/"
+    },
+    {
+      "name": "Alexis Jamet",
+      "from": "https://alecsi.com",
+      "to": "https://alecsi.com/"
+    },
+    {
+      "name": "Tiphaine Creative Talents",
+      "from": "https://www.tiphaine-agent.com/en/actualites",
+      "to": "https://tiphaine-agent.com/en/actualites"
+    },
+    {
+      "name": "Jordan Sowers Editions",
+      "from": "https://editions.jordansowers.com",
+      "to": "https://editions.jordansowers.com/"
+    },
+    {
+      "name": "Tom Abbiss Smith",
+      "from": "https://www.tomabbisssmithart.com",
+      "to": "https://tomabbisssmithart.com/"
+    },
+    {
+      "name": "Jordy van den Nieuwendijk",
+      "from": "https://www.jordy.studio/work",
+      "to": "https://jordy.studio/work"
+    },
+    {
+      "name": "TraceLoops",
+      "from": "https://www.traceloops.com",
+      "to": "https://traceloops.com/"
+    },
+    {
+      "name": "Joe McKendry",
+      "from": "http://www.joemckendry.com",
+      "to": "https://joemckendry.com/"
+    },
+    {
+      "name": "Rob Bailey",
+      "from": "https://robbailey.studio",
+      "to": "https://robbailey.studio/"
+    },
+    {
+      "name": "Lisa Tegtmeier",
+      "from": "https://www.lisategtmeier.com",
+      "to": "https://lisategtmeier.com/"
+    },
+    {
+      "name": "Giacomo Bagnara",
+      "from": "https://www.giacomobagnara.com",
+      "to": "https://giacomobagnara.com/"
+    },
+    {
+      "name": "Patrik Mollwing",
+      "from": "https://www.mollwing.com",
+      "to": "https://mollwing.com/"
+    },
+    {
+      "name": "Gradient",
+      "from": "https://wearegradient.net",
+      "to": "https://wearegradient.net/"
+    },
+    {
+      "name": "Studio Feixen Fonts",
+      "from": "https://fonts.studiofeixen.ch",
+      "to": "https://fonts.studiofeixen.ch/"
+    },
+    {
+      "name": "bb-bureau",
+      "from": "https://www.bb-bureau.fr",
+      "to": "https://bb-bureau.fr/"
+    },
+    {
+      "name": "Nan",
+      "from": "https://www.nan.xyz/fonts",
+      "to": "https://nan.xyz/fonts"
+    },
+    {
+      "name": "VOCAL",
+      "from": "https://www.vocaltype.co",
+      "to": "https://vocaltype.co/"
+    },
+    {
+      "name": "ALT Type Foundry",
+      "from": "https://alt-type.com",
+      "to": "https://alt-type.com/"
+    },
+    {
+      "name": "Kurppa Hosk Type",
+      "from": "https://khtype.com",
+      "to": "https://khtype.com/"
+    },
+    {
+      "name": "Monkey Type",
+      "from": "http://monkeytype.xyz",
+      "to": "https://monkeytype.xyz/"
+    },
+    {
+      "name": "F37 Foundry",
+      "from": "https://www.f37foundry.com/fonts",
+      "to": "https://f37foundry.com/fonts"
+    },
+    {
+      "name": "Nguyen Gobber",
+      "from": "https://nguyengobber.com",
+      "to": "https://nguyengobber.com/"
+    },
+    {
+      "name": "Type Forward",
+      "from": "https://www.typeforward.com/#typefaces",
+      "to": "https://typeforward.com/"
+    },
+    {
+      "name": "newglyph",
+      "from": "https://newglyph.com/classic-collection/#font-grid",
+      "to": "https://newglyph.com/classic-collection"
+    },
+    {
+      "name": "Displaay",
+      "from": "https://displaay.net",
+      "to": "https://displaay.net/"
+    },
+    {
+      "name": "SUVA Type Foundry",
+      "from": "https://www.suvatypefoundry.ee",
+      "to": "https://suvatypefoundry.ee/"
+    },
+    {
+      "name": "AllCaps",
+      "from": "https://www.allcapstype.com",
+      "to": "https://allcapstype.com/"
+    },
+    {
+      "name": "TYPE.WELTKERN",
+      "from": "https://www.weltkern.com/typeface",
+      "to": "https://weltkern.com/typeface"
+    },
+    {
+      "name": "Formula Type",
+      "from": "https://www.formulatype.com",
+      "to": "https://formulatype.com/"
+    },
+    {
+      "name": "PLAYTYPE",
+      "from": "https://playtype.com",
+      "to": "https://playtype.com/"
+    },
+    {
+      "name": "NAUM Type Foundry",
+      "from": "https://naumtype.com",
+      "to": "https://naumtype.com/"
+    },
+    {
+      "name": "Pizza Typefaces",
+      "from": "https://typefaces.pizza",
+      "to": "https://typefaces.pizza/"
+    },
+    {
+      "name": "Due Studio",
+      "from": "https://www.due-studio.com/typefaces",
+      "to": "https://due-studio.com/typefaces"
+    },
+    {
+      "name": "Collletttivo",
+      "from": "https://www.collletttivo.it",
+      "to": "https://collletttivo.it/"
+    },
+    {
+      "name": "groteskly.yours",
+      "from": "https://www.instagram.com/groteskly.yours",
+      "to": "https://instagram.com/groteskly.yours"
+    },
+    {
+      "name": "Blaze Type",
+      "from": "https://blazetype.eu",
+      "to": "https://blazetype.eu/"
+    },
+    {
+      "name": "Superior Type",
+      "from": "https://www.superiortype.com/fonts",
+      "to": "https://superiortype.com/fonts"
+    },
+    {
+      "name": "David Jonathan Ross",
+      "from": "https://djr.com",
+      "to": "https://djr.com/"
+    },
+    {
+      "name": "Off Type Foundry",
+      "from": "https://off-type.com",
+      "to": "https://off-type.com/"
+    },
+    {
+      "name": "A2-TYPE",
+      "from": "https://www.a2-type.co.uk",
+      "to": "https://a2-type.co.uk/"
+    },
+    {
+      "name": "WiseType",
+      "from": "https://wisetype.nl",
+      "to": "https://wisetype.nl/"
+    },
+    {
+      "name": "Lift Type",
+      "from": "https://www.lift-type.fr/c/typography",
+      "to": "https://lift-type.fr/c/typography"
+    },
+    {
+      "name": "BoukRA",
+      "from": "https://bouk.work",
+      "to": "https://bouk.work/"
+    },
+    {
+      "name": "Typeverything",
+      "from": "https://typeverything.com",
+      "to": "https://typeverything.com/"
+    },
+    {
+      "name": "Underware",
+      "from": "https://underware.nl",
+      "to": "https://underware.nl/"
+    }
+  ]
+}

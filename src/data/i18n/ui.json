@@ -1,0 +1,80 @@
+{
+  "pt": {
+    "all": "Todos",
+    "filters": {
+      "toggle": "Filtros",
+      "search": "Buscar",
+      "category": "Categoria",
+      "areaPrimary": "Área principal",
+      "areaSecondary": "Área secundária",
+      "country": "País",
+      "city": "Cidade",
+      "clear": "Limpar",
+      "results": "resultados"
+    },
+    "spotlight": "Destaque",
+    "visit": "Visitar",
+    "loadMore": "Carregar mais",
+    "noImage": "sem imagem",
+    "macros": {
+      "all": "Todos",
+      "Studios": "Estudios",
+      "Designers": "Designers",
+      "Illustrators": "Ilustradores",
+      "Photographers": "Fotógrafos",
+      "Foundries": "Foundries"
+    }
+  },
+  "en": {
+    "all": "All",
+    "filters": {
+      "toggle": "Filters",
+      "search": "Search",
+      "category": "Category",
+      "areaPrimary": "Primary area",
+      "areaSecondary": "Secondary area",
+      "country": "Country",
+      "city": "City",
+      "clear": "Clear",
+      "results": "results"
+    },
+    "spotlight": "Spotlight",
+    "visit": "Visit",
+    "loadMore": "Load more",
+    "noImage": "no image",
+    "macros": {
+      "all": "All",
+      "Studios": "Studios",
+      "Designers": "Designers",
+      "Illustrators": "Illustrators",
+      "Photographers": "Photographers",
+      "Foundries": "Foundries"
+    }
+  },
+  "es": {
+    "all": "Todos",
+    "filters": {
+      "toggle": "Filtros",
+      "search": "Buscar",
+      "category": "Categoría",
+      "areaPrimary": "Área principal",
+      "areaSecondary": "Área secundaria",
+      "country": "País",
+      "city": "Ciudad",
+      "clear": "Limpiar",
+      "results": "resultados"
+    },
+    "spotlight": "Destacado",
+    "visit": "Visitar",
+    "loadMore": "Cargar más",
+    "noImage": "sin imagen",
+    "macros": {
+      "all": "Todos",
+      "Studios": "Estudios",
+      "Designers": "Diseñadores",
+      "Illustrators": "Ilustradores",
+      "Photographers": "Fotógrafos",
+      "Foundries": "Foundries"
+    }
+  }
+}

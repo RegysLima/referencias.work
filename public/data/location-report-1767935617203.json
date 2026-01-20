@@ -1,0 +1,171 @@
+{
+  "processedAt": "2026-01-09T05:13:37.214Z",
+  "processed": 402,
+  "updated": 197,
+  "skipped": 205,
+  "failed": 0,
+  "batches": 6,
+  "samples": [
+    {
+      "name": "Muokka",
+      "url": "https://muokkaa.com/",
+      "city": "Contact",
+      "country": "Muokkaa",
+      "source": "https://muokkaa.com/contact",
+      "method": "regex"
+    },
+    {
+      "name": "Alex Chilvers",
+      "url": "https://alexchilvers.co.uk/illustration",
+      "city": "Mall Galleries",
+      "country": "Bankside Gallery",
+      "source": "https://alexchilvers.co.uk/about",
+      "method": "regex"
+    },
+    {
+      "name": "Jason Galea",
+      "url": "https://jasongalea.com/",
+      "city": "Jason Galea",
+      "country": "About Jason Galea Album",
+      "source": "https://jasongalea.com/about",
+      "method": "regex"
+    },
+    {
+      "name": "Yuka Idu",
+      "url": "https://yukaidu.com/",
+      "city": "Yukai Du Yukai Du",
+      "country": "London-based",
+      "source": "https://yukaidu.com/",
+      "method": "regex"
+    },
+    {
+      "name": "Gina Kiel",
+      "url": "https://ginakiel.com/",
+      "city": "Contact INSTAGRAM Tidal Bodies",
+      "country": "Solo Exhibition installation",
+      "source": "https://ginakiel.com/",
+      "method": "regex"
+    },
+    {
+      "name": "Tomi Leppänen",
+      "url": "https://tomileppanen.com/",
+      "city": "LEPPÄNEN STUDIO Mark E",
+      "country": "MAIL",
+      "source": "https://tomileppanen.com/",
+      "method": "regex"
+    },
+    {
+      "name": "Orit Oor",
+      "url": "https://oritoor.com/",
+      "city": "Adobe",
+      "country": "Apple",
+      "source": "https://oritoor.com/about",
+      "method": "regex"
+    },
+    {
+      "name": "Ellen Porteus",
+      "url": "https://ellenporteus.com/",
+      "city": "Meta",
+      "country": "Nike",
+      "source": "https://ellenporteus.com/about",
+      "method": "regex"
+    },
+    {
+      "name": "Daan Rietbergen",
+      "url": "https://daanrietbergen.com/",
+      "city": "Daan Rietbergen",
+      "country": "About --",
+      "source": "https://daanrietbergen.com/about",
+      "method": "regex"
+    },
+    {
+      "name": "Rich Baird",
+      "url": "https://richardbaird.co.uk/",
+      "city": "Astrid Stavro",
+      "country": "Hugh Miller",
+      "source": "https://richardbaird.co.uk/",
+      "method": "regex"
+    },
+    {
+      "name": "Stelios Ypsilantis",
+      "url": "https://steliosyps.com/",
+      "city": "As a freelancer",
+      "country": "Stelios has collaborated with",
+      "source": "https://steliosyps.com/about",
+      "method": "regex"
+    },
+    {
+      "name": "Bruno Oppido",
+      "url": "https://brunooppido.com/",
+      "city": "Shay Platz",
+      "country": "Amy Ellars",
+      "source": "https://brunooppido.com/",
+      "method": "regex"
+    },
+    {
+      "name": "Vinicius Theodoro",
+      "url": "https://theodoro.work/",
+      "city": "Before that",
+      "country": "Vinicius led a team",
+      "source": "https://theodoro.work/contact",
+      "method": "regex"
+    },
+    {
+      "name": "Matt Willey",
+      "url": "https://mattwilley.co.uk/",
+      "city": "Brooklyn",
+      "country": "New York.",
+      "source": "https://mattwilley.co.uk/about",
+      "method": "regex"
+    },
+    {
+      "name": "Ola Sobiecki",
+      "url": "https://olasobiecki.com/",
+      "city": "Info",
+      "country": "Contact Ola Sobiecki Art",
+      "source": "https://olasobiecki.com/",
+      "method": "regex"
+    },
+    {
+      "name": "Hrvoje Grubisic",
+      "url": "https://dribbble.com/hrvoje-grubisic",
+      "city": "Panze",
+      "country": "UX Design Studio Team",
+      "source": "https://dribbble.com",
+      "method": "regex"
+    },
+    {
+      "name": "Standard Projects",
+      "url": "https://standard-projects.com/work",
+      "city": "Lonsdale Street Melbourne",
+      "country": "Austrália",
+      "source": "https://standard-projects.com/work",
+      "method": "regex"
+    },
+    {
+      "name": "Regular Practice",
+      "url": "https://regularpractice.co.uk/projects",
+      "city": "Home",
+      "country": "Projects",
+      "source": "https://regularpractice.co.uk/projects",
+      "method": "regex"
+    },
+    {
+      "name": "A Friend of Mine",
+      "url": "https://afom.com.au/",
+      "city": "Our founder",
+      "country": "Suzy Tuxen",
+      "source": "https://afom.com.au/studio",
+      "method": "regex"
+    },
+    {
+      "name": "Ragged Edge",
+      "url": "https://raggededge.com/work",
+      "city": "Hatton Garden",
+      "country": "UK",
+      "source": "https://raggededge.com/work",
+      "method": "jsonld"
+    }
+  ],
+  "failures": []
+}

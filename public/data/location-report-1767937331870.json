@@ -1,0 +1,171 @@
+{
+  "processedAt": "2026-01-09T05:42:11.880Z",
+  "processed": 402,
+  "updated": 103,
+  "skipped": 299,
+  "failed": 0,
+  "batches": 6,
+  "samples": [
+    {
+      "name": "Muokka",
+      "url": "https://muokkaa.com/",
+      "city": "Spain.&nbsp;",
+      "country": "Finlândia",
+      "source": "https://muokkaa.com/contact",
+      "method": "regex"
+    },
+    {
+      "name": "Yuka Idu",
+      "url": "https://yukaidu.com/",
+      "city": "USA",
+      "country": "Canadá",
+      "source": "https://yukaidu.com/contact",
+      "method": "regex"
+    },
+    {
+      "name": "Orit Oor",
+      "url": "https://oritoor.com/",
+      "city": "Apple",
+      "country": "Estados Unidos",
+      "source": "https://oritoor.com/about",
+      "method": "regex"
+    },
+    {
+      "name": "Daan Rietbergen",
+      "url": "https://daanrietbergen.com/",
+      "city": "Curated by Whatchamacallit",
+      "country": "Países Baixos",
+      "source": "https://daanrietbergen.com/about",
+      "method": "regex"
+    },
+    {
+      "name": "Vinicius Theodoro",
+      "url": "https://theodoro.work/",
+      "city": "Olympikus &amp; others.",
+      "country": "Brasil",
+      "source": "https://theodoro.work/contact",
+      "method": "regex"
+    },
+    {
+      "name": "Hrvoje Grubisic",
+      "url": "https://dribbble.com/hrvoje-grubisic",
+      "city": "Panze",
+      "country": "Croácia",
+      "source": "https://dribbble.com",
+      "method": "regex"
+    },
+    {
+      "name": "Standard Projects",
+      "url": "https://standard-projects.com/work",
+      "city": "Lonsdale Street Melbourne",
+      "country": "Austrália",
+      "source": "https://standard-projects.com/work",
+      "method": "regex"
+    },
+    {
+      "name": "Regular Practice",
+      "url": "https://regularpractice.co.uk/projects",
+      "city": "London N1 5AA",
+      "country": "Reino Unido",
+      "source": "https://regularpractice.co.uk/about",
+      "method": "regex"
+    },
+    {
+      "name": "Ingrid Picanyol Studio",
+      "url": "https://ingridpicanyol.com/",
+      "city": "Fitia.",
+      "country": "Espanha",
+      "source": "https://ingridpicanyol.com/about",
+      "method": "regex"
+    },
+    {
+      "name": "Ragged Edge",
+      "url": "https://raggededge.com/work",
+      "city": "Hatton Garden",
+      "country": "UK",
+      "source": "https://raggededge.com/work",
+      "method": "jsonld"
+    },
+    {
+      "name": "A Friend of Mine",
+      "url": "https://afom.com.au/",
+      "city": "Founder &amp; Creative Director",
+      "country": "Austrália",
+      "source": "https://afom.com.au/studio",
+      "method": "regex"
+    },
+    {
+      "name": "Parker",
+      "url": "https://parker.studio/work",
+      "city": "Parker Studio",
+      "country": "Estados Unidos",
+      "source": "https://parker.studio/work",
+      "method": "regex"
+    },
+    {
+      "name": "Mouthwash Studio",
+      "url": "https://mouthwash.studio/work",
+      "city": "MW.S has played a critical role in shaping the brands we interact with and the world we live in.",
+      "country": "Canadá",
+      "source": "https://mouthwash.studio/studio",
+      "method": "regex"
+    },
+    {
+      "name": "Forthandback",
+      "url": "https://forthandback.la/projects",
+      "city": "St.",
+      "country": "Estados Unidos",
+      "source": "https://forthandback.la/projects",
+      "method": "regex"
+    },
+    {
+      "name": "Scandinavian Design Group",
+      "url": "https://sdg.no/work",
+      "city": "Oslo",
+      "country": "Norway",
+      "source": "https://sdg.no/work",
+      "method": "jsonld"
+    },
+    {
+      "name": "FormaFantasma",
+      "url": "https://formafantasma.com/works",
+      "city": "Prada Frames examines the living environment as a framework to address contemporary challenges. Explore 2.2.27",
+      "country": "Itália",
+      "source": "https://formafantasma.com/works",
+      "method": "regex"
+    },
+    {
+      "name": "Field of Play",
+      "url": "https://fieldofplay.studio/work",
+      "city": "Darlinghurst",
+      "country": "Reino Unido",
+      "source": "https://fieldofplay.studio/contact",
+      "method": "regex"
+    },
+    {
+      "name": "Superestudio",
+      "url": "https://superestudio.tv/branding.php",
+      "city": "Only One ESPN ESPN Shows",
+      "country": "Itália",
+      "source": "https://superestudio.tv/branding.php",
+      "method": "regex"
+    },
+    {
+      "name": "abdz.do",
+      "url": "https://abduzeedo.com/tags/branding",
+      "city": "ABDZ has evolved with the industry and became one of the most sought-after design blogs on the web.",
+      "country": "Brasil",
+      "source": "https://abduzeedo.com/about",
+      "method": "regex"
+    },
+    {
+      "name": "Fix Studio",
+      "url": "https://fix.studio/",
+      "city": "Studio Based in Brooklyn",
+      "country": "Estados Unidos",
+      "source": "https://fix.studio/",
+      "method": "regex"
+    }
+  ],
+  "failures": []
+}

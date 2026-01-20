@@ -1,0 +1,3195 @@
+{
+  "translated": 0,
+  "skipped": [
+    {
+      "type": "areas",
+      "key": "abstrato",
+      "pt": "Abstrato",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "abstrato",
+      "pt": "Abstrato",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "agencia",
+      "pt": "Agência",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "agencia",
+      "pt": "Agência",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "analogica",
+      "pt": "Analógica",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "analogica",
+      "pt": "Analógica",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "arte-urbana",
+      "pt": "Arte Urbana",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "arte-urbana",
+      "pt": "Arte Urbana",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "artistico",
+      "pt": "Artístico",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "artistico",
+      "pt": "Artístico",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "aventura",
+      "pt": "Aventura",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "aventura",
+      "pt": "Aventura",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "bebidas",
+      "pt": "Bebidas",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "bebidas",
+      "pt": "Bebidas",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "beleza",
+      "pt": "Beleza",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "beleza",
+      "pt": "Beleza",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "botanica",
+      "pt": "Botânica",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "botanica",
+      "pt": "Botânica",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "botanico",
+      "pt": "Botânico",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "botanico",
+      "pt": "Botânico",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "capas",
+      "pt": "Capas",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "capas",
+      "pt": "Capas",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "celebridades",
+      "pt": "Celebridades",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "celebridades",
+      "pt": "Celebridades",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "ciclismo",
+      "pt": "Ciclismo",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "ciclismo",
+      "pt": "Ciclismo",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "cientifica",
+      "pt": "Científica",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "cientifica",
+      "pt": "Científica",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "colagem",
+      "pt": "Colagem",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "colagem",
+      "pt": "Colagem",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "colorida",
+      "pt": "Colorida",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "colorida",
+      "pt": "Colorida",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "colorido",
+      "pt": "Colorido",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "colorido",
+      "pt": "Colorido",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "comercial",
+      "pt": "Comercial",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "comercial",
+      "pt": "Comercial",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "conceitual",
+      "pt": "Conceitual",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "conceitual",
+      "pt": "Conceitual",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "corporativa",
+      "pt": "Corporativa",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "corporativa",
+      "pt": "Corporativa",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "cosmeticos",
+      "pt": "Cosméticos",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "cosmeticos",
+      "pt": "Cosméticos",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "creative-coding",
+      "pt": "Creative Coding",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "creative-coding",
+      "pt": "Creative Coding",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "criativa",
+      "pt": "Criativa",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "criativa",
+      "pt": "Criativa",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "criativo",
+      "pt": "Criativo",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "criativo",
+      "pt": "Criativo",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "customizadas",
+      "pt": "Customizadas",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "customizadas",
+      "pt": "Customizadas",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "digital",
+      "pt": "Digital",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "digital",
+      "pt": "Digital",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "divertida",
+      "pt": "Divertida",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "divertida",
+      "pt": "Divertida",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "documental",
+      "pt": "Documental",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "documental",
+      "pt": "Documental",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "documentary",
+      "pt": "Documentary",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "documentary",
+      "pt": "Documentary",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "doodle",
+      "pt": "Doodle",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "doodle",
+      "pt": "Doodle",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "drinks",
+      "pt": "Drinks",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "drinks",
+      "pt": "Drinks",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "duotone",
+      "pt": "Duotone",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "duotone",
+      "pt": "Duotone",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "embalagens",
+      "pt": "Embalagens",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "embalagens",
+      "pt": "Embalagens",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "espacial",
+      "pt": "Espacial",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "espacial",
+      "pt": "Espacial",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "esporte",
+      "pt": "Esporte",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "esporte",
+      "pt": "Esporte",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "esportes",
+      "pt": "Esportes",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "esportes",
+      "pt": "Esportes",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "estampa",
+      "pt": "Estampa",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "estampa",
+      "pt": "Estampa",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "estampas",
+      "pt": "Estampas",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "estampas",
+      "pt": "Estampas",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "estilo",
+      "pt": "Estilo",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "estilo",
+      "pt": "Estilo",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "estrategia",
+      "pt": "Estratégia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "estrategia",
+      "pt": "Estratégia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "excentrico",
+      "pt": "Excêntrico",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "excentrico",
+      "pt": "Excêntrico",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "exibicoes",
+      "pt": "Exibições",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "exibicoes",
+      "pt": "Exibições",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "experimental",
+      "pt": "Experimental",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "experimental",
+      "pt": "Experimental",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "expografia",
+      "pt": "Expografia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "expografia",
+      "pt": "Expografia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "exposicoes",
+      "pt": "Exposições",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "exposicoes",
+      "pt": "Exposições",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "fashion",
+      "pt": "Fashion",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "fashion",
+      "pt": "Fashion",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "feminista",
+      "pt": "Feminista",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "feminista",
+      "pt": "Feminista",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "filmes",
+      "pt": "Filmes",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "filmes",
+      "pt": "Filmes",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "fine-art",
+      "pt": "Fine Art",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "fine-art",
+      "pt": "Fine Art",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "fine-arts",
+      "pt": "Fine Arts",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "fine-arts",
+      "pt": "Fine Arts",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "fitness",
+      "pt": "Fitness",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "fitness",
+      "pt": "Fitness",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "flash",
+      "pt": "Flash",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "flash",
+      "pt": "Flash",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "fonts",
+      "pt": "Fonts",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "fonts",
+      "pt": "Fonts",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "frutas",
+      "pt": "Frutas",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "frutas",
+      "pt": "Frutas",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "galeria",
+      "pt": "Galeria",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "galeria",
+      "pt": "Galeria",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "gastronomia",
+      "pt": "Gastronomia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "gastronomia",
+      "pt": "Gastronomia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "geometrica",
+      "pt": "Geométrica",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "geometrica",
+      "pt": "Geométrica",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "golf",
+      "pt": "Golf",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "golf",
+      "pt": "Golf",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "graffiti",
+      "pt": "Graffiti",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "graffiti",
+      "pt": "Graffiti",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "grafica",
+      "pt": "Gráfica",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "grafica",
+      "pt": "Gráfica",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "gratuitas",
+      "pt": "Gratuitas",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "gratuitas",
+      "pt": "Gratuitas",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "humor",
+      "pt": "Humor",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "humor",
+      "pt": "Humor",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "iconografia",
+      "pt": "Iconografia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "iconografia",
+      "pt": "Iconografia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "impressao",
+      "pt": "Impressão",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "impressao",
+      "pt": "Impressão",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "interiores",
+      "pt": "Interiores",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "interiores",
+      "pt": "Interiores",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "lifestyle",
+      "pt": "Lifestyle",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "lifestyle",
+      "pt": "Lifestyle",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "lifetyle",
+      "pt": "Lifetyle",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "lifetyle",
+      "pt": "Lifetyle",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "linogravura",
+      "pt": "Linogravura",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "linogravura",
+      "pt": "Linogravura",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "luxo",
+      "pt": "Luxo",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "luxo",
+      "pt": "Luxo",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "macro",
+      "pt": "Macro",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "macro",
+      "pt": "Macro",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "manual",
+      "pt": "Manual",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "manual",
+      "pt": "Manual",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "microscopica",
+      "pt": "Microscópica",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "microscopica",
+      "pt": "Microscópica",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "mobiliario",
+      "pt": "Mobiliário",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "mobiliario",
+      "pt": "Mobiliário",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "moda",
+      "pt": "Moda",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "moda",
+      "pt": "Moda",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "monocromatica",
+      "pt": "Monocromática",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "monocromatica",
+      "pt": "Monocromática",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "murais",
+      "pt": "Murais",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "murais",
+      "pt": "Murais",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "musica",
+      "pt": "Música",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "musica",
+      "pt": "Música",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "natureza",
+      "pt": "Natureza",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "natureza",
+      "pt": "Natureza",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "neon",
+      "pt": "Neon",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "neon",
+      "pt": "Neon",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "objetos",
+      "pt": "Objetos",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "objetos",
+      "pt": "Objetos",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "packaging",
+      "pt": "Packaging",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "packaging",
+      "pt": "Packaging",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "paisagem",
+      "pt": "Paisagem",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "paisagem",
+      "pt": "Paisagem",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "paisagens",
+      "pt": "Paisagens",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "paisagens",
+      "pt": "Paisagens",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "parques",
+      "pt": "Parques",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "parques",
+      "pt": "Parques",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "personagens",
+      "pt": "Personagens",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "personagens",
+      "pt": "Personagens",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "pesquisa",
+      "pt": "Pesquisa",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "pesquisa",
+      "pt": "Pesquisa",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "pinturas",
+      "pt": "Pinturas",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "pinturas",
+      "pt": "Pinturas",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "pontilhismo",
+      "pt": "Pontilhismo",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "pontilhismo",
+      "pt": "Pontilhismo",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "pop",
+      "pt": "Pop",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "pop",
+      "pt": "Pop",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "posters",
+      "pt": "Posters",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "posters",
+      "pt": "Posters",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "praia",
+      "pt": "Praia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "praia",
+      "pt": "Praia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "producao",
+      "pt": "Produção",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "producao",
+      "pt": "Produção",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "produtos",
+      "pt": "Produtos",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "produtos",
+      "pt": "Produtos",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "programacao-criativa",
+      "pt": "Programação Criativa",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "programacao-criativa",
+      "pt": "Programação Criativa",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "psicodelica",
+      "pt": "Psicodélica",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "psicodelica",
+      "pt": "Psicodélica",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "psicodelico",
+      "pt": "Psicodélico",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "psicodelico",
+      "pt": "Psicodélico",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "publicacao",
+      "pt": "Publicação",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "publicacao",
+      "pt": "Publicação",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "publicidade",
+      "pt": "Publicidade",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "publicidade",
+      "pt": "Publicidade",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "quadrinhos",
+      "pt": "Quadrinhos",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "quadrinhos",
+      "pt": "Quadrinhos",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "representante",
+      "pt": "Representante",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "representante",
+      "pt": "Representante",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "retrato",
+      "pt": "Retrato",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "retrato",
+      "pt": "Retrato",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "retratos",
+      "pt": "Retratos",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "retratos",
+      "pt": "Retratos",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "risografia",
+      "pt": "Risografia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "risografia",
+      "pt": "Risografia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "sinalizacao",
+      "pt": "Sinalização",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "sinalizacao",
+      "pt": "Sinalização",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "sketchbook",
+      "pt": "Sketchbook",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "sketchbook",
+      "pt": "Sketchbook",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "solar",
+      "pt": "Solar",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "solar",
+      "pt": "Solar",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "still",
+      "pt": "Still",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "still",
+      "pt": "Still",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "studio",
+      "pt": "Studio",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "studio",
+      "pt": "Studio",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "surrealista",
+      "pt": "Surrealista",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "surrealista",
+      "pt": "Surrealista",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "textura",
+      "pt": "Textura",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "textura",
+      "pt": "Textura",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "texturas",
+      "pt": "Texturas",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "texturas",
+      "pt": "Texturas",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "travel",
+      "pt": "Travel",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "travel",
+      "pt": "Travel",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "typefaces",
+      "pt": "Typefaces",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "typefaces",
+      "pt": "Typefaces",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "ui-ux",
+      "pt": "Ui/ux",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "ui-ux",
+      "pt": "Ui/ux",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "urbana",
+      "pt": "Urbana",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "urbana",
+      "pt": "Urbana",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "urbano",
+      "pt": "Urbano",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "urbano",
+      "pt": "Urbano",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "veiculos",
+      "pt": "Veículos",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "veiculos",
+      "pt": "Veículos",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "vetorial",
+      "pt": "Vetorial",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "vetorial",
+      "pt": "Vetorial",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "viagem",
+      "pt": "Viagem",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "viagem",
+      "pt": "Viagem",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "vintage",
+      "pt": "Vintage",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "areas",
+      "key": "vintage",
+      "pt": "Vintage",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "a-coruna-spain",
+      "pt": "A Coruña (spain)",
+      "reason": "skip-rule"
+    },
+    {
+      "type": "cities",
+      "key": "alexandria",
+      "pt": "Alexandria",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "alexandria",
+      "pt": "Alexandria",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "antuerpia",
+      "pt": "Antuérpia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "antuerpia",
+      "pt": "Antuérpia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "aracaju",
+      "pt": "Aracaju",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "aracaju",
+      "pt": "Aracaju",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "atlanta",
+      "pt": "Atlanta",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "atlanta",
+      "pt": "Atlanta",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "auckland",
+      "pt": "Auckland",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "auckland",
+      "pt": "Auckland",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "austin",
+      "pt": "Austin",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "austin",
+      "pt": "Austin",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "baltimore",
+      "pt": "Baltimore",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "baltimore",
+      "pt": "Baltimore",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "bamberg",
+      "pt": "Bamberg",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "bamberg",
+      "pt": "Bamberg",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "belgrado",
+      "pt": "Belgrado",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "belgrado",
+      "pt": "Belgrado",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "belo-horizonte",
+      "pt": "Belo Horizonte",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "belo-horizonte",
+      "pt": "Belo Horizonte",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "bergen",
+      "pt": "Bergen",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "bergen",
+      "pt": "Bergen",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "berlin",
+      "pt": "Berlin",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "berlin",
+      "pt": "Berlin",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "berna",
+      "pt": "Berna",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "berna",
+      "pt": "Berna",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "birmingham",
+      "pt": "Birmingham",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "birmingham",
+      "pt": "Birmingham",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "bristol",
+      "pt": "Bristol",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "bristol",
+      "pt": "Bristol",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "brno",
+      "pt": "Brno",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "brno",
+      "pt": "Brno",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "broadway",
+      "pt": "Broadway",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "broadway",
+      "pt": "Broadway",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "buenos-aires",
+      "pt": "Buenos Aires",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "buenos-aires",
+      "pt": "Buenos Aires",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "california",
+      "pt": "Califórnia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "california",
+      "pt": "Califórnia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "catskills",
+      "pt": "Catskills",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "catskills",
+      "pt": "Catskills",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "chamonix",
+      "pt": "Chamonix",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "chamonix",
+      "pt": "Chamonix",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "charleston",
+      "pt": "Charleston",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "charleston",
+      "pt": "Charleston",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "chicago",
+      "pt": "Chicago",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "chicago",
+      "pt": "Chicago",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "chippendale",
+      "pt": "Chippendale",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "chippendale",
+      "pt": "Chippendale",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "christchurch",
+      "pt": "Christchurch",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "christchurch",
+      "pt": "Christchurch",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "copenhagen",
+      "pt": "Copenhagen",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "copenhagen",
+      "pt": "Copenhagen",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "curated-by-whatchamacallit",
+      "pt": "Curated By Whatchamacallit",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "curated-by-whatchamacallit",
+      "pt": "Curated By Whatchamacallit",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "curitiba",
+      "pt": "Curitiba",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "curitiba",
+      "pt": "Curitiba",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "dallas",
+      "pt": "Dallas",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "dallas",
+      "pt": "Dallas",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "dubai",
+      "pt": "Dubai",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "dubai",
+      "pt": "Dubai",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "dublin",
+      "pt": "Dublin",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "dublin",
+      "pt": "Dublin",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "eindhoven",
+      "pt": "Eindhoven",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "eindhoven",
+      "pt": "Eindhoven",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "estocolmo",
+      "pt": "Estocolmo",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "estocolmo",
+      "pt": "Estocolmo",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "florianopolis",
+      "pt": "Florianópolis",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "florianopolis",
+      "pt": "Florianópolis",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "fortaleza",
+      "pt": "Fortaleza",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "fortaleza",
+      "pt": "Fortaleza",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "france",
+      "pt": "France",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "france",
+      "pt": "France",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "germany",
+      "pt": "Germany. —",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "germany",
+      "pt": "Germany. —",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "glasgow",
+      "pt": "Glasgow",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "glasgow",
+      "pt": "Glasgow",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "gothenburg",
+      "pt": "Gothenburg",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "gothenburg",
+      "pt": "Gothenburg",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "guang-zhou",
+      "pt": "Guang Zhou",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "guang-zhou",
+      "pt": "Guang Zhou",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "hamburgo",
+      "pt": "Hamburgo",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "hamburgo",
+      "pt": "Hamburgo",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "helsinki",
+      "pt": "Helsinki",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "helsinki",
+      "pt": "Helsinki",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "hessen",
+      "pt": "Hessen",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "hessen",
+      "pt": "Hessen",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "hobart",
+      "pt": "Hobart",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "hobart",
+      "pt": "Hobart",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "jakarta",
+      "pt": "Jakarta",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "jakarta",
+      "pt": "Jakarta",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "kerry",
+      "pt": "Kerry",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "kerry",
+      "pt": "Kerry",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "kiev",
+      "pt": "Kiev",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "kiev",
+      "pt": "Kiev",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "lausanne",
+      "pt": "Lausanne",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "lausanne",
+      "pt": "Lausanne",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "lima",
+      "pt": "Lima",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "lima",
+      "pt": "Lima",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "londrina",
+      "pt": "Londrina",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "londrina",
+      "pt": "Londrina",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "lopez-mateos",
+      "pt": "López Mateos",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "lopez-mateos",
+      "pt": "López Mateos",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "lucerne",
+      "pt": "Lucerne",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "lucerne",
+      "pt": "Lucerne",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "lyon",
+      "pt": "Lyon",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "lyon",
+      "pt": "Lyon",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "mac-com-brooklyn",
+      "pt": "Mac.com Brooklyn",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "mac-com-brooklyn",
+      "pt": "Mac.com Brooklyn",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "macau",
+      "pt": "Macau",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "macau",
+      "pt": "Macau",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "macclesfield",
+      "pt": "Macclesfield",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "macclesfield",
+      "pt": "Macclesfield",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "makassar",
+      "pt": "Makassar",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "makassar",
+      "pt": "Makassar",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "manchester",
+      "pt": "Manchester",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "manchester",
+      "pt": "Manchester",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "melbourne",
+      "pt": "Melbourne",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "melbourne",
+      "pt": "Melbourne",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "merida",
+      "pt": "Mérida",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "merida",
+      "pt": "Mérida",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "modena",
+      "pt": "Modena",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "modena",
+      "pt": "Modena",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "monterrey",
+      "pt": "Monterrey",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "monterrey",
+      "pt": "Monterrey",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "montevideo",
+      "pt": "Montevideo",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "montevideo",
+      "pt": "Montevideo",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "montpellier",
+      "pt": "Montpellier",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "montpellier",
+      "pt": "Montpellier",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "montreal",
+      "pt": "Montreal",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "montreal",
+      "pt": "Montreal",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "moscow",
+      "pt": "Moscow",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "moscow",
+      "pt": "Moscow",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "n-a",
+      "pt": "N/A",
+      "reason": "skip-rule"
+    },
+    {
+      "type": "cities",
+      "key": "nashville",
+      "pt": "Nashville",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "nashville",
+      "pt": "Nashville",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "new-york-city",
+      "pt": "New York City",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "new-york-city",
+      "pt": "New York City",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "north-melbourne",
+      "pt": "North Melbourne",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "north-melbourne",
+      "pt": "North Melbourne",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "oregon",
+      "pt": "Oregon",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "oregon",
+      "pt": "Oregon",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "oslo",
+      "pt": "Oslo",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "oslo",
+      "pt": "Oslo",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "perugia",
+      "pt": "Perugia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "perugia",
+      "pt": "Perugia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "port-macquarie",
+      "pt": "Port Macquarie",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "port-macquarie",
+      "pt": "Port Macquarie",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "portland",
+      "pt": "Portland",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "portland",
+      "pt": "Portland",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "porto-alegre",
+      "pt": "Porto Alegre",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "porto-alegre",
+      "pt": "Porto Alegre",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "praga",
+      "pt": "Praga",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "praga",
+      "pt": "Praga",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "providence",
+      "pt": "Providence",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "providence",
+      "pt": "Providence",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "queenstown",
+      "pt": "Queenstown",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "queenstown",
+      "pt": "Queenstown",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "recife",
+      "pt": "Recife",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "recife",
+      "pt": "Recife",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "reiquiavique",
+      "pt": "Reiquiavique",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "reiquiavique",
+      "pt": "Reiquiavique",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "riviera-maya",
+      "pt": "Riviera Maya",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "riviera-maya",
+      "pt": "Riviera Maya",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "rotterdam",
+      "pt": "Rotterdam",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "rotterdam",
+      "pt": "Rotterdam",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "salamanca",
+      "pt": "Salamanca",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "salamanca",
+      "pt": "Salamanca",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "salvador",
+      "pt": "Salvador",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "salvador",
+      "pt": "Salvador",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "san-diego",
+      "pt": "San Diego",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "san-diego",
+      "pt": "San Diego",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "san-francisco",
+      "pt": "San Francisco",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "san-francisco",
+      "pt": "San Francisco",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "santander",
+      "pt": "Santander",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "santander",
+      "pt": "Santander",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "sapporo",
+      "pt": "Sapporo",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "sapporo",
+      "pt": "Sapporo",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "seattle",
+      "pt": "Seattle",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "seattle",
+      "pt": "Seattle",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "seoul",
+      "pt": "Seoul",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "seoul",
+      "pt": "Seoul",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "sofia",
+      "pt": "Sofia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "sofia",
+      "pt": "Sofia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "surry-hills",
+      "pt": "Surry Hills",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "surry-hills",
+      "pt": "Surry Hills",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "sydney",
+      "pt": "Sydney",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "sydney",
+      "pt": "Sydney",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "tel-aviv",
+      "pt": "Tel Aviv",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "tel-aviv",
+      "pt": "Tel Aviv",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "toronto",
+      "pt": "Toronto",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "toronto",
+      "pt": "Toronto",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "udine",
+      "pt": "Udine",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "udine",
+      "pt": "Udine",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "valencia",
+      "pt": "Valencia",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "valencia",
+      "pt": "Valencia",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "vancouver",
+      "pt": "Vancouver",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "vancouver",
+      "pt": "Vancouver",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "vero-beach",
+      "pt": "Vero Beach",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "vero-beach",
+      "pt": "Vero Beach",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "verona",
+      "pt": "Verona",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "verona",
+      "pt": "Verona",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "viena",
+      "pt": "Viena",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "viena",
+      "pt": "Viena",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "vienna",
+      "pt": "Vienna",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "vienna",
+      "pt": "Vienna",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "vilnius",
+      "pt": "Vilnius",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "vilnius",
+      "pt": "Vilnius",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "wellington",
+      "pt": "Wellington",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "wellington",
+      "pt": "Wellington",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "zaandam",
+      "pt": "Zaandam",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "zaandam",
+      "pt": "Zaandam",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "zagreb",
+      "pt": "Zagreb",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "zagreb",
+      "pt": "Zagreb",
+      "target": "es",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "zurich",
+      "pt": "Zurich",
+      "target": "en",
+      "reason": "error"
+    },
+    {
+      "type": "cities",
+      "key": "zurich",
+      "pt": "Zurich",
+      "target": "es",
+      "reason": "error"
+    }
+  ]
+}

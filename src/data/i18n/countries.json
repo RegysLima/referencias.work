@@ -1,0 +1,232 @@
+{
+  "alemana": {
+    "pt": "Alemana",
+    "en": "",
+    "es": ""
+  },
+  "alemananha": {
+    "pt": "Alemananha",
+    "en": "",
+    "es": ""
+  },
+  "alemanha": {
+    "pt": "Alemanha",
+    "en": "Germany",
+    "es": "Alemania"
+  },
+  "argentina": {
+    "pt": "Argentina",
+    "en": "Argentina",
+    "es": "Argentina"
+  },
+  "australia": {
+    "pt": "Australia",
+    "en": "Australia",
+    "es": "Australia"
+  },
+  "austria": {
+    "pt": "Áustria",
+    "en": "Austria",
+    "es": "Austria"
+  },
+  "bahia": {
+    "pt": "Bahia",
+    "en": "",
+    "es": ""
+  },
+  "belgica": {
+    "pt": "Bélgica",
+    "en": "Belgium",
+    "es": "Bélgica"
+  },
+  "brasil": {
+    "pt": "Brasil",
+    "en": "Brazil",
+    "es": "Brasil"
+  },
+  "bulgaria": {
+    "pt": "Bulgaria",
+    "en": "Bulgaria",
+    "es": "Bulgaria"
+  },
+  "canada": {
+    "pt": "Canadá",
+    "en": "Canada",
+    "es": "Canadá"
+  },
+  "china": {
+    "pt": "China",
+    "en": "People's Republic of China,China",
+    "es": "China"
+  },
+  "coreia-do-sul": {
+    "pt": "Coreia do Sul",
+    "en": "South Korea,Korea, Republic of,Republic of Korea",
+    "es": "República de Corea"
+  },
+  "croacia": {
+    "pt": "Croácia",
+    "en": "Croatia",
+    "es": "Croacia"
+  },
+  "dinamarca": {
+    "pt": "Dinamarca",
+    "en": "Denmark",
+    "es": "Dinamarca"
+  },
+  "emirados-arabes": {
+    "pt": "Emirados Árabes",
+    "en": "",
+    "es": ""
+  },
+  "espanha": {
+    "pt": "Espanha",
+    "en": "Spain",
+    "es": "España"
+  },
+  "estados-unidos": {
+    "pt": "Estados Unidos",
+    "en": "",
+    "es": ""
+  },
+  "finlandia": {
+    "pt": "Finlândia",
+    "en": "Finland",
+    "es": "Finlandia"
+  },
+  "franca": {
+    "pt": "França",
+    "en": "France",
+    "es": "Francia"
+  },
+  "indonesia": {
+    "pt": "Indonésia",
+    "en": "Indonesia",
+    "es": "Indonesia"
+  },
+  "inglaterra": {
+    "pt": "Inglaterra",
+    "en": "",
+    "es": ""
+  },
+  "irlanda": {
+    "pt": "Irlanda",
+    "en": "Ireland",
+    "es": "Irlanda"
+  },
+  "islandia": {
+    "pt": "Islândia",
+    "en": "Iceland",
+    "es": "Islandia"
+  },
+  "israel": {
+    "pt": "Israel",
+    "en": "Israel",
+    "es": "Israel"
+  },
+  "italia": {
+    "pt": "Itália",
+    "en": "Italy",
+    "es": "Italia"
+  },
+  "japao": {
+    "pt": "Japão",
+    "en": "Japan",
+    "es": "Japón"
+  },
+  "lituania": {
+    "pt": "Lituânia",
+    "en": "Lithuania",
+    "es": "Lituania"
+  },
+  "malta": {
+    "pt": "Malta",
+    "en": "Malta",
+    "es": "Malta"
+  },
+  "mexico": {
+    "pt": "México",
+    "en": "Mexico",
+    "es": "México"
+  },
+  "n-a": {
+    "pt": "N/A",
+    "en": "",
+    "es": ""
+  },
+  "netherlands": {
+    "pt": "Netherlands",
+    "en": "",
+    "es": ""
+  },
+  "noruega": {
+    "pt": "Noruega",
+    "en": "Norway",
+    "es": "Noruega"
+  },
+  "nova-zelandia": {
+    "pt": "Nova Zelândia",
+    "en": "New Zealand",
+    "es": "Nueva Zelanda"
+  },
+  "paises-baixos": {
+    "pt": "Países Baixos",
+    "en": "Netherlands,The Netherlands,Netherlands (Kingdom of the)",
+    "es": "Países Bajos"
+  },
+  "paris": {
+    "pt": "Paris",
+    "en": "",
+    "es": ""
+  },
+  "peru": {
+    "pt": "Peru",
+    "en": "Peru",
+    "es": "Perú"
+  },
+  "portugal": {
+    "pt": "Portugal",
+    "en": "Portugal",
+    "es": "Portugal"
+  },
+  "reino-unido": {
+    "pt": "Reino Unido",
+    "en": "United Kingdom,UK,Great Britain",
+    "es": "Reino Unido"
+  },
+  "republica-tcheca": {
+    "pt": "República Tcheca",
+    "en": "",
+    "es": ""
+  },
+  "russia": {
+    "pt": "Rússia",
+    "en": "Russian Federation,Russia",
+    "es": "Rusia"
+  },
+  "servia": {
+    "pt": "Sérvia",
+    "en": "Serbia",
+    "es": "Serbia"
+  },
+  "suecia": {
+    "pt": "Suécia",
+    "en": "Sweden",
+    "es": "Suecia"
+  },
+  "suica": {
+    "pt": "Suíça",
+    "en": "Switzerland",
+    "es": "Suiza"
+  },
+  "ucrania": {
+    "pt": "Ucrânia",
+    "en": "Ukraine",
+    "es": "Ucrania"
+  },
+  "uruguai": {
+    "pt": "Uruguai",
+    "en": "Uruguay",
+    "es": "Uruguay"
+  }
+}

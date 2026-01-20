@@ -1,0 +1,50 @@
+{
+  "typeMap": {
+    "Ilustrator": "Ilustrador",
+    "Illustrator": "Ilustrador",
+    "Fotografo": "Fotógrafo",
+    "Photographer": "Fotógrafo"
+  },
+  "macroTypeMap": {
+  "Studio": "Studios",
+
+  "Designer": "Designers",
+  "Design": "Designers",
+  "Graphic Designer": "Designers",
+
+  "Fotógrafo": "Photographers",
+  "Fotografo": "Photographers",
+  "Photographer": "Photographers",
+
+  "Ilustrador": "Illustrators",
+  "Illustrator": "Illustrators",
+
+  "Foundry": "Foundries"
+    },
+
+  "areaMap": {
+    "Illustration": "Ilustração",
+    "Ilustracao": "Ilustração",
+    "Graphic Design": "Design Gráfico",
+    "Graphic design": "Design Gráfico",
+    "Photography": "Fotografia",
+    "Art Direction": "Direção de Arte",
+    "Type Design": "Tipografia",
+    "Typography": "Tipografia",
+    "Branding": "Branding"
+  },
+  "tagMap": {
+    "Illustration": "Ilustração",
+    "Ilustracao": "Ilustração",
+    "Graphic Design": "Design Gráfico",
+    "Graphic design": "Design Gráfico",
+    "Photography": "Fotografia",
+    "Art Direction": "Direção de Arte",
+    "Type Design": "Tipografia",
+    "Typography": "Tipografia",
+    "Campaign": "Campanhas",
+    "Campaigns": "Campanhas"
+  },
+  "countryMap": {},
+  "cityMap": {}
+}

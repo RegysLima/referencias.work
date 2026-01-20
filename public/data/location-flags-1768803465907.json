@@ -1,0 +1,48 @@
+{
+  "fixed": 36,
+  "flagged": 7,
+  "sample": [
+    {
+      "id": "choice-https-choice-studio",
+      "name": "Choice",
+      "country": "Emirados Árabes",
+      "city": "Dubai"
+    },
+    {
+      "id": "guillotina-estudio-http-guillotinaestudio-com",
+      "name": "Guillotina Estudio",
+      "country": "Espanha",
+      "city": "A Coruña (spain)"
+    },
+    {
+      "id": "nikon-s-small-world-https-www-nikonsmallworld-com",
+      "name": "Nikon's Small World",
+      "country": null,
+      "city": "N/A"
+    },
+    {
+      "id": "b-a-https-www-ba-reps-com-photographers",
+      "name": "B&A",
+      "country": "Estados Unidos",
+      "city": "N/A"
+    },
+    {
+      "id": "museparadox-https-www-museparadox-com",
+      "name": "Maxime",
+      "country": null,
+      "city": "France"
+    },
+    {
+      "id": "max-loeffler-https-maxloeffler-com",
+      "name": "Max Loeffler",
+      "country": "Alemanha",
+      "city": "Germany. —"
+    },
+    {
+      "id": "vocal-https-www-vocaltype-co",
+      "name": "Vocal Type",
+      "country": "Estados Unidos",
+      "city": "-"
+    }
+  ]
+}

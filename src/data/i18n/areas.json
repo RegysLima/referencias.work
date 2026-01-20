@@ -1,0 +1,717 @@
+{
+  "2d": {
+    "pt": "2D",
+    "en": "2D",
+    "es": "2D"
+  },
+  "3d": {
+    "pt": "3D",
+    "en": "3D",
+    "es": "3D"
+  },
+  "abstrato": {
+    "pt": "Abstrato",
+    "en": "Abstraction",
+    "es": "Abstracción"
+  },
+  "agencia": {
+    "pt": "Agência",
+    "en": "Agency:",
+    "es": "Agencia"
+  },
+  "analogica": {
+    "pt": "Analógica",
+    "en": "Analog",
+    "es": "Analógico"
+  },
+  "animacao": {
+    "pt": "Animação",
+    "en": "Animation",
+    "es": "Animación"
+  },
+  "aquarela": {
+    "pt": "Aquarela",
+    "en": "Watercolor",
+    "es": "Acuarela"
+  },
+  "arquitetura": {
+    "pt": "Arquitetura",
+    "en": "Architecture",
+    "es": "Arquitectura"
+  },
+  "arte-urbana": {
+    "pt": "Arte Urbana",
+    "en": "Street art",
+    "es": "Arte urbano"
+  },
+  "artes-visuais": {
+    "pt": "Artes Visuais",
+    "en": "Visual arts",
+    "es": "Artes visuales"
+  },
+  "artistico": {
+    "pt": "Artístico",
+    "en": "Artistic",
+    "es": "Artístico"
+  },
+  "autoral": {
+    "pt": "Autoral",
+    "en": "Authorial",
+    "es": "Original"
+  },
+  "aventura": {
+    "pt": "Aventura",
+    "en": "Adventure",
+    "es": "Aventura"
+  },
+  "bebidas": {
+    "pt": "Bebidas",
+    "en": "Drinks",
+    "es": "Bebidas"
+  },
+  "beleza": {
+    "pt": "Beleza",
+    "en": "Beauty",
+    "es": "Belleza"
+  },
+  "botanica": {
+    "pt": "Botânica",
+    "en": "Botanies",
+    "es": "Botánica"
+  },
+  "botanico": {
+    "pt": "Botânica",
+    "en": "Botanists",
+    "es": "botánico"
+  },
+  "branding": {
+    "pt": "Branding",
+    "en": "Branding",
+    "es": "Branding"
+  },
+  "campanhas": {
+    "pt": "Campanhas",
+    "en": "Campaigns",
+    "es": "Campañas"
+  },
+  "capas": {
+    "pt": "Capas",
+    "en": "Capes",
+    "es": "Cubiertas"
+  },
+  "celebridades": {
+    "pt": "Celebridades",
+    "en": "Celebrity",
+    "es": "Celebridades"
+  },
+  "cenografia": {
+    "pt": "Cenografia",
+    "en": "Scenography",
+    "es": "Escenografía"
+  },
+  "ciclismo": {
+    "pt": "Ciclismo",
+    "en": "Cycling",
+    "es": "Ciclismo"
+  },
+  "cientifica": {
+    "pt": "Científica",
+    "en": "Training",
+    "es": "©emea 2004"
+  },
+  "colagem": {
+    "pt": "Colagem",
+    "en": "Gluing",
+    "es": "Collage"
+  },
+  "colorida": {
+    "pt": "Colorido",
+    "en": "Color",
+    "es": "Aguja"
+  },
+  "colorido": {
+    "pt": "Colorido",
+    "en": "Colourful",
+    "es": "Con color"
+  },
+  "comercial": {
+    "pt": "Comercial",
+    "en": "Salesperson",
+    "es": "Comercial"
+  },
+  "conceitual": {
+    "pt": "Conceitual",
+    "en": "Conceptual",
+    "es": "Conceptual"
+  },
+  "corporativa": {
+    "pt": "Corporativa",
+    "en": "Corporate",
+    "es": "Corporación"
+  },
+  "cosmeticos": {
+    "pt": "Cosméticos",
+    "en": "Cosmetics",
+    "es": "Cosmética"
+  },
+  "creative-coding": {
+    "pt": "Creative Coding",
+    "en": "Creative Coding",
+    "es": "Codificación creativa"
+  },
+  "criativa": {
+    "pt": "Colorido",
+    "en": "Creative",
+    "es": "Creativo"
+  },
+  "criativo": {
+    "pt": "Colorido",
+    "en": "Creative",
+    "es": "Creativo"
+  },
+  "customizadas": {
+    "pt": "Customizadas",
+    "en": "Customized",
+    "es": "Personalizado"
+  },
+  "design-de-produto": {
+    "pt": "Design de Produto",
+    "en": "Product design",
+    "es": "Diseño de producto"
+  },
+  "design-grafico": {
+    "pt": "Design Gráfico",
+    "en": "Graphic design",
+    "es": "Diseño gráfico"
+  },
+  "digital": {
+    "pt": "Digital",
+    "en": "Digital",
+    "es": "Digital"
+  },
+  "direcao-de-arte": {
+    "pt": "Direção de Arte",
+    "en": "Art direction",
+    "es": "Dirección de arte"
+  },
+  "divertida": {
+    "pt": "Divertida",
+    "en": "Fun",
+    "es": "Divertida"
+  },
+  "documental": {
+    "pt": "Documental",
+    "en": "Documentary",
+    "es": "Documental"
+  },
+  "documentary": {
+    "pt": "Documentary",
+    "en": "Documentary.",
+    "es": "Documental"
+  },
+  "doodle": {
+    "pt": "Doodle",
+    "en": "Doodle",
+    "es": "Garabato"
+  },
+  "drinks": {
+    "pt": "Drinks",
+    "en": "Drinks",
+    "es": "Drinks"
+  },
+  "duotone": {
+    "pt": "Duotone",
+    "en": "Duotone",
+    "es": "Duotono"
+  },
+  "editorial": {
+    "pt": "Editorial",
+    "en": "Editorial",
+    "es": "Editorial"
+  },
+  "embalagem": {
+    "pt": "Embalagem",
+    "en": "Packaging",
+    "es": "Embalaje"
+  },
+  "embalagens": {
+    "pt": "Embalagem",
+    "en": "Packaging",
+    "es": "Envases"
+  },
+  "espacial": {
+    "pt": "Espacial",
+    "en": "Spatial",
+    "es": "Espacial"
+  },
+  "esporte": {
+    "pt": "Esportes",
+    "en": "Sports",
+    "es": "Deportes"
+  },
+  "esportes": {
+    "pt": "Esportes",
+    "en": "Sports",
+    "es": "Deportes"
+  },
+  "estampa": {
+    "pt": "Estampa",
+    "en": "Print",
+    "es": "Imprimir"
+  },
+  "estampas": {
+    "pt": "Estampa",
+    "en": "Prints",
+    "es": "Estampados"
+  },
+  "estilo": {
+    "pt": "Estilo",
+    "en": "Style",
+    "es": "Estilo"
+  },
+  "estrategia": {
+    "pt": "Estratégia",
+    "en": "Strategy",
+    "es": "estratégico"
+  },
+  "excentrico": {
+    "pt": "Excêntrico",
+    "en": "Eccentricity",
+    "es": "Excentricidad"
+  },
+  "exibicoes": {
+    "pt": "Exibições",
+    "en": "Exhibitions",
+    "es": "Exhibiciones"
+  },
+  "experimental": {
+    "pt": "Experimental",
+    "en": "Investigational",
+    "es": "Experimental"
+  },
+  "expografia": {
+    "pt": "Expografia",
+    "en": "Expography",
+    "es": "Expografía"
+  },
+  "exposicoes": {
+    "pt": "Exposições",
+    "en": "Exhibitions",
+    "es": "Exhibiciones"
+  },
+  "fashion": {
+    "pt": "Fashion",
+    "en": "Fashion",
+    "es": "Fashion"
+  },
+  "feminista": {
+    "pt": "Feminista",
+    "en": "Feminism",
+    "es": "¿Feminista?"
+  },
+  "filmes": {
+    "pt": "Filmes",
+    "en": "Movies",
+    "es": "Cine como Asunto"
+  },
+  "fine-art": {
+    "pt": "Fine Art",
+    "en": "Fine Art",
+    "es": "Bellas artes"
+  },
+  "fine-arts": {
+    "pt": "Fine Art",
+    "en": "Fine arts",
+    "es": "Bellas artes"
+  },
+  "fitness": {
+    "pt": "Fitness",
+    "en": "Fitness",
+    "es": "Fitness"
+  },
+  "flash": {
+    "pt": "Flash",
+    "en": "Flash",
+    "es": "Flash"
+  },
+  "fonts": {
+    "pt": "Fonts",
+    "en": "Fonts",
+    "es": "Fuentes"
+  },
+  "fotografia": {
+    "pt": "Fotografia",
+    "en": "Photography",
+    "es": "Fotografía"
+  },
+  "frutas": {
+    "pt": "Frutas",
+    "en": "Fruit",
+    "es": "Frambuesa"
+  },
+  "galeria": {
+    "pt": "Galeria",
+    "en": "Gallery",
+    "es": "Galería"
+  },
+  "gastronomia": {
+    "pt": "Gastronomia",
+    "en": "Gastronomy",
+    "es": "Gastronomía"
+  },
+  "geometrica": {
+    "pt": "Geométrica",
+    "en": "Geometry",
+    "es": "Geometría"
+  },
+  "golf": {
+    "pt": "Golf",
+    "en": "Golf",
+    "es": "Golf"
+  },
+  "graffiti": {
+    "pt": "Graffiti",
+    "en": "Graffiti",
+    "es": "Graffiti"
+  },
+  "grafica": {
+    "pt": "Gráfica",
+    "en": "Printer (publishing)",
+    "es": "Gráfica:"
+  },
+  "gratuitas": {
+    "pt": "Gratuitas",
+    "en": "Free",
+    "es": "Gratis"
+  },
+  "humor": {
+    "pt": "Humor",
+    "en": "Humour",
+    "es": "Estado de ánimo"
+  },
+  "iconografia": {
+    "pt": "Iconografia",
+    "en": "Iconography",
+    "es": "Iconografía"
+  },
+  "ilustracao": {
+    "pt": "Ilustração",
+    "en": "Illustration",
+    "es": "Ilustración"
+  },
+  "impressao": {
+    "pt": "Impressão",
+    "en": "Print",
+    "es": "Impronta"
+  },
+  "interiores": {
+    "pt": "Interiores",
+    "en": "Interiors",
+    "es": "Interiores"
+  },
+  "lettering": {
+    "pt": "Lettering",
+    "en": "Lettering",
+    "es": "Lettering"
+  },
+  "lifestyle": {
+    "pt": "Lifestyle",
+    "en": "Nelly Furtado",
+    "es": "Lifestyle"
+  },
+  "lifetyle": {
+    "pt": "Lifestyle",
+    "en": "Lifetyle",
+    "es": "Lifetyle"
+  },
+  "linogravura": {
+    "pt": "Linogravura",
+    "en": "Linogravura",
+    "es": "Linogravura"
+  },
+  "luxo": {
+    "pt": "Luxo",
+    "en": "Ultra High End",
+    "es": "Lujuria"
+  },
+  "macro": {
+    "pt": "Macro",
+    "en": "Macro",
+    "es": "Macro"
+  },
+  "manual": {
+    "pt": "Manual",
+    "en": "Manual)",
+    "es": "Manual"
+  },
+  "microscopica": {
+    "pt": "Microscópica",
+    "en": "Microscopic",
+    "es": "Microscópico"
+  },
+  "mobiliario": {
+    "pt": "Mobiliário",
+    "en": "Furnishing",
+    "es": "Mobiliario"
+  },
+  "moda": {
+    "pt": "Moda",
+    "en": "Fashion",
+    "es": "Moda"
+  },
+  "monocromatica": {
+    "pt": "Monocromática",
+    "en": "Monochrome",
+    "es": "Monocromo"
+  },
+  "motion": {
+    "pt": "Motion",
+    "en": "Motion",
+    "es": "Motion"
+  },
+  "murais": {
+    "pt": "Murais",
+    "en": "Mural",
+    "es": "Mural"
+  },
+  "musica": {
+    "pt": "Música",
+    "en": "Music",
+    "es": "Música"
+  },
+  "natureza": {
+    "pt": "Natureza",
+    "en": "Category",
+    "es": "Naturaleza"
+  },
+  "neon": {
+    "pt": "Neon",
+    "en": "175 Neon",
+    "es": "Neón"
+  },
+  "objetos": {
+    "pt": "Objetos",
+    "en": "Objects",
+    "es": "Objetos"
+  },
+  "packaging": {
+    "pt": "Packaging",
+    "en": "Pack size",
+    "es": "Packaging"
+  },
+  "paisagem": {
+    "pt": "Paisagem",
+    "en": "Landscaping",
+    "es": "Apaisado"
+  },
+  "paisagens": {
+    "pt": "Paisagens",
+    "en": "Scenery",
+    "es": "Paisajes"
+  },
+  "parques": {
+    "pt": "Parques",
+    "en": "Parks",
+    "es": "Parques"
+  },
+  "personagens": {
+    "pt": "Personagens",
+    "en": "Characters",
+    "es": "Personajes"
+  },
+  "pesquisa": {
+    "pt": "Pesquisa",
+    "en": "Exploration",
+    "es": "Búsqueda"
+  },
+  "pinturas": {
+    "pt": "Pinturas",
+    "en": "Pictures",
+    "es": "Pinturas"
+  },
+  "pontilhismo": {
+    "pt": "Pontilhismo",
+    "en": "Pointillism",
+    "es": "Puntillista"
+  },
+  "pop": {
+    "pt": "Pop",
+    "en": "Pop",
+    "es": "Poe"
+  },
+  "posters": {
+    "pt": "Posters",
+    "en": "Posters",
+    "es": "Pósters:"
+  },
+  "praia": {
+    "pt": "Praia",
+    "en": "Praia",
+    "es": "Playa"
+  },
+  "producao": {
+    "pt": "Produção",
+    "en": "Production",
+    "es": "Producción"
+  },
+  "produto": {
+    "pt": "Produto",
+    "en": "Product",
+    "es": "Producto"
+  },
+  "produtos": {
+    "pt": "Produto",
+    "en": "Products",
+    "es": "Productos"
+  },
+  "programacao-criativa": {
+    "pt": "Programação Criativa",
+    "en": "Creative Programming",
+    "es": "Programación creativa"
+  },
+  "psicodelica": {
+    "pt": "Psicodélica",
+    "en": "Psychedelia",
+    "es": "Psicodélico"
+  },
+  "psicodelico": {
+    "pt": "Psicodélica",
+    "en": "Psychedelia",
+    "es": "Psicodélico"
+  },
+  "publicacao": {
+    "pt": "Publicação",
+    "en": "Publication",
+    "es": "Publicación"
+  },
+  "publicidade": {
+    "pt": "Publicidade",
+    "en": "Advertising",
+    "es": "Publicidad"
+  },
+  "quadrinhos": {
+    "pt": "Quadrinhos",
+    "en": "Comics",
+    "es": "Historieta"
+  },
+  "representante": {
+    "pt": "Representante",
+    "en": "Representative",
+    "es": "Representante"
+  },
+  "retrato": {
+    "pt": "Retrato",
+    "en": "Portrait",
+    "es": "Vertical"
+  },
+  "retratos": {
+    "pt": "Retrato",
+    "en": "Portraits",
+    "es": "Retratos como Asunto"
+  },
+  "risografia": {
+    "pt": "Risografia",
+    "en": "Risography",
+    "es": "Risografia"
+  },
+  "sinalizacao": {
+    "pt": "Sinalização",
+    "en": "Signal",
+    "es": "Señalética"
+  },
+  "sketchbook": {
+    "pt": "Sketchbook",
+    "en": "Sketchbook",
+    "es": "Cuaderno de bocetos"
+  },
+  "solar": {
+    "pt": "Solar",
+    "en": "Solar",
+    "es": "Solar"
+  },
+  "still": {
+    "pt": "Still",
+    "en": "Still",
+    "es": "Still"
+  },
+  "studio": {
+    "pt": "Studio",
+    "en": "Studio",
+    "es": "Estudio"
+  },
+  "surrealista": {
+    "pt": "Surrealista",
+    "en": "Surrealism",
+    "es": "Surrealista."
+  },
+  "textura": {
+    "pt": "Textura",
+    "en": "Texture",
+    "es": "Textura"
+  },
+  "texturas": {
+    "pt": "Textura",
+    "en": "Textures",
+    "es": "Texturas"
+  },
+  "tipografia": {
+    "pt": "Tipografia",
+    "en": "Typography",
+    "es": "Tipografía"
+  },
+  "travel": {
+    "pt": "Travel",
+    "en": "Travel",
+    "es": "Viajes"
+  },
+  "typefaces": {
+    "pt": "Typefaces",
+    "en": "Typefaces",
+    "es": "Tipos de letra"
+  },
+  "ui": {
+    "pt": "UI",
+    "en": "UI",
+    "es": "UI"
+  },
+  "ui-ux": {
+    "pt": "Ui/ux",
+    "en": "Ui/ux",
+    "es": "Ui/ux"
+  },
+  "urbana": {
+    "pt": "Urbana",
+    "en": "Urban",
+    "es": "Urbana"
+  },
+  "urbano": {
+    "pt": "Urbana",
+    "en": "Urban",
+    "es": "Urbano"
+  },
+  "ux": {
+    "pt": "UX",
+    "en": "UX",
+    "es": "UX"
+  },
+  "veiculos": {
+    "pt": "Veículos",
+    "en": "Vehicles",
+    "es": "Vehículos"
+  },
+  "vetorial": {
+    "pt": "Vetorial",
+    "en": "Vector",
+    "es": "Vectoriales"
+  },
+  "viagem": {
+    "pt": "Viagem",
+    "en": "Travel",
+    "es": "Viagem"
+  },
+  "vintage": {
+    "pt": "Vintage",
+    "en": "Vintage",
+    "es": "Vendimia"
+  }
+}

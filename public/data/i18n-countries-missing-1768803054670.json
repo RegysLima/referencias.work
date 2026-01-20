@@ -1,0 +1,46 @@
+{
+  "missing": [
+    {
+      "key": "alemana",
+      "pt": "Alemana"
+    },
+    {
+      "key": "alemananha",
+      "pt": "Alemananha"
+    },
+    {
+      "key": "bahia",
+      "pt": "Bahia"
+    },
+    {
+      "key": "emirados-arabes",
+      "pt": "Emirados Árabes"
+    },
+    {
+      "key": "estados-unidos",
+      "pt": "Estados Unidos"
+    },
+    {
+      "key": "inglaterra",
+      "pt": "Inglaterra"
+    },
+    {
+      "key": "n-a",
+      "pt": "N/A"
+    },
+    {
+      "key": "netherlands",
+      "pt": "Netherlands"
+    },
+    {
+      "key": "paris",
+      "pt": "Paris"
+    },
+    {
+      "key": "republica-tcheca",
+      "pt": "República Tcheca"
+    }
+  ],
+  "filled": 36,
+  "total": 46
+}

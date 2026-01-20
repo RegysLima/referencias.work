@@ -1,26 +1,108 @@
 @import "tailwindcss";
 
+/* Base */
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+body {
+  font-family: var(--font-ui);
+  background: var(--background);
+  color: var(--foreground);
 }
 
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark mode (se você ainda quiser manter) */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+
+  .instrument-serif-regular {
+  font-family: "Instrument Serif", serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+:root[data-theme="dark"] {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+.btn {
+  border: 1px solid #18181b;
+  color: #18181b;
+  background: transparent;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.btn:hover {
+  background: #18181b;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .btn {
+  border-color: #e4e4e7;
+  color: #e4e4e7;
+}
+
+:root[data-theme="dark"] .btn:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+:root[data-theme="dark"] .bg-white {
+  background-color: #0a0a0a !important;
+}
+
+:root[data-theme="dark"] .bg-white\\/80 {
+  background-color: rgba(10, 10, 10, 0.8) !important;
+}
+
+:root[data-theme="dark"] .bg-white\\/85 {
+  background-color: rgba(10, 10, 10, 0.85) !important;
+}
+
+:root[data-theme="dark"] .bg-zinc-100 {
+  background-color: #18181b !important;
+}
+
+:root[data-theme="dark"] .text-zinc-950 {
+  color: #f4f4f5 !important;
+}
+
+:root[data-theme="dark"] .text-zinc-900 {
+  color: #e4e4e7 !important;
+}
+
+:root[data-theme="dark"] .text-zinc-700 {
+  color: #d4d4d8 !important;
+}
+
+:root[data-theme="dark"] .text-zinc-600 {
+  color: #a1a1aa !important;
+}
+
+:root[data-theme="dark"] .text-zinc-500 {
+  color: #a1a1aa !important;
+}
+
+:root[data-theme="dark"] .text-zinc-400 {
+  color: #a1a1aa !important;
+}
+
+:root[data-theme="dark"] .border-zinc-200 {
+  border-color: #27272a !important;
+}
+
+:root[data-theme="dark"] .border-zinc-300 {
+  border-color: #3f3f46 !important;
 }

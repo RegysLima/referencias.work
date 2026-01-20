@@ -1,0 +1,1904 @@
+{
+  "areas": [
+    {
+      "key": "digital",
+      "pt": "Digital",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "editorial",
+      "pt": "Editorial",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "autoral",
+      "pt": "Autoral",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "comercial",
+      "pt": "Comercial",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "urbano",
+      "pt": "Urbano",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "personagens",
+      "pt": "Personagens",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lettering",
+      "pt": "Lettering",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "pop",
+      "pt": "Pop",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "colorido",
+      "pt": "Colorido",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "design-grafico",
+      "pt": "Design Gráfico",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "direcao-de-arte",
+      "pt": "Direção de Arte",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "branding",
+      "pt": "Branding",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "expografia",
+      "pt": "Expografia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "experimental",
+      "pt": "Experimental",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "tipografia",
+      "pt": "Tipografia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "motion",
+      "pt": "Motion",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "ilustracao",
+      "pt": "Ilustração",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "cenografia",
+      "pt": "Cenografia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "embalagem",
+      "pt": "Embalagem",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "produto",
+      "pt": "Produto",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fonts",
+      "pt": "Fonts",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "customizadas",
+      "pt": "Customizadas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "capas",
+      "pt": "Capas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "posters",
+      "pt": "Posters",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sinalizacao",
+      "pt": "Sinalização",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "3d",
+      "pt": "3D",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "documental",
+      "pt": "Documental",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fine-arts",
+      "pt": "Fine Arts",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "campanhas",
+      "pt": "Campanhas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "creative-coding",
+      "pt": "Creative Coding",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "publicidade",
+      "pt": "Publicidade",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "artes-visuais",
+      "pt": "Artes Visuais",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "ui-ux",
+      "pt": "Ui/ux",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "impressao",
+      "pt": "Impressão",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "animacao",
+      "pt": "Animação",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "manual",
+      "pt": "Manual",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "psicodelico",
+      "pt": "Psicodélico",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estampas",
+      "pt": "Estampas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "musica",
+      "pt": "Música",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "retratos",
+      "pt": "Retratos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "colorida",
+      "pt": "Colorida",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "murais",
+      "pt": "Murais",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "arte-urbana",
+      "pt": "Arte Urbana",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vetorial",
+      "pt": "Vetorial",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "duotone",
+      "pt": "Duotone",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "psicodelica",
+      "pt": "Psicodélica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "excentrico",
+      "pt": "Excêntrico",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "doodle",
+      "pt": "Doodle",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "design-de-produto",
+      "pt": "Design de Produto",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "programacao-criativa",
+      "pt": "Programação Criativa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "packaging",
+      "pt": "Packaging",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "ui",
+      "pt": "UI",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "ux",
+      "pt": "UX",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "espacial",
+      "pt": "Espacial",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "arquitetura",
+      "pt": "Arquitetura",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estrategia",
+      "pt": "Estratégia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fotografia",
+      "pt": "Fotografia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "typefaces",
+      "pt": "Typefaces",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "exposicoes",
+      "pt": "Exposições",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "exibicoes",
+      "pt": "Exibições",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "pesquisa",
+      "pt": "Pesquisa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "filmes",
+      "pt": "Filmes",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "moda",
+      "pt": "Moda",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "mobiliario",
+      "pt": "Mobiliário",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "iconografia",
+      "pt": "Iconografia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "gastronomia",
+      "pt": "Gastronomia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "still",
+      "pt": "Still",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lifestyle",
+      "pt": "Lifestyle",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lifetyle",
+      "pt": "Lifetyle",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "esporte",
+      "pt": "Esporte",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "documentary",
+      "pt": "Documentary",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "studio",
+      "pt": "Studio",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fashion",
+      "pt": "Fashion",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "travel",
+      "pt": "Travel",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "conceitual",
+      "pt": "Conceitual",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "beleza",
+      "pt": "Beleza",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "viagem",
+      "pt": "Viagem",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "objetos",
+      "pt": "Objetos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "analogica",
+      "pt": "Analógica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "representante",
+      "pt": "Representante",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "agencia",
+      "pt": "Agência",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "criativa",
+      "pt": "Criativa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "producao",
+      "pt": "Produção",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "retrato",
+      "pt": "Retrato",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "paisagem",
+      "pt": "Paisagem",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "natureza",
+      "pt": "Natureza",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "urbana",
+      "pt": "Urbana",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "interiores",
+      "pt": "Interiores",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "esportes",
+      "pt": "Esportes",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "macro",
+      "pt": "Macro",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "cientifica",
+      "pt": "Científica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "microscopica",
+      "pt": "Microscópica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fine-art",
+      "pt": "Fine Art",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "galeria",
+      "pt": "Galeria",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "publicacao",
+      "pt": "Publicação",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "golf",
+      "pt": "Golf",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "veiculos",
+      "pt": "Veículos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "produtos",
+      "pt": "Produtos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "paisagens",
+      "pt": "Paisagens",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "botanico",
+      "pt": "Botânico",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "artistico",
+      "pt": "Artístico",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "aventura",
+      "pt": "Aventura",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "parques",
+      "pt": "Parques",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "celebridades",
+      "pt": "Celebridades",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "criativo",
+      "pt": "Criativo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "luxo",
+      "pt": "Luxo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fitness",
+      "pt": "Fitness",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "cosmeticos",
+      "pt": "Cosméticos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "flash",
+      "pt": "Flash",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "praia",
+      "pt": "Praia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "bebidas",
+      "pt": "Bebidas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estilo",
+      "pt": "Estilo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "drinks",
+      "pt": "Drinks",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "texturas",
+      "pt": "Texturas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "embalagens",
+      "pt": "Embalagens",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "ciclismo",
+      "pt": "Ciclismo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "corporativa",
+      "pt": "Corporativa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "solar",
+      "pt": "Solar",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "neon",
+      "pt": "Neon",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sketchbook",
+      "pt": "Sketchbook",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "colagem",
+      "pt": "Colagem",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "risografia",
+      "pt": "Risografia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estampa",
+      "pt": "Estampa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "frutas",
+      "pt": "Frutas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "botanica",
+      "pt": "Botânica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "linogravura",
+      "pt": "Linogravura",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "monocromatica",
+      "pt": "Monocromática",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "pinturas",
+      "pt": "Pinturas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "humor",
+      "pt": "Humor",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "aquarela",
+      "pt": "Aquarela",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "quadrinhos",
+      "pt": "Quadrinhos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "graffiti",
+      "pt": "Graffiti",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "surrealista",
+      "pt": "Surrealista",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "feminista",
+      "pt": "Feminista",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "divertida",
+      "pt": "Divertida",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "geometrica",
+      "pt": "Geométrica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vintage",
+      "pt": "Vintage",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "pontilhismo",
+      "pt": "Pontilhismo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "2d",
+      "pt": "2D",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "textura",
+      "pt": "Textura",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "abstrato",
+      "pt": "Abstrato",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "grafica",
+      "pt": "Gráfica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "gratuitas",
+      "pt": "Gratuitas",
+      "en": "",
+      "es": ""
+    }
+  ],
+  "countries": [
+    {
+      "key": "alemanha",
+      "pt": "Alemanha",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "espanha",
+      "pt": "Espanha",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "brasil",
+      "pt": "Brasil",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estados-unidos",
+      "pt": "Estados Unidos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "reino-unido",
+      "pt": "Reino Unido",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "canada",
+      "pt": "Canadá",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "inglaterra",
+      "pt": "Inglaterra",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "portugal",
+      "pt": "Portugal",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "franca",
+      "pt": "França",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "coreia-do-sul",
+      "pt": "Coreia do Sul",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "australia",
+      "pt": "Australia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "islandia",
+      "pt": "Islândia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "china",
+      "pt": "China",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "argentina",
+      "pt": "Argentina",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "nova-zelandia",
+      "pt": "Nova Zelândia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "israel",
+      "pt": "Israel",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "emirados-arabes",
+      "pt": "Emirados Árabes",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "paises-baixos",
+      "pt": "Países Baixos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "dinamarca",
+      "pt": "Dinamarca",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "suecia",
+      "pt": "Suécia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "finlandia",
+      "pt": "Finlândia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "mexico",
+      "pt": "México",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "italia",
+      "pt": "Itália",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "malta",
+      "pt": "Malta",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "noruega",
+      "pt": "Noruega",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "croacia",
+      "pt": "Croácia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "uruguai",
+      "pt": "Uruguai",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "belgica",
+      "pt": "Bélgica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "russia",
+      "pt": "Rússia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "suica",
+      "pt": "Suíça",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "austria",
+      "pt": "Áustria",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "alemana",
+      "pt": "Alemana",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "servia",
+      "pt": "Sérvia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "peru",
+      "pt": "Peru",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "n-a",
+      "pt": "N/A",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "bahia",
+      "pt": "Bahia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "indonesia",
+      "pt": "Indonésia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "paris",
+      "pt": "Paris",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "netherlands",
+      "pt": "Netherlands",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "ucrania",
+      "pt": "Ucrânia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "japao",
+      "pt": "Japão",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lituania",
+      "pt": "Lituânia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "irlanda",
+      "pt": "Irlanda",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "bulgaria",
+      "pt": "Bulgaria",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "republica-tcheca",
+      "pt": "República Tcheca",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "alemananha",
+      "pt": "Alemananha",
+      "en": "",
+      "es": ""
+    }
+  ],
+  "cities": [
+    {
+      "key": "berlin",
+      "pt": "Berlin",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "valencia",
+      "pt": "Valencia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fortaleza",
+      "pt": "Fortaleza",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "rio-de-janeiro",
+      "pt": "Rio de Janeiro",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sao-paulo",
+      "pt": "São Paulo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "aracaju",
+      "pt": "Aracaju",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "florianopolis",
+      "pt": "Florianópolis",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "londrina",
+      "pt": "Londrina",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "belo-horizonte",
+      "pt": "Belo Horizonte",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "recife",
+      "pt": "Recife",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "new-york-city",
+      "pt": "New York City",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "porto-alegre",
+      "pt": "Porto Alegre",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "santander",
+      "pt": "Santander",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "barcelona",
+      "pt": "Barcelona",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "birmingham",
+      "pt": "Birmingham",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "montreal",
+      "pt": "Montreal",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "brasilia",
+      "pt": "Brasília",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "londres",
+      "pt": "Londres",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "berlim",
+      "pt": "Berlim",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lisboa",
+      "pt": "Lisboa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "paris",
+      "pt": "Paris",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "austin",
+      "pt": "Austin",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "seoul",
+      "pt": "Seoul",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "melbourne",
+      "pt": "Melbourne",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "toronto",
+      "pt": "Toronto",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "nova-york",
+      "pt": "Nova York",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "oregon",
+      "pt": "Oregon",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "reiquiavique",
+      "pt": "Reiquiavique",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "salamanca",
+      "pt": "Salamanca",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "macau",
+      "pt": "Macau",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "buenos-aires",
+      "pt": "Buenos Aires",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "guang-zhou",
+      "pt": "Guang Zhou",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "wellington",
+      "pt": "Wellington",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "tel-aviv",
+      "pt": "Tel Aviv",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "los-angeles",
+      "pt": "Los Angeles",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "dubai",
+      "pt": "Dubai",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "rotterdam",
+      "pt": "Rotterdam",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sydney",
+      "pt": "Sydney",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "copenhagen",
+      "pt": "Copenhagen",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "gothenburg",
+      "pt": "Gothenburg",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "helsinki",
+      "pt": "Helsinki",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "seattle",
+      "pt": "Seattle",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "merida",
+      "pt": "Mérida",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "milao",
+      "pt": "Milão",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "curated-by-whatchamacallit",
+      "pt": "Curated By Whatchamacallit",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "madrid",
+      "pt": "Madrid",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "modena",
+      "pt": "Modena",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lopez-mateos",
+      "pt": "López Mateos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "north-melbourne",
+      "pt": "North Melbourne",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "cidade-do-mexico",
+      "pt": "Cidade do México",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "monterrey",
+      "pt": "Monterrey",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "riviera-maya",
+      "pt": "Riviera Maya",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "san-francisco",
+      "pt": "San Francisco",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "oslo",
+      "pt": "Oslo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "zagreb",
+      "pt": "Zagreb",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "alexandria",
+      "pt": "Alexandria",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "auckland",
+      "pt": "Auckland",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "montevideo",
+      "pt": "Montevideo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "charleston",
+      "pt": "Charleston",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "amsterdam",
+      "pt": "Amsterdam",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "antuerpia",
+      "pt": "Antuérpia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "moscow",
+      "pt": "Moscow",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "chippendale",
+      "pt": "Chippendale",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "roma",
+      "pt": "Roma",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "zurich",
+      "pt": "Zurich",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "viena",
+      "pt": "Viena",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "hamburgo",
+      "pt": "Hamburgo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "a-coruna-spain",
+      "pt": "A Coruña (spain)",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vancouver",
+      "pt": "Vancouver",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "belgrado",
+      "pt": "Belgrado",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estocolmo",
+      "pt": "Estocolmo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lucerne",
+      "pt": "Lucerne",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "queenstown",
+      "pt": "Queenstown",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "broadway",
+      "pt": "Broadway",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vienna",
+      "pt": "Vienna",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lima",
+      "pt": "Lima",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "portland",
+      "pt": "Portland",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "curitiba",
+      "pt": "Curitiba",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "eindhoven",
+      "pt": "Eindhoven",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "nashville",
+      "pt": "Nashville",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "mac-com-brooklyn",
+      "pt": "Mac.com Brooklyn",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "surry-hills",
+      "pt": "Surry Hills",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "catskills",
+      "pt": "Catskills",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "n-a",
+      "pt": "N/A",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "salvador",
+      "pt": "Salvador",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "jakarta",
+      "pt": "Jakarta",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "france",
+      "pt": "France",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vero-beach",
+      "pt": "Vero Beach",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "pequim",
+      "pt": "Pequim",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "hessen",
+      "pt": "Hessen",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "chicago",
+      "pt": "Chicago",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "california",
+      "pt": "Califórnia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "hobart",
+      "pt": "Hobart",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "san-diego",
+      "pt": "San Diego",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "dallas",
+      "pt": "Dallas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "atlanta",
+      "pt": "Atlanta",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "kiev",
+      "pt": "Kiev",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "new-york",
+      "pt": "New York",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "zaandam",
+      "pt": "Zaandam",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "baltimore",
+      "pt": "Baltimore",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "providence",
+      "pt": "Providence",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "bristol",
+      "pt": "Bristol",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sapporo",
+      "pt": "Sapporo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "port-macquarie",
+      "pt": "Port Macquarie",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "bamberg",
+      "pt": "Bamberg",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "macclesfield",
+      "pt": "Macclesfield",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vilnius",
+      "pt": "Vilnius",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "dublin",
+      "pt": "Dublin",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "germany",
+      "pt": "Germany. —",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "kerry",
+      "pt": "Kerry",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "manchester",
+      "pt": "Manchester",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "verona",
+      "pt": "Verona",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "bergen",
+      "pt": "Bergen",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "christchurch",
+      "pt": "Christchurch",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "glasgow",
+      "pt": "Glasgow",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lyon",
+      "pt": "Lyon",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "chamonix",
+      "pt": "Chamonix",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "makassar",
+      "pt": "Makassar",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sofia",
+      "pt": "Sofia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "brno",
+      "pt": "Brno",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lausanne",
+      "pt": "Lausanne",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "praga",
+      "pt": "Praga",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "berna",
+      "pt": "Berna",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "udine",
+      "pt": "Udine",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "perugia",
+      "pt": "Perugia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "haia",
+      "pt": "Haia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "montpellier",
+      "pt": "Montpellier",
+      "en": "",
+      "es": ""
+    }
+  ]
+}

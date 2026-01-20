@@ -1,0 +1,660 @@
+{
+  "missing": [
+    {
+      "key": "a-coruna-spain",
+      "pt": "A Coruña (spain)",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "alexandria",
+      "pt": "Alexandria",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "antuerpia",
+      "pt": "Antuérpia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "aracaju",
+      "pt": "Aracaju",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "atlanta",
+      "pt": "Atlanta",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "auckland",
+      "pt": "Auckland",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "austin",
+      "pt": "Austin",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "baltimore",
+      "pt": "Baltimore",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "bamberg",
+      "pt": "Bamberg",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "belgrado",
+      "pt": "Belgrado",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "belo-horizonte",
+      "pt": "Belo Horizonte",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "bergen",
+      "pt": "Bergen",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "berlin",
+      "pt": "Berlin",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "berna",
+      "pt": "Berna",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "birmingham",
+      "pt": "Birmingham",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "bristol",
+      "pt": "Bristol",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "brno",
+      "pt": "Brno",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "broadway",
+      "pt": "Broadway",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "buenos-aires",
+      "pt": "Buenos Aires",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "california",
+      "pt": "Califórnia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "catskills",
+      "pt": "Catskills",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "chamonix",
+      "pt": "Chamonix",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "charleston",
+      "pt": "Charleston",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "chicago",
+      "pt": "Chicago",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "chippendale",
+      "pt": "Chippendale",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "christchurch",
+      "pt": "Christchurch",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "copenhagen",
+      "pt": "Copenhagen",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "curated-by-whatchamacallit",
+      "pt": "Curated By Whatchamacallit",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "curitiba",
+      "pt": "Curitiba",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "dallas",
+      "pt": "Dallas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "dubai",
+      "pt": "Dubai",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "dublin",
+      "pt": "Dublin",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "eindhoven",
+      "pt": "Eindhoven",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estocolmo",
+      "pt": "Estocolmo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "florianopolis",
+      "pt": "Florianópolis",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fortaleza",
+      "pt": "Fortaleza",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "france",
+      "pt": "France",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "germany",
+      "pt": "Germany. —",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "glasgow",
+      "pt": "Glasgow",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "gothenburg",
+      "pt": "Gothenburg",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "guang-zhou",
+      "pt": "Guang Zhou",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "hamburgo",
+      "pt": "Hamburgo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "helsinki",
+      "pt": "Helsinki",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "hessen",
+      "pt": "Hessen",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "hobart",
+      "pt": "Hobart",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "jakarta",
+      "pt": "Jakarta",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "kerry",
+      "pt": "Kerry",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "kiev",
+      "pt": "Kiev",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lausanne",
+      "pt": "Lausanne",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lima",
+      "pt": "Lima",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "londrina",
+      "pt": "Londrina",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lopez-mateos",
+      "pt": "López Mateos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lucerne",
+      "pt": "Lucerne",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lyon",
+      "pt": "Lyon",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "mac-com-brooklyn",
+      "pt": "Mac.com Brooklyn",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "macau",
+      "pt": "Macau",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "macclesfield",
+      "pt": "Macclesfield",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "makassar",
+      "pt": "Makassar",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "manchester",
+      "pt": "Manchester",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "melbourne",
+      "pt": "Melbourne",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "merida",
+      "pt": "Mérida",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "modena",
+      "pt": "Modena",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "monterrey",
+      "pt": "Monterrey",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "montevideo",
+      "pt": "Montevideo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "montpellier",
+      "pt": "Montpellier",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "montreal",
+      "pt": "Montreal",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "moscow",
+      "pt": "Moscow",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "n-a",
+      "pt": "N/A",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "nashville",
+      "pt": "Nashville",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "new-york-city",
+      "pt": "New York City",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "north-melbourne",
+      "pt": "North Melbourne",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "oregon",
+      "pt": "Oregon",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "oslo",
+      "pt": "Oslo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "perugia",
+      "pt": "Perugia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "port-macquarie",
+      "pt": "Port Macquarie",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "portland",
+      "pt": "Portland",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "porto-alegre",
+      "pt": "Porto Alegre",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "praga",
+      "pt": "Praga",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "providence",
+      "pt": "Providence",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "queenstown",
+      "pt": "Queenstown",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "recife",
+      "pt": "Recife",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "reiquiavique",
+      "pt": "Reiquiavique",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "riviera-maya",
+      "pt": "Riviera Maya",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "rotterdam",
+      "pt": "Rotterdam",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "salamanca",
+      "pt": "Salamanca",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "salvador",
+      "pt": "Salvador",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "san-diego",
+      "pt": "San Diego",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "san-francisco",
+      "pt": "San Francisco",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "santander",
+      "pt": "Santander",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sapporo",
+      "pt": "Sapporo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "seattle",
+      "pt": "Seattle",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "seoul",
+      "pt": "Seoul",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sofia",
+      "pt": "Sofia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "surry-hills",
+      "pt": "Surry Hills",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sydney",
+      "pt": "Sydney",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "tel-aviv",
+      "pt": "Tel Aviv",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "toronto",
+      "pt": "Toronto",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "udine",
+      "pt": "Udine",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "valencia",
+      "pt": "Valencia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vancouver",
+      "pt": "Vancouver",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vero-beach",
+      "pt": "Vero Beach",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "verona",
+      "pt": "Verona",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "viena",
+      "pt": "Viena",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vienna",
+      "pt": "Vienna",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vilnius",
+      "pt": "Vilnius",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "wellington",
+      "pt": "Wellington",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "zaandam",
+      "pt": "Zaandam",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "zagreb",
+      "pt": "Zagreb",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "zurich",
+      "pt": "Zurich",
+      "en": "",
+      "es": ""
+    }
+  ],
+  "filled": 19,
+  "total": 128
+}

@@ -1,0 +1,17 @@
+{
+  "translated": 454,
+  "skipped": [
+    {
+      "type": "cities",
+      "key": "a-coruna-spain",
+      "pt": "A Coruña (spain)",
+      "reason": "skip-rule"
+    },
+    {
+      "type": "cities",
+      "key": "n-a",
+      "pt": "N/A",
+      "reason": "skip-rule"
+    }
+  ]
+}

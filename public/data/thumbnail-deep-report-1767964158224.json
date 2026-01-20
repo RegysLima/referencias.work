@@ -1,0 +1,131 @@
+{
+  "processedAt": "2026-01-09T13:09:18.235Z",
+  "processed": 138,
+  "updated": 79,
+  "skipped": 59,
+  "failed": 0,
+  "batches": 3,
+  "samples": [
+    {
+      "name": "Opala Rosa Choque",
+      "url": "https://opalarosachoque.in/",
+      "thumbnailUrl": "https://i0.wp.com/opalarosachoque.in/wp-content/uploads/2025/03/THRWORK-1.png?fit=800%2C817&ssl=1",
+      "source": "deep"
+    },
+    {
+      "name": "Danilo Campos",
+      "url": "https://danilocampos.com.br/work",
+      "thumbnailUrl": "https://danilocampos.cc/share.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Muokka",
+      "url": "https://muokkaa.com/",
+      "thumbnailUrl": "https://muokkaa.com/wp-content/uploads/2024/04/BALLOON-NIKE2.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Standard Projects",
+      "url": "https://standard-projects.com/work",
+      "thumbnailUrl": "https://www.standard-projects.com/wp-content/uploads/2025/12/standard-projects-singlestore-signage-2-265x177.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Hype Type Studio",
+      "url": "https://hypetype.studio/",
+      "thumbnailUrl": "https://hypetype.opalstacked.com/wp-content/uploads/2021/08/01-Nike.svg",
+      "source": "deep"
+    },
+    {
+      "name": "Réplica",
+      "url": "https://replica.studio/",
+      "thumbnailUrl": "https://replica.studio/wp-content/uploads/2024/06/zey_zey_replica_cover.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Not Real",
+      "url": "https://notreal.tv/work",
+      "thumbnailUrl": "https://notreal.tv/wp-content/uploads/2021/02/project_thumb_insane.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Sawdust",
+      "url": "https://sawdust.works/",
+      "thumbnailUrl": "https://sawdust.works/wp-content/uploads/2020/05/sawdust-x-love-2.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Landscape",
+      "url": "https://thisislandscape.com/",
+      "thumbnailUrl": "https://thisislandscape.com/wp-content/uploads/2023/01/Mindbloom-Case-Study-07.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Korak Studio",
+      "url": "https://korakstudio.com/",
+      "thumbnailUrl": "https://korakstudio.com/wp-content/uploads/2022/03/Asset-1-768x532.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Jordi Masdeu Studio",
+      "url": "https://jordi-masdeu.com/project",
+      "thumbnailUrl": "https://jordi-masdeu.com/wp-content/uploads/2022/02/Jordi-Masdeu-Studio-Cases-de-la-Musica-01-1-1280x854.webp",
+      "source": "deep"
+    },
+    {
+      "name": "Paul Santiago",
+      "url": "https://paul-santiago.us/",
+      "thumbnailUrl": "https://paul-santiago.us/images/info.svg",
+      "source": "deep"
+    },
+    {
+      "name": "Valentin Guilbaud",
+      "url": "https://valentinguilbaud.com/",
+      "thumbnailUrl": "https://www.valentinguilbaud.com/wp-content/uploads/2022/06/VALENTIN-GUILBAUD-MOST-ARTWORK-01.webp",
+      "source": "deep"
+    },
+    {
+      "name": "Fabio Catapano",
+      "url": "https://fabiocatapano.it/work",
+      "thumbnailUrl": "https://fabiocatapano.it/wp-content/uploads/2025/03/FabioCatapano_Portfolio_IBM_Artwork_Motion-scaled.jpeg",
+      "source": "deep"
+    },
+    {
+      "name": "FAY",
+      "url": "https://fay.design/work",
+      "thumbnailUrl": "https://fay.design/wp-content/uploads/2023/03/cropped-FAY_studio-space.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Love Street Studio",
+      "url": "https://lovestreetstudio.com/projects",
+      "thumbnailUrl": "https://lovestreetstudio.com/wp-content/uploads/2025/01/Thumbnail-min-scaled.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Söderhavet",
+      "url": "https://soderhavet.com/work",
+      "thumbnailUrl": "https://soderhavet.com/wp-content/uploads/2025/09/opengraph-soderhavet.png",
+      "source": "deep"
+    },
+    {
+      "name": "Studio Feixen",
+      "url": "https://studiofeixen.ch/",
+      "thumbnailUrl": "https://www.studiofeixen.ch/wp-content/uploads/2023/03/3-Workflow.jpg",
+      "source": "deep"
+    },
+    {
+      "name": "Base Design",
+      "url": "https://basedesign.com/work",
+      "thumbnailUrl": "https://basedesign2.imgix.net/images/Huntington_Thumbnail_Desktop.png?auto=format&amp;fit=max&amp;w=3840",
+      "source": "deep"
+    },
+    {
+      "name": "LAYER",
+      "url": "https://layerdesign.com/projects",
+      "thumbnailUrl": "https://cdn.layerdesign.com/wp-content/uploads/2023/03/Project_.jpg.webp",
+      "source": "deep"
+    }
+  ],
+  "failures": []
+}

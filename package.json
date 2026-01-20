@@ -3,15 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "import:xlsx": "node scripts/import-xlsx.mjs",
+    "enrich:thumbs": "node scripts/enrich-thumbnails.mjs",
+    "enrich:location": "node scripts/enrich-location.mjs",
+    "enrich:thumbs:deep": "node scripts/enrich-thumbnails-deep.mjs",
+    "normalize:references": "node scripts/normalize-references.mjs",
+    "i18n:scaffold": "node scripts/i18n-scaffold.mjs",
+    "i18n:fill:countries": "node scripts/i18n-fill-countries.mjs",
+    "i18n:fill:areas": "node scripts/i18n-fill-areas.mjs",
+    "i18n:fill:cities": "node scripts/i18n-fill-cities.mjs",
+    "i18n:flag:location": "node scripts/flag-location-issues.mjs",
+    "i18n:translate:missing": "node scripts/i18n-translate-missing.mjs",
+    "i18n:normalize:labels": "node scripts/i18n-normalize-labels.mjs",
+    "i18n:fix:areas": "node scripts/i18n-fix-area-typos.mjs"
   },
   "dependencies": {
+    "@vercel/kv": "^3.0.0",
+    "cheerio": "^1.1.2",
     "next": "16.1.1",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

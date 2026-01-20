@@ -1,0 +1,726 @@
+{
+  "missing": [
+    {
+      "key": "abstrato",
+      "pt": "Abstrato",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "agencia",
+      "pt": "Agência",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "analogica",
+      "pt": "Analógica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "arte-urbana",
+      "pt": "Arte Urbana",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "artistico",
+      "pt": "Artístico",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "aventura",
+      "pt": "Aventura",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "bebidas",
+      "pt": "Bebidas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "beleza",
+      "pt": "Beleza",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "botanica",
+      "pt": "Botânica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "botanico",
+      "pt": "Botânico",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "capas",
+      "pt": "Capas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "celebridades",
+      "pt": "Celebridades",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "ciclismo",
+      "pt": "Ciclismo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "cientifica",
+      "pt": "Científica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "colagem",
+      "pt": "Colagem",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "colorida",
+      "pt": "Colorida",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "colorido",
+      "pt": "Colorido",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "comercial",
+      "pt": "Comercial",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "conceitual",
+      "pt": "Conceitual",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "corporativa",
+      "pt": "Corporativa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "cosmeticos",
+      "pt": "Cosméticos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "creative-coding",
+      "pt": "Creative Coding",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "criativa",
+      "pt": "Criativa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "criativo",
+      "pt": "Criativo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "customizadas",
+      "pt": "Customizadas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "digital",
+      "pt": "Digital",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "divertida",
+      "pt": "Divertida",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "documental",
+      "pt": "Documental",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "documentary",
+      "pt": "Documentary",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "doodle",
+      "pt": "Doodle",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "drinks",
+      "pt": "Drinks",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "duotone",
+      "pt": "Duotone",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "embalagens",
+      "pt": "Embalagens",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "espacial",
+      "pt": "Espacial",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "esporte",
+      "pt": "Esporte",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "esportes",
+      "pt": "Esportes",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estampa",
+      "pt": "Estampa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estampas",
+      "pt": "Estampas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estilo",
+      "pt": "Estilo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "estrategia",
+      "pt": "Estratégia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "excentrico",
+      "pt": "Excêntrico",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "exibicoes",
+      "pt": "Exibições",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "experimental",
+      "pt": "Experimental",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "expografia",
+      "pt": "Expografia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "exposicoes",
+      "pt": "Exposições",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fashion",
+      "pt": "Fashion",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "feminista",
+      "pt": "Feminista",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "filmes",
+      "pt": "Filmes",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fine-art",
+      "pt": "Fine Art",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fine-arts",
+      "pt": "Fine Arts",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fitness",
+      "pt": "Fitness",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "flash",
+      "pt": "Flash",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "fonts",
+      "pt": "Fonts",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "frutas",
+      "pt": "Frutas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "galeria",
+      "pt": "Galeria",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "gastronomia",
+      "pt": "Gastronomia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "geometrica",
+      "pt": "Geométrica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "golf",
+      "pt": "Golf",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "graffiti",
+      "pt": "Graffiti",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "grafica",
+      "pt": "Gráfica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "gratuitas",
+      "pt": "Gratuitas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "humor",
+      "pt": "Humor",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "iconografia",
+      "pt": "Iconografia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "impressao",
+      "pt": "Impressão",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "interiores",
+      "pt": "Interiores",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lifestyle",
+      "pt": "Lifestyle",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "lifetyle",
+      "pt": "Lifetyle",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "linogravura",
+      "pt": "Linogravura",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "luxo",
+      "pt": "Luxo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "macro",
+      "pt": "Macro",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "manual",
+      "pt": "Manual",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "microscopica",
+      "pt": "Microscópica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "mobiliario",
+      "pt": "Mobiliário",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "moda",
+      "pt": "Moda",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "monocromatica",
+      "pt": "Monocromática",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "murais",
+      "pt": "Murais",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "musica",
+      "pt": "Música",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "natureza",
+      "pt": "Natureza",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "neon",
+      "pt": "Neon",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "objetos",
+      "pt": "Objetos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "packaging",
+      "pt": "Packaging",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "paisagem",
+      "pt": "Paisagem",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "paisagens",
+      "pt": "Paisagens",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "parques",
+      "pt": "Parques",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "personagens",
+      "pt": "Personagens",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "pesquisa",
+      "pt": "Pesquisa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "pinturas",
+      "pt": "Pinturas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "pontilhismo",
+      "pt": "Pontilhismo",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "pop",
+      "pt": "Pop",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "posters",
+      "pt": "Posters",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "praia",
+      "pt": "Praia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "producao",
+      "pt": "Produção",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "produtos",
+      "pt": "Produtos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "programacao-criativa",
+      "pt": "Programação Criativa",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "psicodelica",
+      "pt": "Psicodélica",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "psicodelico",
+      "pt": "Psicodélico",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "publicacao",
+      "pt": "Publicação",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "publicidade",
+      "pt": "Publicidade",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "quadrinhos",
+      "pt": "Quadrinhos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "representante",
+      "pt": "Representante",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "retrato",
+      "pt": "Retrato",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "retratos",
+      "pt": "Retratos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "risografia",
+      "pt": "Risografia",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sinalizacao",
+      "pt": "Sinalização",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "sketchbook",
+      "pt": "Sketchbook",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "solar",
+      "pt": "Solar",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "still",
+      "pt": "Still",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "studio",
+      "pt": "Studio",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "surrealista",
+      "pt": "Surrealista",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "textura",
+      "pt": "Textura",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "texturas",
+      "pt": "Texturas",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "travel",
+      "pt": "Travel",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "typefaces",
+      "pt": "Typefaces",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "ui-ux",
+      "pt": "Ui/ux",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "urbana",
+      "pt": "Urbana",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "urbano",
+      "pt": "Urbano",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "veiculos",
+      "pt": "Veículos",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vetorial",
+      "pt": "Vetorial",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "viagem",
+      "pt": "Viagem",
+      "en": "",
+      "es": ""
+    },
+    {
+      "key": "vintage",
+      "pt": "Vintage",
+      "en": "",
+      "es": ""
+    }
+  ],
+  "filled": 23,
+  "total": 143
+}

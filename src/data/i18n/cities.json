@@ -1,0 +1,642 @@
+{
+  "a-coruna": {
+    "pt": "A Coruña",
+    "en": "A Coruña",
+    "es": "A Coruña"
+  },
+  "a-coruna-spain": {
+    "pt": "A Coruña (spain)",
+    "en": "A Coruña",
+    "es": "A Coruña"
+  },
+  "alexandria": {
+    "pt": "Alexandria",
+    "en": "Alexandria - Alexandria",
+    "es": "Alexandria"
+  },
+  "amsterdam": {
+    "pt": "Amsterdam",
+    "en": "Amsterdam",
+    "es": "Amsterdam"
+  },
+  "antuerpia": {
+    "pt": "Antuérpia",
+    "en": "Antwerp",
+    "es": "Amberes"
+  },
+  "aracaju": {
+    "pt": "Aracaju",
+    "en": "Aracaju",
+    "es": "Aracaju"
+  },
+  "atlanta": {
+    "pt": "Atlanta",
+    "en": "Atlanta",
+    "es": "Atlanta"
+  },
+  "auckland": {
+    "pt": "Auckland",
+    "en": "Auckland.",
+    "es": "Auckland"
+  },
+  "austin": {
+    "pt": "Austin",
+    "en": "Austin",
+    "es": "Austin"
+  },
+  "baltimore": {
+    "pt": "Baltimore",
+    "en": "Balt",
+    "es": "Baltimore"
+  },
+  "bamberg": {
+    "pt": "Bamberg",
+    "en": "Bamberg",
+    "es": "Bamberg"
+  },
+  "barcelona": {
+    "pt": "Barcelona",
+    "en": "Barcelona",
+    "es": "Barcelona"
+  },
+  "belgrado": {
+    "pt": "Belgrado",
+    "en": "Belgrade",
+    "es": "Belgrado"
+  },
+  "belo-horizonte": {
+    "pt": "Belo Horizonte",
+    "en": "Belo Horizonte",
+    "es": "Belo Horizonte"
+  },
+  "bergen": {
+    "pt": "Bergen",
+    "en": "Bergen",
+    "es": "Bergen"
+  },
+  "berlim": {
+    "pt": "Berlim",
+    "en": "Berlin",
+    "es": "Berlín"
+  },
+  "berlin": {
+    "pt": "Berlin",
+    "en": "Berlin",
+    "es": "Berlin"
+  },
+  "berna": {
+    "pt": "Berna",
+    "en": "Bern",
+    "es": "Berna"
+  },
+  "birmingham": {
+    "pt": "Birmingham",
+    "en": "Birmingham",
+    "es": "Birmingham"
+  },
+  "brasilia": {
+    "pt": "Brasília",
+    "en": "Brasília",
+    "es": "Brasilia"
+  },
+  "bristol": {
+    "pt": "Bristol",
+    "en": "Bristol",
+    "es": "Brístol"
+  },
+  "brno": {
+    "pt": "Brno",
+    "en": "Brno",
+    "es": "Brno"
+  },
+  "broadway": {
+    "pt": "Broadway",
+    "en": "51 Broadway",
+    "es": "Broadway"
+  },
+  "buenos-aires": {
+    "pt": "Buenos Aires",
+    "en": "Buenos Aires",
+    "es": "Buenos aires"
+  },
+  "california": {
+    "pt": "Califórnia",
+    "en": "Cal.",
+    "es": "California"
+  },
+  "catskills": {
+    "pt": "Catskills",
+    "en": "Catskills",
+    "es": "Catskills"
+  },
+  "chamonix": {
+    "pt": "Chamonix",
+    "en": "Chamonix",
+    "es": "Chamonix"
+  },
+  "charleston": {
+    "pt": "Charleston",
+    "en": "Charleston",
+    "es": "Charleston"
+  },
+  "chicago": {
+    "pt": "Chicago",
+    "en": "Chicago",
+    "es": "Chicago"
+  },
+  "chippendale": {
+    "pt": "Chippendale",
+    "en": "Chippendale",
+    "es": "Chippendale"
+  },
+  "christchurch": {
+    "pt": "Christchurch",
+    "en": "Christchurch",
+    "es": "Christchurch"
+  },
+  "cidade-do-mexico": {
+    "pt": "Cidade do México",
+    "en": "Mexico City",
+    "es": "Ciudad de México"
+  },
+  "copenhagen": {
+    "pt": "Copenhagen",
+    "en": "Copenhagen",
+    "es": "Copenhague"
+  },
+  "curated-by-whatchamacallit": {
+    "pt": "Curated By Whatchamacallit",
+    "en": "Curated By Whatchamacallit",
+    "es": "Comisariada por Whatchamacallit"
+  },
+  "curitiba": {
+    "pt": "Curitiba",
+    "en": "Curitiba",
+    "es": "Curitiba"
+  },
+  "dallas": {
+    "pt": "Dallas",
+    "en": "Dallas",
+    "es": "Dallas"
+  },
+  "dubai": {
+    "pt": "Dubai",
+    "en": "Dubai",
+    "es": "Dubai"
+  },
+  "dublin": {
+    "pt": "Dublin",
+    "en": "Dublin",
+    "es": "Dublín"
+  },
+  "eindhoven": {
+    "pt": "Eindhoven",
+    "en": "Eindhoven",
+    "es": "Eindhoven"
+  },
+  "estocolmo": {
+    "pt": "Estocolmo",
+    "en": "Stockholm",
+    "es": "Estocolmo"
+  },
+  "florianopolis": {
+    "pt": "Florianópolis",
+    "en": "Florianópolis",
+    "es": "Florianópolis"
+  },
+  "fortaleza": {
+    "pt": "Fortaleza",
+    "en": "Fortress",
+    "es": "Fortaleza"
+  },
+  "france": {
+    "pt": "France",
+    "en": "France",
+    "es": "France"
+  },
+  "germany": {
+    "pt": "Germany. —",
+    "en": "Germany.",
+    "es": "Germany"
+  },
+  "glasgow": {
+    "pt": "Glasgow",
+    "en": "Glasgow",
+    "es": "Glasgow"
+  },
+  "gothenburg": {
+    "pt": "Gothenburg",
+    "en": "Gothenburg",
+    "es": "Gotemburgo"
+  },
+  "guang-zhou": {
+    "pt": "Guang Zhou",
+    "en": "Guang Zhou",
+    "es": "Guang Zhou"
+  },
+  "haia": {
+    "pt": "Haia",
+    "en": "The Hague",
+    "es": "La Haya"
+  },
+  "hamburgo": {
+    "pt": "Hamburgo",
+    "en": "Free and Hanseatic City of Hamburg",
+    "es": "Hamburg"
+  },
+  "helsinki": {
+    "pt": "Helsinki",
+    "en": "Helsinki",
+    "es": "Helsinki"
+  },
+  "hessen": {
+    "pt": "Hessen",
+    "en": "Hesse",
+    "es": "Hessen"
+  },
+  "hobart": {
+    "pt": "Hobart",
+    "en": "Hobart",
+    "es": "Hobart"
+  },
+  "jakarta": {
+    "pt": "Jakarta",
+    "en": "Jakarta",
+    "es": "Yakarta"
+  },
+  "kerry": {
+    "pt": "Kerry",
+    "en": "Kerry",
+    "es": "Kerry"
+  },
+  "kiev": {
+    "pt": "Kiev",
+    "en": "Kiev",
+    "es": "Kiev"
+  },
+  "lausanne": {
+    "pt": "Lausanne",
+    "en": "Lausanne",
+    "es": "Lausana"
+  },
+  "lima": {
+    "pt": "Lima",
+    "en": "Lima",
+    "es": "Lima"
+  },
+  "lisboa": {
+    "pt": "Lisboa",
+    "en": "Lisbon",
+    "es": "Lisboa"
+  },
+  "londres": {
+    "pt": "Londres",
+    "en": "London",
+    "es": "Londres"
+  },
+  "londrina": {
+    "pt": "Londrina",
+    "en": "Londrina",
+    "es": "Londrina"
+  },
+  "lopez-mateos": {
+    "pt": "López Mateos",
+    "en": "López Mateos",
+    "es": "López Mateos"
+  },
+  "los-angeles": {
+    "pt": "Los Angeles",
+    "en": "Los Angeles",
+    "es": "Los Ángeles"
+  },
+  "lucerne": {
+    "pt": "Lucerne",
+    "en": "<g id=\"24\"/><g id=\"166\"/><g id=\"169\">Lucerne</g>",
+    "es": "Lucerna"
+  },
+  "lyon": {
+    "pt": "Lyon",
+    "en": "Lyon",
+    "es": "Lyon (desambiguación)"
+  },
+  "mac-com-brooklyn": {
+    "pt": "Mac.com Brooklyn",
+    "en": "Mac.com Brooklyn",
+    "es": "Mac.com Brooklyn"
+  },
+  "macau": {
+    "pt": "Macau",
+    "en": "Macau",
+    "es": "Macao"
+  },
+  "macclesfield": {
+    "pt": "Macclesfield",
+    "en": "Macclesfield",
+    "es": "Macclesfield"
+  },
+  "madrid": {
+    "pt": "Madrid",
+    "en": "Madrid",
+    "es": "Madrid"
+  },
+  "makassar": {
+    "pt": "Makassar",
+    "en": "Makassar",
+    "es": "Makassar"
+  },
+  "manchester": {
+    "pt": "Manchester",
+    "en": "Manchester",
+    "es": "Mánchester"
+  },
+  "melbourne": {
+    "pt": "Melbourne",
+    "en": "Melbourne",
+    "es": "Melbourne"
+  },
+  "merida": {
+    "pt": "Mérida",
+    "en": "Mérida",
+    "es": "Mérida"
+  },
+  "milao": {
+    "pt": "Milão",
+    "en": "Milan",
+    "es": "Milán"
+  },
+  "modena": {
+    "pt": "Modena",
+    "en": "Modena",
+    "es": "Modena"
+  },
+  "monterrey": {
+    "pt": "Monterrey",
+    "en": "Monterrey",
+    "es": "Monterrey"
+  },
+  "montevideo": {
+    "pt": "Montevideo",
+    "en": "Montevideo",
+    "es": "Montevidéu"
+  },
+  "montpellier": {
+    "pt": "Montpellier",
+    "en": "Montpellier",
+    "es": "Montpellier"
+  },
+  "montreal": {
+    "pt": "Montreal",
+    "en": "Montreal",
+    "es": "Montreal"
+  },
+  "moscow": {
+    "pt": "Moscow",
+    "en": "Moscow",
+    "es": "Moscú"
+  },
+  "n-a": {
+    "pt": "N/A",
+    "en": "N/A",
+    "es": "N/A"
+  },
+  "nashville": {
+    "pt": "Nashville",
+    "en": "Nashville, Tennessee",
+    "es": "Nashville"
+  },
+  "new-york": {
+    "pt": "New York",
+    "en": "New York",
+    "es": "New York"
+  },
+  "new-york-city": {
+    "pt": "New York City",
+    "en": "New York City",
+    "es": "Ciudad de Nueva York"
+  },
+  "north-melbourne": {
+    "pt": "North Melbourne",
+    "en": "North Melbourne",
+    "es": "North Melbourne"
+  },
+  "nova-york": {
+    "pt": "Nova York",
+    "en": "New York",
+    "es": "Nueva York"
+  },
+  "oregon": {
+    "pt": "Oregon",
+    "en": "Oregon",
+    "es": "Oregon"
+  },
+  "oslo": {
+    "pt": "Oslo",
+    "en": "Oslo",
+    "es": "Oslo"
+  },
+  "paris": {
+    "pt": "Paris",
+    "en": "Paris",
+    "es": "París"
+  },
+  "pequim": {
+    "pt": "Pequim",
+    "en": "Beijing",
+    "es": "Pekín"
+  },
+  "perugia": {
+    "pt": "Perugia",
+    "en": "Perugia",
+    "es": "«Perugia"
+  },
+  "port-macquarie": {
+    "pt": "Port Macquarie",
+    "en": "Port Macquarie",
+    "es": "Port Macquarie"
+  },
+  "portland": {
+    "pt": "Portland",
+    "en": "Portland:",
+    "es": "Portland"
+  },
+  "porto-alegre": {
+    "pt": "Porto Alegre",
+    "en": "Porto Alegre",
+    "es": "&#10;\t\tPorto Alegre"
+  },
+  "praga": {
+    "pt": "Praga",
+    "en": "Pests",
+    "es": "Praga"
+  },
+  "providence": {
+    "pt": "Providence",
+    "en": "Providence, RI",
+    "es": "Providence"
+  },
+  "queenstown": {
+    "pt": "Queenstown",
+    "en": "Queenstown, New Zealand",
+    "es": "Queenstown"
+  },
+  "recife": {
+    "pt": "Recife",
+    "en": "Recife",
+    "es": "Arrecife"
+  },
+  "reiquiavique": {
+    "pt": "Reiquiavique",
+    "en": "Reykjavik",
+    "es": "Reykjavik"
+  },
+  "rio-de-janeiro": {
+    "pt": "Rio de Janeiro",
+    "en": "Rio de Janeiro",
+    "es": "Río de Janeiro"
+  },
+  "riviera-maya": {
+    "pt": "Riviera Maya",
+    "en": "Riviera Maya",
+    "es": "Riviera Maya"
+  },
+  "roma": {
+    "pt": "Roma",
+    "en": "Rome",
+    "es": "Roma"
+  },
+  "rotterdam": {
+    "pt": "Rotterdam",
+    "en": "Rotterdam",
+    "es": "Rotterdam"
+  },
+  "salamanca": {
+    "pt": "Salamanca",
+    "en": "Salamanca.",
+    "es": "Salamanca"
+  },
+  "salvador": {
+    "pt": "Salvador",
+    "en": "Salvador",
+    "es": "Salvador"
+  },
+  "san-diego": {
+    "pt": "San Diego",
+    "en": "San diego",
+    "es": "San Diego"
+  },
+  "san-francisco": {
+    "pt": "San Francisco",
+    "en": "Images of San Francisco",
+    "es": "San Francisco"
+  },
+  "santander": {
+    "pt": "Santander",
+    "en": "Santander",
+    "es": "Santander"
+  },
+  "sao-paulo": {
+    "pt": "São Paulo",
+    "en": "São Paulo",
+    "es": "São Paulo"
+  },
+  "sapporo": {
+    "pt": "Sapporo",
+    "en": "Sapporo",
+    "es": "Sapporo"
+  },
+  "seattle": {
+    "pt": "Seattle",
+    "en": "Seattle",
+    "es": "Seattle"
+  },
+  "seoul": {
+    "pt": "Seoul",
+    "en": "Seoul",
+    "es": "Seúl"
+  },
+  "sofia": {
+    "pt": "Sofia",
+    "en": "सोफ़िया",
+    "es": "Sofía"
+  },
+  "surry-hills": {
+    "pt": "Surry Hills",
+    "en": "Surry Hills",
+    "es": "Surry Hills"
+  },
+  "sydney": {
+    "pt": "Sydney",
+    "en": "Sydney",
+    "es": "Sídney"
+  },
+  "tel-aviv": {
+    "pt": "Tel Aviv",
+    "en": "Tel Aviv",
+    "es": "Tel Aviv"
+  },
+  "toronto": {
+    "pt": "Toronto",
+    "en": "Toronto",
+    "es": "Toronto"
+  },
+  "udine": {
+    "pt": "Udine",
+    "en": "Udine",
+    "es": "Udine"
+  },
+  "valencia": {
+    "pt": "Valencia",
+    "en": "Valencia",
+    "es": "Valencia"
+  },
+  "vancouver": {
+    "pt": "Vancouver",
+    "en": "Vancouver",
+    "es": "Vancouver"
+  },
+  "vero-beach": {
+    "pt": "Vero Beach",
+    "en": "Vero Beach",
+    "es": "Vero Beach"
+  },
+  "verona": {
+    "pt": "Verona",
+    "en": "Verona",
+    "es": "Verona"
+  },
+  "viena": {
+    "pt": "Viena",
+    "en": "Vienna",
+    "es": "Vienna"
+  },
+  "vienna": {
+    "pt": "Vienna",
+    "en": "Vienna.",
+    "es": "Viena"
+  },
+  "vilnius": {
+    "pt": "Vilnius",
+    "en": "Vilnius",
+    "es": "Vilna"
+  },
+  "wellington": {
+    "pt": "Wellington",
+    "en": "Wellington",
+    "es": "Wellington"
+  },
+  "zaandam": {
+    "pt": "Zaandam",
+    "en": "Zaandam",
+    "es": "Zaandam"
+  },
+  "zagreb": {
+    "pt": "Zagreb",
+    "en": "Zagreb",
+    "es": "Zagreb»"
+  },
+  "zurich": {
+    "pt": "Zurich",
+    "en": "Zurich",
+    "es": "Zúrich"
+  }
+}
