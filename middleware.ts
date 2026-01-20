@@ -60,8 +60,10 @@ export async function middleware(req: NextRequest) {
 
   if (!isAdminRoute) return NextResponse.next();
 
-  // libera o login e assets
-  if (pathname === "/admin/login") return NextResponse.next();
+  // libera o login
+  if (pathname === "/admin/login" || pathname === "/api/admin/login") {
+    return NextResponse.next();
+  }
 
   const secret = process.env.ADMIN_SECRET || "";
   const token = req.cookies.get("rw_admin")?.value;
