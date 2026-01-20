@@ -244,6 +244,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [shuffleOffset, setShuffleOffset] = useState(0);
 
   const [visibleCount, setVisibleCount] = useState(20);
+  const [toast, setToast] = useState<string | null>(null);
 
   const ui = UI[lang] || UI.pt;
 
@@ -281,6 +282,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }, [theme]);
 
   useEffect(() => {
+    if (!toast) return;
+    const timeout = window.setTimeout(() => setToast(null), 2000);
+    return () => window.clearTimeout(timeout);
+  }, [toast]);
+
+  useEffect(() => {
     const n = Math.floor(Math.random() * 1_000_000_000);
     setSeed(n);
   }, []);
@@ -289,6 +296,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     const n = Math.floor(Math.random() * 1_000_000_000);
     setSeed(n);
     setSpotlightIndex(0);
+  }
+
+  function showToast(message: string) {
+    setToast(message);
   }
 
   function handleClear() {
@@ -1118,6 +1129,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           </div>
         </div>
       </footer>
+
+      {toast ? (
+        <div className="fixed bottom-5 left-5 z-50 rounded-full border border-zinc-200 bg-white px-4 py-2 text-[14px] text-zinc-900 shadow-sm">
+          {toast}
+        </div>
+      ) : null}
     </div>
   );
 }
