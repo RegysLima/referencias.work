@@ -10,6 +10,7 @@ export async function POST(req: Request) {
 
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
   const ADMIN_SECRET = process.env.ADMIN_SECRET || "";
+  const isProd = process.env.NODE_ENV === "production";
 
   if (!ADMIN_PASSWORD || !ADMIN_SECRET) {
     return NextResponse.json({ ok: false, error: "ENV missing" }, { status: 500 });
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
   res.cookies.set("rw_admin", token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: false, // local
+    secure: isProd,
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 7 dias
   });
