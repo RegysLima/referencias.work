@@ -568,7 +568,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           </div>
 
           {/* menu macro */}
-          <div className="hidden lg:flex lg:justify-center">
+          <div className="flex justify-start lg:justify-center">
             <nav className="pt-2 text-[16px]">
               {MACRO_MENU.map((value, idx) => {
                 const active = macroKey === value || (value === "all" && macroKey === ALL_KEY);
@@ -1042,7 +1042,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4"
                 )}`}
                 alt="QR Code Pix"
-                className="h-[220px] w-[220px] border border-zinc-200"
+                className="hidden h-[220px] w-[220px] border border-zinc-200 sm:block"
               />
               <button
                 onClick={async () => {
