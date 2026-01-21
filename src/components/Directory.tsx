@@ -605,12 +605,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           hideMobileMenus ? "pb-2 pt-3" : "pb-10 pt-4",
         ].join(" ")}
       >
-        <div
-          className={[
-            "grid grid-cols-1 lg:grid-cols-[360px_1fr_260px] lg:items-start",
-            hideMobileMenus ? "gap-2" : "gap-8",
-          ].join(" ")}
-        >
+        <div className="grid grid-cols-1 gap-2 lg:grid-cols-[360px_1fr_260px] lg:items-start lg:gap-8">
           <div className={hideMobileMenus ? "space-y-0" : "space-y-6"}>
             <div className="flex items-center justify-between">
               <div className="instrument-serif-regular text-[44px] leading-none tracking-[-0.01em] sm:text-[52px]">
@@ -633,7 +628,9 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           <div
             className={[
               "flex justify-start lg:justify-center transition-all duration-300",
-              hideMobileMenus ? "pointer-events-none max-h-0 opacity-0" : "max-h-40 opacity-100",
+              hideMobileMenus
+                ? "pointer-events-none max-h-0 opacity-0 mt-0"
+                : "max-h-40 opacity-100 mt-6 lg:mt-0",
             ].join(" ")}
           >
             <nav className="pt-2 text-[16px]">
@@ -668,7 +665,9 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           <div
             className={[
               "flex items-start justify-between gap-6 lg:justify-end transition-all duration-300",
-              hideMobileMenus ? "pointer-events-none max-h-0 opacity-0" : "max-h-40 opacity-100",
+              hideMobileMenus
+                ? "pointer-events-none max-h-0 opacity-0 mt-0"
+                : "max-h-40 opacity-100 mt-4 lg:mt-0",
             ].join(" ")}
           >
               <div className="pt-2 text-[16px] whitespace-nowrap">
