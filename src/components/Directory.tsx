@@ -601,6 +601,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         className={[
           "sticky top-0 z-40 border-b backdrop-blur",
           theme === "dark" ? "border-zinc-800 bg-zinc-950/80" : "border-zinc-200 bg-white/80",
+          "transition-all duration-300",
           hideMobileMenus ? "pb-4 pt-4" : "pb-10 pt-4",
         ].join(" ")}
       >
@@ -617,20 +618,24 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   aria-expanded={!hideMobileMenus}
                   aria-label="Mostrar menu"
                 >
-                  +
+                  {mobileMenuOpen ? "—" : "+"}
                 </button>
               ) : null}
             </div>
           </div>
 
           {/* menu macro */}
-          {!hideMobileMenus ? (
-            <div className="flex justify-start lg:justify-center">
-              <nav className="pt-2 text-[16px]">
-                {MACRO_MENU.map((value, idx) => {
-                  const active = macroKey === value || (value === "all" && macroKey === ALL_KEY);
-                  const label = value === "all" ? ui.macros.all : getMacroLabel(value, lang);
-                  return (
+          <div
+            className={[
+              "flex justify-start lg:justify-center transition-all duration-300",
+              hideMobileMenus ? "pointer-events-none max-h-0 opacity-0" : "max-h-40 opacity-100",
+            ].join(" ")}
+          >
+            <nav className="pt-2 text-[16px]">
+              {MACRO_MENU.map((value, idx) => {
+                const active = macroKey === value || (value === "all" && macroKey === ALL_KEY);
+                const label = value === "all" ? ui.macros.all : getMacroLabel(value, lang);
+                return (
                     <span key={value}>
                       <button
                         onClick={() => {
@@ -649,15 +654,18 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                       </button>
                       {idx < MACRO_MENU.length - 1 ? <span className="text-zinc-400">, </span> : null}
                     </span>
-                  );
-                })}
-              </nav>
-            </div>
-          ) : null}
+                );
+              })}
+            </nav>
+          </div>
 
           {/* idioma + filtros */}
-          {!hideMobileMenus ? (
-            <div className="flex items-start justify-between gap-6 lg:justify-end">
+          <div
+            className={[
+              "flex items-start justify-between gap-6 lg:justify-end transition-all duration-300",
+              hideMobileMenus ? "pointer-events-none max-h-0 opacity-0" : "max-h-40 opacity-100",
+            ].join(" ")}
+          >
               <div className="pt-2 text-[16px] whitespace-nowrap">
                 {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
                   <span key={code}>
@@ -698,7 +706,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 {filtersOpen ? `- ${ui.filters.toggle}` : `+ ${ui.filters.toggle}`}
               </button>
             </div>
-          ) : null}
         </div>
       </header>
 
