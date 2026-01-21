@@ -240,6 +240,9 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [cityKey, setCityKey] = useState<string>(ALL_KEY);
   const [areaPrimaryKey, setAreaPrimaryKey] = useState<string>(ALL_KEY);
   const [areaSecondaryKey, setAreaSecondaryKey] = useState<string>(ALL_KEY);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMobileCollapsed, setIsMobileCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const [seed, setSeed] = useState<number | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
@@ -248,6 +251,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [toast, setToast] = useState<string | null>(null);
 
   const ui = UI[lang] || UI.pt;
+  const hideMobileMenus = isMobile && isMobileCollapsed && !mobileMenuOpen;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -283,10 +287,49 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }, [theme]);
 
   useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    if ("addEventListener" in mq) {
+      mq.addEventListener("change", update);
+      return () => mq.removeEventListener("change", update);
+    }
+    mq.addListener(update);
+    return () => mq.removeListener(update);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setIsMobileCollapsed(false);
+      setMobileMenuOpen(false);
+      return;
+    }
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y > 80 && y >= lastY) {
+        setIsMobileCollapsed(true);
+      } else if (y < 40) {
+        setIsMobileCollapsed(false);
+        setMobileMenuOpen(false);
+      }
+      lastY = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isMobile]);
+
+  useEffect(() => {
     if (!toast) return;
     const timeout = window.setTimeout(() => setToast(null), 2000);
     return () => window.clearTimeout(timeout);
   }, [toast]);
+
+  useEffect(() => {
+    if (hideMobileMenus && filtersOpen) {
+      setFiltersOpen(false);
+    }
+  }, [hideMobileMenus, filtersOpen]);
 
   useEffect(() => {
     setSeed(getRandomSeed());
@@ -556,89 +599,106 @@ export default function Directory({ items }: { items: AnyItem[] }) {
       {/* Topo */}
       <header
         className={[
-          "sticky top-0 z-40 border-b pb-10 pt-4 backdrop-blur",
+          "sticky top-0 z-40 border-b backdrop-blur",
           theme === "dark" ? "border-zinc-800 bg-zinc-950/80" : "border-zinc-200 bg-white/80",
+          hideMobileMenus ? "pb-4 pt-4" : "pb-10 pt-4",
         ].join(" ")}
       >
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_1fr_260px] lg:items-start">
-          <div className="space-y-6">
-            <div className="instrument-serif-regular text-[44px] leading-none tracking-[-0.01em] sm:text-[52px]">
-              referencias.work
+          <div className={hideMobileMenus ? "space-y-0" : "space-y-6"}>
+            <div className="flex items-center justify-between">
+              <div className="instrument-serif-regular text-[44px] leading-none tracking-[-0.01em] sm:text-[52px]">
+                referencias.work
+              </div>
+              {isMobile && isMobileCollapsed ? (
+                <button
+                  onClick={() => setMobileMenuOpen((v) => !v)}
+                  className="instrument-serif-regular text-[44px] leading-none tracking-[-0.01em] sm:text-[52px]"
+                  aria-expanded={!hideMobileMenus}
+                  aria-label="Mostrar menu"
+                >
+                  +
+                </button>
+              ) : null}
             </div>
           </div>
 
           {/* menu macro */}
-          <div className="flex justify-start lg:justify-center">
-            <nav className="pt-2 text-[16px]">
-              {MACRO_MENU.map((value, idx) => {
-                const active = macroKey === value || (value === "all" && macroKey === ALL_KEY);
-                const label = value === "all" ? ui.macros.all : getMacroLabel(value, lang);
-                return (
-                  <span key={value}>
-                    <button
-                      onClick={() => {
-                        if (value === "all") {
-                          setMacroKey(ALL_KEY);
-                        } else {
-                          setMacroKey((cur) => (cur === value ? ALL_KEY : value));
-                        }
-                        setVisibleCount(20);
-                        setSpotlightIndex(0);
-                        newSeed();
-                      }}
-                      className={active ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
-                    >
-                      {label}
-                    </button>
-                    {idx < MACRO_MENU.length - 1 ? <span className="text-zinc-400">, </span> : null}
-                  </span>
-                );
-              })}
-            </nav>
-          </div>
+          {!hideMobileMenus ? (
+            <div className="flex justify-start lg:justify-center">
+              <nav className="pt-2 text-[16px]">
+                {MACRO_MENU.map((value, idx) => {
+                  const active = macroKey === value || (value === "all" && macroKey === ALL_KEY);
+                  const label = value === "all" ? ui.macros.all : getMacroLabel(value, lang);
+                  return (
+                    <span key={value}>
+                      <button
+                        onClick={() => {
+                          if (value === "all") {
+                            setMacroKey(ALL_KEY);
+                          } else {
+                            setMacroKey((cur) => (cur === value ? ALL_KEY : value));
+                          }
+                          setVisibleCount(20);
+                          setSpotlightIndex(0);
+                          newSeed();
+                        }}
+                        className={active ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
+                      >
+                        {label}
+                      </button>
+                      {idx < MACRO_MENU.length - 1 ? <span className="text-zinc-400">, </span> : null}
+                    </span>
+                  );
+                })}
+              </nav>
+            </div>
+          ) : null}
 
           {/* idioma + filtros */}
-          <div className="flex items-start justify-between gap-6 lg:justify-end">
-            <div className="pt-2 text-[16px] whitespace-nowrap">
-              {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
-                <span key={code}>
-                  <button
-                    onClick={() => setLang(code)}
-                    className={lang === code ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
-                  >
-                    {code}
-                  </button>
-                  {idx < 2 ? <span className="text-zinc-400">/</span> : null}
-                </span>
-              ))}
-            </div>
+          {!hideMobileMenus ? (
+            <div className="flex items-start justify-between gap-6 lg:justify-end">
+              <div className="pt-2 text-[16px] whitespace-nowrap">
+                {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
+                  <span key={code}>
+                    <button
+                      onClick={() => setLang(code)}
+                      className={lang === code ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
+                    >
+                      {code}
+                    </button>
+                    {idx < 2 ? <span className="text-zinc-400">/</span> : null}
+                  </span>
+                ))}
+              </div>
 
-            <div className="inline-flex w-[92px] justify-between pt-2 text-[16px]">
+              <div className="inline-flex w-[92px] justify-between pt-2 text-[16px]">
+                <button
+                  onClick={() => setTheme("light")}
+                  className={theme === "light" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
+                  aria-pressed={theme === "light"}
+                >
+                  Light
+                </button>
+                <span className="text-zinc-400">/</span>
+                <button
+                  onClick={() => setTheme("dark")}
+                  className={theme === "dark" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
+                  aria-pressed={theme === "dark"}
+                >
+                  Dark
+                </button>
+              </div>
+
               <button
-                onClick={() => setTheme("light")}
-                className={theme === "light" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
-                aria-pressed={theme === "light"}
+                onClick={() => setFiltersOpen((v) => !v)}
+                className="inline-flex w-[88px] justify-end pt-2 text-[16px] text-zinc-950"
+                aria-expanded={filtersOpen}
               >
-                Light
-              </button>
-              <span className="text-zinc-400">/</span>
-              <button
-                onClick={() => setTheme("dark")}
-                className={theme === "dark" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
-                aria-pressed={theme === "dark"}
-              >
-                Dark
+                {filtersOpen ? `- ${ui.filters.toggle}` : `+ ${ui.filters.toggle}`}
               </button>
             </div>
-
-            <button
-              onClick={() => setFiltersOpen((v) => !v)}
-              className="inline-flex w-[88px] justify-end pt-2 text-[16px] text-zinc-950"
-              aria-expanded={filtersOpen}
-            >
-              {filtersOpen ? `- ${ui.filters.toggle}` : `+ ${ui.filters.toggle}`}
-            </button>
-          </div>
+          ) : null}
         </div>
       </header>
 
