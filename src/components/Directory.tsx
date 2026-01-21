@@ -602,7 +602,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           "sticky top-0 z-40 border-b backdrop-blur",
           theme === "dark" ? "border-zinc-800 bg-zinc-950/80" : "border-zinc-200 bg-white/80",
           "transition-all duration-300",
-          hideMobileMenus ? "pb-4 pt-4" : "pb-10 pt-4",
+          hideMobileMenus ? "pb-2 pt-3" : "pb-10 pt-4",
         ].join(" ")}
       >
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_1fr_260px] lg:items-start">
