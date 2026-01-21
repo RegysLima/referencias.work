@@ -217,11 +217,13 @@ function seededShuffle<T>(arr: T[], seed: number) {
   return a;
 }
 
-function rotate<T>(arr: T[], offset: number) {
-  if (!arr.length) return arr;
-  const o = ((offset % arr.length) + arr.length) % arr.length;
-  if (!o) return arr;
-  return [...arr.slice(o), ...arr.slice(0, o)];
+function getRandomSeed() {
+  if (typeof crypto !== "undefined" && "getRandomValues" in crypto) {
+    const buf = new Uint32Array(1);
+    crypto.getRandomValues(buf);
+    return buf[0];
+  }
+  return Math.floor(Math.random() * 1_000_000_000);
 }
 
 /* ---------------- UI constants ---------------- */
@@ -241,7 +243,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   const [seed, setSeed] = useState<number | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
-  const [shuffleOffset, setShuffleOffset] = useState(0);
 
   const [visibleCount, setVisibleCount] = useState(20);
   const [toast, setToast] = useState<string | null>(null);
@@ -288,13 +289,11 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }, [toast]);
 
   useEffect(() => {
-    const n = Math.floor(Math.random() * 1_000_000_000);
-    setSeed(n);
+    setSeed(getRandomSeed());
   }, []);
 
   function newSeed() {
-    const n = Math.floor(Math.random() * 1_000_000_000);
-    setSeed(n);
+    setSeed(getRandomSeed());
     setSpotlightIndex(0);
   }
 
@@ -520,19 +519,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   const ordered = useMemo(() => {
     if (!seed) return filtered;
-    const shuffled = seededShuffle(filtered, seed);
-    return rotate(shuffled, shuffleOffset);
-  }, [filtered, seed, shuffleOffset]);
+    return seededShuffle(filtered, seed);
+  }, [filtered, seed]);
 
   const total = ordered.length;
-
-  useEffect(() => {
-    if (!total) return;
-    const stored = Number(window.localStorage.getItem("rw_shuffle_offset") || "0");
-    const next = (stored + 37) % total;
-    setShuffleOffset(next);
-    window.localStorage.setItem("rw_shuffle_offset", String(next));
-  }, [seed, total]);
 
   useEffect(() => {
     setSpotlightIndex(0);
