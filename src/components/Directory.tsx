@@ -290,7 +290,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     const mq = window.matchMedia("(max-width: 1023px)");
     const update = () => setIsMobile(mq.matches);
     update();
-    if ("addEventListener" in mq) {
+    if (mq.addEventListener) {
       mq.addEventListener("change", update);
       return () => mq.removeEventListener("change", update);
     }
