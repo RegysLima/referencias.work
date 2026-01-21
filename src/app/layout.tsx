@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og.svg",
+        url: "/og.png",
         width: 1200,
         height: 630,
         alt: "referencias.work",
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     title: "referencias.work",
     description:
       "Diretório global de referências criativas: design, branding, ilustração, fotografia, tipografia e estúdios.",
-    images: ["/og.svg"],
+    images: ["/og.png"],
   },
 };
 
