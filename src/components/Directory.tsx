@@ -605,7 +605,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           hideMobileMenus ? "pb-2 pt-3" : "pb-10 pt-4",
         ].join(" ")}
       >
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_1fr_260px] lg:items-start">
+        <div
+          className={[
+            "grid grid-cols-1 lg:grid-cols-[360px_1fr_260px] lg:items-start",
+            hideMobileMenus ? "gap-2" : "gap-8",
+          ].join(" ")}
+        >
           <div className={hideMobileMenus ? "space-y-0" : "space-y-6"}>
             <div className="flex items-center justify-between">
               <div className="instrument-serif-regular text-[44px] leading-none tracking-[-0.01em] sm:text-[52px]">
