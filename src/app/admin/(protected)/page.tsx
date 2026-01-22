@@ -229,38 +229,42 @@ export default function AdminPage() {
     setBrokenThumbs({});
     showToast("Verificando imagens…");
 
-    const batchSize = 40;
-    let brokenCount = 0;
+    const queue = [...candidates];
+    const next = async (): Promise<{ id: string; ok: boolean } | null> => {
+      const item = queue.shift();
+      if (!item) return null;
+      return new Promise((resolve) => {
+        const img = new Image();
+        const cleanup = () => {
+          img.onload = null;
+          img.onerror = null;
+        };
+        img.onload = () => {
+          cleanup();
+          resolve({ id: item.id, ok: true });
+        };
+        img.onerror = () => {
+          cleanup();
+          resolve({ id: item.id, ok: false });
+        };
+        img.referrerPolicy = "no-referrer";
+        img.decoding = "async";
+        img.src = item.url;
+      });
+    };
 
-    for (let i = 0; i < candidates.length; i += batchSize) {
-      const batch = candidates.slice(i, i + batchSize);
-      try {
-        const res = await fetch("/api/admin/check-images", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ items: batch }),
-        });
-        if (!res.ok) {
-          showToast("Falha ao verificar imagens");
-          break;
-        }
-        const data = await res.json();
-        const results: Array<{ id: string; ok: boolean }> = Array.isArray(data?.results)
-          ? data.results
-          : [];
-        setBrokenThumbs((prev) => {
-          const next = { ...prev };
-          for (const r of results) {
-            next[r.id] = !r.ok;
-          }
-          return next;
-        });
-        brokenCount += results.filter((r) => !r.ok).length;
-      } catch {
-        showToast("Falha ao verificar imagens");
-        break;
+    const CONCURRENCY = 6;
+    let brokenCount = 0;
+    const workers = Array.from({ length: CONCURRENCY }, async () => {
+      while (queue.length) {
+        const result = await next();
+        if (!result) break;
+        setBrokenThumbs((prev) => ({ ...prev, [result.id]: !result.ok }));
+        if (!result.ok) brokenCount += 1;
       }
-    }
+    });
+
+    await Promise.all(workers);
 
     setCheckingThumbs(false);
     showToast(
