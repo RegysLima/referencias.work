@@ -361,6 +361,24 @@ export default function AdminPage() {
 
         const next: RefItem = { ...i, ...patch, updatedAt: new Date().toISOString() };
 
+        if (i.reviewedAt) {
+          const keys = Object.keys(patch);
+          const reviewKeys = [
+            "name",
+            "url",
+            "macroType",
+            "areaPrimary",
+            "areasSecondary",
+            "country",
+            "city",
+            "thumbnailUrl",
+            "thumbnailSource",
+          ];
+          if (keys.some((k) => reviewKeys.includes(k))) {
+            next.reviewedAt = null;
+          }
+        }
+
         // normaliza macroType sempre que mexer (evita “Studio” solto)
         next.macroType = normalizeMacro(next.macroType);
 
@@ -1144,11 +1162,11 @@ export default function AdminPage() {
                           onClick={() => openThumbPicker(i.id, i.url)}
                           className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
                         >
-                          Escolher thumbnail
+                          Escolher
                         </button>
 
                         <label className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 cursor-pointer text-center">
-                          {uploadingId === i.id ? "Enviando…" : "Upload imagem"}
+                          {uploadingId === i.id ? "Enviando…" : "Upload"}
                           <input
                             type="file"
                             accept="image/*"
