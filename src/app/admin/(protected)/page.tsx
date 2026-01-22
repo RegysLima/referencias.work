@@ -138,6 +138,7 @@ export default function AdminPage() {
   const [onlyUnreviewed, setOnlyUnreviewed] = useState(false);
   const [onlyDuplicates, setOnlyDuplicates] = useState(false);
   const [onlyNeedsReview, setOnlyNeedsReview] = useState(false);
+  const [onlyBrokenImages, setOnlyBrokenImages] = useState(false);
   const [macroFilter, setMacroFilter] = useState<string>("Todos");
 
   const [openId, setOpenId] = useState<string | null>(null);
@@ -148,6 +149,8 @@ export default function AdminPage() {
   const [saveMessage, setSaveMessage] = useState<string>("");
   const [autoSavePending, setAutoSavePending] = useState(false);
   const [autoSaveActive, setAutoSaveActive] = useState(false);
+  const [checkingThumbs, setCheckingThumbs] = useState(false);
+  const [brokenThumbs, setBrokenThumbs] = useState<Record<string, boolean>>({});
   const [deleteConfirm, setDeleteConfirm] = useState<{
     open: boolean;
     itemId: string | null;
@@ -212,12 +215,68 @@ export default function AdminPage() {
     return map;
   }, [items]);
 
+  async function checkBrokenImages() {
+    const candidates = items
+      .filter((i) => (i.thumbnailUrl || "").trim())
+      .map((i) => ({ id: i.id, url: (i.thumbnailUrl || "").trim() }));
+
+    if (!candidates.length) {
+      showToast("Nenhuma imagem para verificar");
+      return;
+    }
+
+    setCheckingThumbs(true);
+    setBrokenThumbs({});
+    showToast("Verificando imagens…");
+
+    const batchSize = 40;
+    let brokenCount = 0;
+
+    for (let i = 0; i < candidates.length; i += batchSize) {
+      const batch = candidates.slice(i, i + batchSize);
+      try {
+        const res = await fetch("/api/admin/check-images", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ items: batch }),
+        });
+        if (!res.ok) {
+          showToast("Falha ao verificar imagens");
+          break;
+        }
+        const data = await res.json();
+        const results: Array<{ id: string; ok: boolean }> = Array.isArray(data?.results)
+          ? data.results
+          : [];
+        setBrokenThumbs((prev) => {
+          const next = { ...prev };
+          for (const r of results) {
+            next[r.id] = !r.ok;
+          }
+          return next;
+        });
+        brokenCount += results.filter((r) => !r.ok).length;
+      } catch {
+        showToast("Falha ao verificar imagens");
+        break;
+      }
+    }
+
+    setCheckingThumbs(false);
+    showToast(
+      brokenCount
+        ? `${brokenCount} imagem(ns) com problema`
+        : "Nenhuma imagem quebrada encontrada"
+    );
+  }
+
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
 
     return items.filter((i) => {
       if (macroFilter !== "Todos" && i.macroType !== macroFilter) return false;
       if (onlyNoImage && i.thumbnailUrl) return false;
+      if (onlyBrokenImages && !brokenThumbs[i.id]) return false;
       if (onlyUnreviewed && i.reviewedAt) return false;
       if (onlyNeedsReview && !i.reviewFlags) return false;
 
@@ -245,7 +304,18 @@ export default function AdminPage() {
 
       return hay.includes(query);
     });
-  }, [items, q, onlyNoImage, onlyUnreviewed, onlyDuplicates, onlyNeedsReview, macroFilter, duplicateMap]);
+  }, [
+    items,
+    q,
+    onlyNoImage,
+    onlyBrokenImages,
+    onlyUnreviewed,
+    onlyDuplicates,
+    onlyNeedsReview,
+    macroFilter,
+    duplicateMap,
+    brokenThumbs,
+  ]);
 
   const areaMap = useMemo(() => buildAreaMap(items), [items]);
   const areaOptions = useMemo(() => {
@@ -619,6 +689,23 @@ export default function AdminPage() {
             Revisar dúvidas
           </label>
 
+          <label className="flex items-center gap-2 text-sm text-zinc-300">
+            <input
+              type="checkbox"
+              checked={onlyBrokenImages}
+              onChange={(e) => setOnlyBrokenImages(e.target.checked)}
+            />
+            Somente imagens quebradas
+          </label>
+
+          <button
+            onClick={checkBrokenImages}
+            disabled={checkingThumbs}
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 disabled:opacity-60"
+          >
+            {checkingThumbs ? "Verificando…" : "Verificar imagens"}
+          </button>
+
           <div className="ml-auto text-sm text-zinc-400">{filtered.length} itens</div>
         </div>
       </div>
@@ -747,6 +834,7 @@ export default function AdminPage() {
             const isOpen = openId === i.id;
             const k = normalizeUrl(i.url);
             const dup = k && (duplicateMap.get(k) ?? 0) >= 2;
+            const brokenThumb = brokenThumbs[i.id];
 
             return (
               <div
@@ -797,6 +885,12 @@ export default function AdminPage() {
                       >
                         {i.reviewedAt ? "revisado" : "pendente"}
                       </span>
+
+                      {brokenThumb ? (
+                        <span className="rounded-full border border-red-700/60 bg-red-950/30 px-2 py-1 text-[11px] text-red-200">
+                          imagem quebrada
+                        </span>
+                      ) : null}
 
                       {i.reviewFlags ? (
                         <span className="rounded-full border border-amber-700/60 bg-amber-950/25 px-2 py-1 text-[11px] text-amber-200">
