@@ -151,6 +151,7 @@ export default function AdminPage() {
   const [autoSaveActive, setAutoSaveActive] = useState(false);
   const [checkingThumbs, setCheckingThumbs] = useState(false);
   const [brokenThumbs, setBrokenThumbs] = useState<Record<string, boolean>>({});
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<{
     open: boolean;
     itemId: string | null;
@@ -272,6 +273,33 @@ export default function AdminPage() {
         ? `${brokenCount} imagem(ns) com problema`
         : "Nenhuma imagem quebrada encontrada"
     );
+  }
+
+  async function uploadThumbnail(itemId: string, file: File) {
+    if (!file) return;
+    setUploadingId(itemId);
+    showToast("Enviando imagem…");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
+      if (!res.ok) {
+        showToast("Falha no upload");
+        return;
+      }
+      const data = await res.json();
+      if (data?.url) {
+        updateItem(itemId, { thumbnailUrl: data.url, thumbnailSource: "upload" });
+        showToast("Imagem enviada");
+        setAutoSavePending(true);
+      } else {
+        showToast("Falha no upload");
+      }
+    } catch {
+      showToast("Falha no upload");
+    } finally {
+      setUploadingId(null);
+    }
   }
 
   const filtered = useMemo(() => {
@@ -1096,7 +1124,7 @@ export default function AdminPage() {
                       </div>
 
 
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
                         <div>
                           <label className="text-xs text-zinc-400">Imagem (thumbnailUrl)</label>
                           <input
@@ -1118,6 +1146,21 @@ export default function AdminPage() {
                         >
                           Escolher thumbnail
                         </button>
+
+                        <label className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 cursor-pointer text-center">
+                          {uploadingId === i.id ? "Enviando…" : "Upload imagem"}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            disabled={uploadingId === i.id}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) uploadThumbnail(i.id, file);
+                              e.currentTarget.value = "";
+                            }}
+                          />
+                        </label>
                       </div>
 
                       <div className="text-xs text-zinc-500">
