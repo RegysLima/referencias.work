@@ -25,13 +25,13 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
   }, [theme]);
 
   useEffect(() => {
-    window.localStorage.setItem("rw_lang", lang);
-    const params = new URLSearchParams(window.location.search);
-    params.set("lang", lang);
-    const nextUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState(null, "", nextUrl);
     document.documentElement.lang = lang;
   }, [lang]);
+
+  function setLangAndReload(next: Lang) {
+    window.localStorage.setItem("rw_lang", next);
+    window.location.href = `/sobre?lang=${next}`;
+  }
 
   return (
     <header
@@ -42,7 +42,8 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
         "pb-6 pt-4",
       ].join(" ")}
     >
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[360px_1fr_260px] lg:items-start">
+      <div className="mx-auto w-full px-6 sm:px-10 lg:px-12">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[360px_1fr_260px] lg:items-start">
         <div className="space-y-3">
           <a
             href={`/?lang=${lang}`}
@@ -60,8 +61,8 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
           </nav>
         </div>
 
-        <div className="flex items-center justify-between gap-4 lg:justify-end flex-nowrap">
-          <div className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap flex items-center gap-2">
+        <div className="flex items-center justify-between gap-4 sm:gap-6 lg:justify-end flex-nowrap">
+          <div className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap flex items-center gap-4 sm:gap-6">
             <a
               href={`/?lang=${lang}`}
               className="text-zinc-400 hover:text-zinc-700 lg:hidden"
@@ -72,7 +73,7 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
             {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
               <span key={code}>
                 <button
-                  onClick={() => setLang(code)}
+                  onClick={() => setLangAndReload(code)}
                   className={lang === code ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
                 >
                   {code}
@@ -100,6 +101,7 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
             </button>
           </div>
 
+        </div>
         </div>
       </div>
     </header>

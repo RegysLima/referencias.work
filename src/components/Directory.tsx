@@ -672,19 +672,20 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           {/* idioma + filtros */}
           <div
             className={[
-              "flex items-center justify-between gap-4 lg:justify-end transition-all duration-300 flex-nowrap",
+              "flex items-center justify-between gap-4 sm:gap-6 lg:justify-end transition-all duration-300 flex-nowrap",
               hideMobileMenus
                 ? "pointer-events-none max-h-0 opacity-0 mt-0"
                 : "max-h-40 opacity-100 mt-4 lg:mt-0",
             ].join(" ")}
           >
-            <div className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap flex items-center gap-2">
-              <a
-                href={`/sobre?lang=${lang}`}
-                className="text-zinc-400 hover:text-zinc-700"
-              >
-                {lang === "en" ? "About" : "Sobre"}
-              </a>
+            <a
+              href={`/sobre?lang=${lang}`}
+              className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap text-zinc-400 hover:text-zinc-700"
+            >
+              {lang === "en" ? "About" : "Sobre"}
+            </a>
+
+            <div className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap">
               {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
                 <span key={code}>
                   <button
@@ -718,7 +719,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
             <button
               onClick={() => setFiltersOpen((v) => !v)}
-              className="inline-flex w-[72px] sm:w-[88px] justify-end pt-2 text-[14px] sm:text-[16px] text-zinc-950 shrink-0"
+              className="inline-flex whitespace-nowrap pt-2 text-[14px] sm:text-[16px] text-zinc-950 shrink-0"
               aria-expanded={filtersOpen}
             >
               {filtersOpen ? `- ${ui.filters.toggle}` : `+ ${ui.filters.toggle}`}

@@ -56,14 +56,33 @@ function normalizeSections(sections: unknown) {
     });
 }
 
+function normalizeAbout(input: unknown): AboutContent {
+  const parsed = input as {
+    title?: unknown;
+    body?: unknown;
+    sections?: unknown;
+    updatedAt?: string;
+  };
+  return {
+    title: normalizeText(parsed?.title),
+    body: normalizeText(parsed?.body),
+    sections: normalizeSections(parsed?.sections),
+    updatedAt: parsed?.updatedAt,
+  };
+}
+
 async function readAbout(): Promise<AboutContent> {
   if (KV_ENABLED) {
     const data = await kv.get<AboutContent>(KV_KEY);
-    if (data) return data;
+    if (data) {
+      const normalized = normalizeAbout(data);
+      await kv.set(KV_KEY, normalized);
+      return normalized;
+    }
   }
 
   const raw = fs.readFileSync(DB_PATH, "utf-8");
-  const fileDb = JSON.parse(raw) as AboutContent;
+  const fileDb = normalizeAbout(JSON.parse(raw));
 
   if (KV_ENABLED) {
     await kv.set(KV_KEY, fileDb);
