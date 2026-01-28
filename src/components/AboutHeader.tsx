@@ -56,7 +56,7 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
         <div className="hidden lg:flex lg:justify-center">
           <nav className="pt-2 text-[16px]">
             <a href={`/?lang=${lang}`} className="text-zinc-400 hover:text-zinc-700">
-              {ui.macros.all}
+              {lang === "en" ? "Back to home" : lang === "es" ? "Volver al inicio" : "Voltar a home"}
             </a>
           </nav>
         </div>
@@ -67,7 +67,7 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
               href={`/?lang=${lang}`}
               className="text-zinc-400 hover:text-zinc-700 lg:hidden"
             >
-              {ui.macros.all}
+              {lang === "en" ? "Back to home" : lang === "es" ? "Volver al inicio" : "Voltar a home"}
             </a>
             <span className="text-zinc-400">{aboutLabel}</span>
             {(["pt", "es", "en"] as Lang[]).map((code, idx) => (

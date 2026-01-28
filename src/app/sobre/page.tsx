@@ -30,7 +30,7 @@ export default async function SobrePage({
     <main className="min-h-screen bg-white text-zinc-950">
       <AboutHeader initialLang={lang} />
       <div className="mx-auto w-full px-6 pb-16 pt-10 sm:px-10 lg:px-12">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_1fr] lg:items-start">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[320px_minmax(0,680px)] lg:items-start">
           <div className="text-[22px] tracking-[0.02em] text-zinc-900">
             {pickText(about.title, lang) || (lang === "en" ? "About the project" : lang === "es" ? "Sobre el proyecto" : "Sobre o projeto")}
           </div>
@@ -50,7 +50,7 @@ export default async function SobrePage({
               const body = splitParagraphs(pickText(section.body, lang));
               if (!title && !body.length) return null;
               return (
-                <div key={section.id || `${idx}-${title}`} className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_1fr] lg:items-start">
+                <div key={section.id || `${idx}-${title}`} className="grid grid-cols-1 gap-8 lg:grid-cols-[320px_minmax(0,680px)] lg:items-start">
                   <div className="text-[20px] tracking-[0.02em] text-zinc-900">
                     {title || (lang === "en" ? "Section" : "Seção")}
                   </div>
@@ -64,6 +64,47 @@ export default async function SobrePage({
             })}
           </div>
         ) : null}
+
+        <footer className="mt-16 border-t border-zinc-200 pt-6">
+          <div className="flex flex-col gap-4 text-[14px] text-zinc-600 sm:flex-row sm:items-start sm:justify-between">
+            <div>Projeto desenvolvido por Regys Lima</div>
+            <div className="text-zinc-600">
+              <a
+                href="https://regys.design/"
+                target="_blank"
+                rel="noreferrer"
+                className="underline decoration-zinc-400/50 underline-offset-4 hover:decoration-zinc-600"
+              >
+                Portfólio
+              </a>
+              <span className="text-zinc-400">, </span>
+              <a
+                href="https://www.instagram.com/_regyslima/"
+                target="_blank"
+                rel="noreferrer"
+                className="underline decoration-zinc-400/50 underline-offset-4 hover:decoration-zinc-600"
+              >
+                Instagram
+              </a>
+              <span className="text-zinc-400">, </span>
+              <a
+                href="https://www.linkedin.com/in/regyslima/"
+                target="_blank"
+                rel="noreferrer"
+                className="underline decoration-zinc-400/50 underline-offset-4 hover:decoration-zinc-600"
+              >
+                Linkedin
+              </a>
+              <span className="text-zinc-400">, </span>
+              <a
+                href="mailto:regyslima07@gmail.com"
+                className="underline decoration-zinc-400/50 underline-offset-4 hover:decoration-zinc-600"
+              >
+                Contato
+              </a>
+            </div>
+          </div>
+        </footer>
       </div>
     </main>
   );
