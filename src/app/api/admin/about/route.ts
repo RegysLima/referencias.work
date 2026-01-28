@@ -6,6 +6,10 @@ import path from "node:path";
 type AboutContent = {
   title: string;
   body: string;
+  sections?: Array<{
+    title: string;
+    body: string;
+  }>;
   updatedAt?: string;
 };
 
@@ -50,9 +54,18 @@ export async function GET() {
 export async function PUT(req: Request) {
   const body = (await req.json()) as Partial<AboutContent>;
   const title = (body.title || "").trim() || "Sobre o projeto";
+  const sections = Array.isArray(body.sections)
+    ? body.sections
+        .map((s) => ({
+          title: (s?.title || "").trim(),
+          body: (s?.body || "").trim(),
+        }))
+        .filter((s) => s.title || s.body)
+    : [];
   const about = {
     title,
     body: (body.body || "").trim(),
+    sections,
   };
 
   await writeAbout(about);

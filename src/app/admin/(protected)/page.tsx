@@ -155,6 +155,7 @@ export default function AdminPage() {
   const [aboutTitle, setAboutTitle] = useState("Sobre o projeto");
   const [aboutBody, setAboutBody] = useState("");
   const [aboutSaving, setAboutSaving] = useState(false);
+  const [aboutSections, setAboutSections] = useState<Array<{ title: string; body: string }>>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<{
     open: boolean;
     itemId: string | null;
@@ -217,6 +218,7 @@ export default function AdminPage() {
         const data = await res.json();
         setAboutTitle(data?.title || "Sobre o projeto");
         setAboutBody(data?.body || "");
+        setAboutSections(Array.isArray(data?.sections) ? data.sections : []);
       } catch {
         // ignore
       }
@@ -325,7 +327,7 @@ export default function AdminPage() {
       const res = await fetch("/api/admin/about", {
         method: "PUT",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ title: aboutTitle, body: aboutBody }),
+        body: JSON.stringify({ title: aboutTitle, body: aboutBody, sections: aboutSections }),
       });
       if (!res.ok) {
         showToast("Falha ao salvar Sobre");
@@ -941,6 +943,64 @@ export default function AdminPage() {
           </div>
         </div>
 
+        <div className="mt-6 border-t border-zinc-800 pt-4">
+          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Seções adicionais</div>
+          <div className="mt-4 space-y-4">
+            {aboutSections.map((section, idx) => (
+              <div key={`${idx}-${section.title}`} className="rounded-xl border border-zinc-800 bg-zinc-950/40 p-4">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_1fr] lg:items-start">
+                  <div>
+                    <label className="text-xs text-zinc-400">Título</label>
+                    <input
+                      value={section.title}
+                      onChange={(e) => {
+                        const next = [...aboutSections];
+                        next[idx] = { ...next[idx], title: e.target.value };
+                        setAboutSections(next);
+                      }}
+                      className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs text-zinc-400">Texto</label>
+                    <textarea
+                      value={section.body}
+                      onChange={(e) => {
+                        const next = [...aboutSections];
+                        next[idx] = { ...next[idx], body: e.target.value };
+                        setAboutSections(next);
+                      }}
+                      rows={4}
+                      className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="mt-3 flex justify-end">
+                  <button
+                    onClick={() => {
+                      const next = aboutSections.filter((_, i) => i !== idx);
+                      setAboutSections(next);
+                    }}
+                    className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs hover:border-zinc-700"
+                  >
+                    Remover seção
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4">
+            <button
+              onClick={() => setAboutSections((prev) => [...prev, { title: "", body: "" }])}
+              className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+            >
+              + Adicionar seção
+            </button>
+          </div>
+        </div>
+
         <div className="mt-4 flex justify-end">
           <button
             onClick={saveAbout}
@@ -950,6 +1010,10 @@ export default function AdminPage() {
             {aboutSaving ? "Salvando…" : "Salvar Sobre"}
           </button>
         </div>
+      </div>
+
+      <div className="mt-10 border-t border-zinc-800 pt-6">
+        <div className="text-sm text-zinc-400">Referências</div>
       </div>
 
       {/* CONTENT - GRID */}

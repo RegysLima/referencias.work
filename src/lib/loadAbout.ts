@@ -5,6 +5,10 @@ import { kv } from "@vercel/kv";
 export type AboutContent = {
   title: string;
   body: string;
+  sections?: Array<{
+    title: string;
+    body: string;
+  }>;
   updatedAt?: string;
 };
 

@@ -678,19 +678,26 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 : "max-h-40 opacity-100 mt-4 lg:mt-0",
             ].join(" ")}
           >
-              <div className="pt-2 text-[16px] whitespace-nowrap">
-                {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
-                  <span key={code}>
-                    <button
-                      onClick={() => setLang(code)}
-                      className={lang === code ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
-                    >
-                      {code}
-                    </button>
-                    {idx < 2 ? <span className="text-zinc-400">/</span> : null}
-                  </span>
-                ))}
-              </div>
+            <div className="pt-2 text-[16px] whitespace-nowrap">
+              {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
+                <span key={code}>
+                  <button
+                    onClick={() => setLang(code)}
+                    className={lang === code ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
+                  >
+                    {code}
+                  </button>
+                  {idx < 2 ? <span className="text-zinc-400">/</span> : null}
+                </span>
+              ))}
+              <span className="text-zinc-400">, </span>
+              <a
+                href="/sobre"
+                className="text-zinc-950 hover:text-zinc-700"
+              >
+                Sobre
+              </a>
+            </div>
 
               <div className="inline-flex w-[92px] justify-between pt-2 text-[16px]">
                 <button
