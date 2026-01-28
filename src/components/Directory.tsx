@@ -1106,8 +1106,9 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             )}
           </h2>
 
-          {lang === "pt" ? (
+          <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-start sm:gap-10">
             <div className="flex flex-col items-start gap-4">
+              <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">Pix</div>
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
                   "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4"
@@ -1131,21 +1132,17 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 Copiar código Pix
               </button>
             </div>
-          ) : (
-            <div className="flex items-start">
+
+            <div className="flex flex-col items-start gap-4">
+              <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">PayPal</div>
               <form action="https://www.paypal.com/donate" method="post" target="_top">
                 <input type="hidden" name="hosted_button_id" value="E9XXLCKPSMR3E" />
-                <input
-                  type="image"
-                  src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
-                  name="submit"
-                  title="PayPal - The safer, easier way to pay online!"
-                  alt="Donate with PayPal button"
-                />
-                <img alt="" src="https://www.paypal.com/en_BR/i/scr/pixel.gif" width="1" height="1" />
+                <button type="submit" className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]">
+                  Donate
+                </button>
               </form>
             </div>
-          )}
+          </div>
         </div>
       </section>
 
