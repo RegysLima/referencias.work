@@ -249,6 +249,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   const [visibleCount, setVisibleCount] = useState(20);
   const [toast, setToast] = useState<string | null>(null);
+  const [pixModalOpen, setPixModalOpen] = useState(false);
 
   const ui = UI[lang] || UI.pt;
   const hideMobileMenus = isMobile && isMobileCollapsed && !mobileMenuOpen;
@@ -1083,8 +1084,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
       </div>
 
       <section className="mt-16 border-t border-zinc-200 pt-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-          <h2 className="max-w-[560px] text-[22px] leading-snug text-zinc-900">
+        <div className="flex flex-col gap-6">
+          <h2 className="mx-auto max-w-[560px] text-center text-[22px] leading-snug text-zinc-900">
             {lang === "en" ? (
               <>
                 Did the references help you?
@@ -1106,16 +1107,15 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             )}
           </h2>
 
-          <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-start sm:gap-10">
-            <div className="flex flex-col items-start gap-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">Pix</div>
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
-                  "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4"
-                )}`}
-                alt="QR Code Pix"
-                className="hidden h-[220px] w-[220px] border border-zinc-200 sm:block"
-              />
+          <div className="mt-4 grid grid-cols-1 gap-6 border-t border-zinc-200 pt-6 sm:grid-cols-2 sm:gap-10 sm:border-t-0 sm:pt-0">
+            <div className="flex flex-col items-center gap-4 sm:border-r sm:border-zinc-200 sm:pr-10">
+              <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">Em reais via pix</div>
+              <button
+                onClick={() => setPixModalOpen(true)}
+                className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em] hidden sm:inline-flex"
+              >
+                Código / QR Code
+              </button>
               <button
                 onClick={async () => {
                   try {
@@ -1127,18 +1127,20 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                     showToast("Não foi possível copiar");
                   }
                 }}
-                className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]"
+                className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em] sm:hidden"
               >
-                Copiar código Pix
+                Código / QR Code
               </button>
             </div>
 
-            <div className="flex flex-col items-start gap-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">PayPal</div>
+            <div className="flex flex-col items-center gap-4">
+              <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">
+                {lang === "es" ? "en USD a través de PayPal" : "In USD via PayPal"}
+              </div>
               <form action="https://www.paypal.com/donate" method="post" target="_top">
                 <input type="hidden" name="hosted_button_id" value="E9XXLCKPSMR3E" />
                 <button type="submit" className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]">
-                  Donate
+                  {lang === "es" ? "Donar" : "Donate"}
                 </button>
               </form>
             </div>
@@ -1197,6 +1199,56 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           ].join(" ")}
         >
           {toast}
+        </div>
+      ) : null}
+
+      {pixModalOpen ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          onClick={() => setPixModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-md overflow-hidden rounded-2xl border border-zinc-200 bg-white p-6 text-zinc-900"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">Em reais via pix</div>
+                <div className="mt-2 text-lg">Código / QR Code</div>
+              </div>
+              <button
+                onClick={() => setPixModalOpen(false)}
+                className="text-sm text-zinc-500 hover:text-zinc-700"
+              >
+                Fechar
+              </button>
+            </div>
+
+            <div className="mt-6 flex flex-col items-center gap-4">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
+                  "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4"
+                )}`}
+                alt="QR Code Pix"
+                className="h-[220px] w-[220px] border border-zinc-200"
+              />
+              <button
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(
+                      "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4"
+                    );
+                    showToast("Código Pix copiado");
+                  } catch {
+                    showToast("Não foi possível copiar");
+                  }
+                }}
+                className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]"
+              >
+                Copiar código Pix
+              </button>
+            </div>
+          </div>
         </div>
       ) : null}
     </div>
