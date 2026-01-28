@@ -251,7 +251,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [toast, setToast] = useState<string | null>(null);
   const [pixModalOpen, setPixModalOpen] = useState(false);
   const [pixCopied, setPixCopied] = useState(false);
-  const [pixCopied, setPixCopied] = useState(false);
 
   const ui = UI[lang] || UI.pt;
   const hideMobileMenus = isMobile && isMobileCollapsed && !mobileMenuOpen;
@@ -327,12 +326,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     const timeout = window.setTimeout(() => setToast(null), 2000);
     return () => window.clearTimeout(timeout);
   }, [toast]);
-
-  useEffect(() => {
-    if (!pixCopied) return;
-    const timeout = window.setTimeout(() => setPixCopied(false), 2000);
-    return () => window.clearTimeout(timeout);
-  }, [pixCopied]);
 
   useEffect(() => {
     if (!pixCopied) return;
