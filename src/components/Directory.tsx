@@ -250,6 +250,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [visibleCount, setVisibleCount] = useState(20);
   const [toast, setToast] = useState<string | null>(null);
   const [pixModalOpen, setPixModalOpen] = useState(false);
+  const [pixCopied, setPixCopied] = useState(false);
+  const [pixCopied, setPixCopied] = useState(false);
 
   const ui = UI[lang] || UI.pt;
   const hideMobileMenus = isMobile && isMobileCollapsed && !mobileMenuOpen;
@@ -325,6 +327,18 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     const timeout = window.setTimeout(() => setToast(null), 2000);
     return () => window.clearTimeout(timeout);
   }, [toast]);
+
+  useEffect(() => {
+    if (!pixCopied) return;
+    const timeout = window.setTimeout(() => setPixCopied(false), 2000);
+    return () => window.clearTimeout(timeout);
+  }, [pixCopied]);
+
+  useEffect(() => {
+    if (!pixCopied) return;
+    const timeout = window.setTimeout(() => setPixCopied(false), 2000);
+    return () => window.clearTimeout(timeout);
+  }, [pixCopied]);
 
   useEffect(() => {
     if (hideMobileMenus && filtersOpen) {
@@ -1072,15 +1086,15 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         </div>
 
         {visibleCount < Math.max(0, total - 1) && (
-          <div className="pt-10">
-              <button
-                onClick={() => setVisibleCount((n) => Math.min(n + 20, Math.max(0, total - 1)))}
-                className="btn cursor-pointer px-6 py-3 text-[16px] tracking-[0.02em]"
-              >
-                {ui.loadMore}
-              </button>
-            </div>
-          )}
+          <div className="flex justify-center pt-10">
+            <button
+              onClick={() => setVisibleCount((n) => Math.min(n + 20, Math.max(0, total - 1)))}
+              className="btn cursor-pointer px-6 py-3 text-[16px] tracking-[0.02em]"
+            >
+              {ui.loadMore}
+            </button>
+          </div>
+        )}
       </div>
 
       <section className="mt-16 border-t border-zinc-200 pt-8">
@@ -1109,7 +1123,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
           <div className="mt-4 grid grid-cols-1 gap-6 border-t border-zinc-200 pt-6 sm:grid-cols-2 sm:gap-10 sm:border-t-0 sm:pt-0">
             <div className="flex flex-col items-center gap-4 sm:border-r sm:border-zinc-200 sm:pr-10">
-              <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">Em reais via pix</div>
+              <div className="text-xs uppercase tracking-[0.18em] text-zinc-900">Em reais via pix</div>
               <button
                 onClick={() => setPixModalOpen(true)}
                 className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em] hidden sm:inline-flex"
@@ -1122,19 +1136,19 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                     await navigator.clipboard.writeText(
                       "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4"
                     );
-                    showToast("Código Pix copiado");
+                    setPixCopied(true);
                   } catch {
                     showToast("Não foi possível copiar");
                   }
                 }}
                 className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em] sm:hidden"
               >
-                Código / QR Code
+                {pixCopied ? "Código copiado" : "Código / QR Code"}
               </button>
             </div>
 
             <div className="flex flex-col items-center gap-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">
+              <div className="text-xs uppercase tracking-[0.18em] text-zinc-900">
                 {lang === "es" ? "en USD a través de PayPal" : "In USD via PayPal"}
               </div>
               <form action="https://www.paypal.com/donate" method="post" target="_top">
@@ -1213,12 +1227,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">Em reais via pix</div>
+                <div className="text-xs uppercase tracking-[0.18em] text-zinc-900">Em reais via pix</div>
                 <div className="mt-2 text-lg">Código / QR Code</div>
               </div>
               <button
                 onClick={() => setPixModalOpen(false)}
-                className="text-sm text-zinc-500 hover:text-zinc-700"
+                className="text-sm text-zinc-500 hover:text-zinc-700 cursor-pointer"
               >
                 Fechar
               </button>
@@ -1238,14 +1252,14 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                     await navigator.clipboard.writeText(
                       "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4"
                     );
-                    showToast("Código Pix copiado");
+                    setPixCopied(true);
                   } catch {
                     showToast("Não foi possível copiar");
                   }
                 }}
                 className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]"
               >
-                Copiar código Pix
+                {pixCopied ? "Código copiado" : "Copiar código Pix"}
               </button>
             </div>
           </div>
