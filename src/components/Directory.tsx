@@ -609,7 +609,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         className={[
           "sticky top-0 z-40 border-b backdrop-blur",
           theme === "dark" ? "border-zinc-800 bg-zinc-950/80" : "border-zinc-200 bg-white/80",
-          "transition-all duration-300",
+          "transition-[padding,background-color,border-color] duration-200",
           hideMobileMenus ? "pb-2 pt-3" : "pb-10 pt-4",
         ].join(" ")}
       >
@@ -724,7 +724,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
       {/* filtros */}
       <div
         className={[
-          "sticky top-[84px] z-30 overflow-hidden border-b backdrop-blur transition-all duration-300",
+          "sticky top-[84px] z-30 overflow-hidden border-b backdrop-blur transition-[max-height,opacity,padding,background-color,border-color] duration-300",
           theme === "dark" ? "border-zinc-800 bg-zinc-950/85" : "border-zinc-200 bg-white/85",
           filtersOpen ? "max-h-[520px] pb-6 pt-8 opacity-100" : "max-h-0 pb-0 pt-0 opacity-0",
         ].join(" ")}
