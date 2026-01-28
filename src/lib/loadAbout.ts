@@ -6,6 +6,7 @@ export type AboutContent = {
   title: string;
   body: string;
   sections?: Array<{
+    id: string;
     title: string;
     body: string;
   }>;

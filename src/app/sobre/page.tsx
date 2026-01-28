@@ -36,7 +36,7 @@ export default async function SobrePage() {
               const body = splitParagraphs(section.body || "");
               if (!section.title && !body.length) return null;
               return (
-                <div key={`${idx}-${section.title}`} className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_1fr] lg:items-start">
+                <div key={section.id || `${idx}-${section.title}`} className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_1fr] lg:items-start">
                   <div className="text-[20px] tracking-[0.02em] text-zinc-900">
                     {section.title || "Seção"}
                   </div>

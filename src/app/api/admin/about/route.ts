@@ -7,6 +7,7 @@ type AboutContent = {
   title: string;
   body: string;
   sections?: Array<{
+    id: string;
     title: string;
     body: string;
   }>;
@@ -57,10 +58,11 @@ export async function PUT(req: Request) {
   const sections = Array.isArray(body.sections)
     ? body.sections
         .map((s) => ({
+          id: (s?.id || "").trim(),
           title: (s?.title || "").trim(),
           body: (s?.body || "").trim(),
         }))
-        .filter((s) => s.title || s.body)
+        .filter((s) => s.id && (s.title || s.body))
     : [];
   const about = {
     title,

@@ -679,6 +679,13 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             ].join(" ")}
           >
             <div className="pt-2 text-[16px] whitespace-nowrap">
+              <a
+                href="/sobre"
+                className="text-zinc-950 hover:text-zinc-700"
+              >
+                Sobre
+              </a>
+              <span className="text-zinc-400">, </span>
               {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
                 <span key={code}>
                   <button
@@ -690,13 +697,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   {idx < 2 ? <span className="text-zinc-400">/</span> : null}
                 </span>
               ))}
-              <span className="text-zinc-400">, </span>
-              <a
-                href="/sobre"
-                className="text-zinc-950 hover:text-zinc-700"
-              >
-                Sobre
-              </a>
             </div>
 
               <div className="inline-flex w-[92px] justify-between pt-2 text-[16px]">
