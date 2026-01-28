@@ -152,6 +152,9 @@ export default function AdminPage() {
   const [checkingThumbs, setCheckingThumbs] = useState(false);
   const [brokenThumbs, setBrokenThumbs] = useState<Record<string, boolean>>({});
   const [uploadingId, setUploadingId] = useState<string | null>(null);
+  const [aboutTitle, setAboutTitle] = useState("Sobre o projeto");
+  const [aboutBody, setAboutBody] = useState("");
+  const [aboutSaving, setAboutSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{
     open: boolean;
     itemId: string | null;
@@ -203,6 +206,20 @@ export default function AdminPage() {
       const draft: Record<string, string> = {};
       for (const it of normalized) draft[it.id] = (it.areasSecondary ?? []).join(", ");
       setSecondaryDraft(draft);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/admin/about");
+        if (!res.ok) return;
+        const data = await res.json();
+        setAboutTitle(data?.title || "Sobre o projeto");
+        setAboutBody(data?.body || "");
+      } catch {
+        // ignore
+      }
     })();
   }, []);
 
@@ -299,6 +316,26 @@ export default function AdminPage() {
       showToast("Falha no upload");
     } finally {
       setUploadingId(null);
+    }
+  }
+
+  async function saveAbout() {
+    setAboutSaving(true);
+    try {
+      const res = await fetch("/api/admin/about", {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ title: aboutTitle, body: aboutBody }),
+      });
+      if (!res.ok) {
+        showToast("Falha ao salvar Sobre");
+      } else {
+        showToast("Sobre salvo ✓");
+      }
+    } catch {
+      showToast("Falha ao salvar Sobre");
+    } finally {
+      setAboutSaving(false);
     }
   }
 
@@ -876,6 +913,44 @@ export default function AdminPage() {
           </div>
         </div>
       ) : null}
+
+      {/* ABOUT EDITOR */}
+      <div className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className="text-sm text-zinc-400">Página Sobre</div>
+        <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[260px_1fr] lg:items-start">
+          <div>
+            <label className="text-xs text-zinc-400">Título</label>
+            <input
+              value={aboutTitle}
+              onChange={(e) => setAboutTitle(e.target.value)}
+              className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-zinc-400">Texto</label>
+            <textarea
+              value={aboutBody}
+              onChange={(e) => setAboutBody(e.target.value)}
+              rows={6}
+              className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+            />
+            <div className="mt-2 text-xs text-zinc-500">
+              Use quebras de linha para separar parágrafos.
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={saveAbout}
+            disabled={aboutSaving}
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 text-sm hover:border-zinc-700 disabled:opacity-60"
+          >
+            {aboutSaving ? "Salvando…" : "Salvar Sobre"}
+          </button>
+        </div>
+      </div>
 
       {/* CONTENT - GRID */}
       <div className="pt-6">
