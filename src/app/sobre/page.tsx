@@ -30,7 +30,7 @@ export default async function SobrePage({
     <main className="min-h-screen bg-white text-zinc-950">
       <AboutHeader initialLang={lang} />
       <div className="mx-auto w-full px-6 pb-16 pt-10 sm:px-10 lg:px-12">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[320px_minmax(0,680px)] lg:items-start">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_minmax(0,680px)] lg:items-start">
           <div className="text-[22px] tracking-[0.02em] text-zinc-900">
             {pickText(about.title, lang) || (lang === "en" ? "About the project" : lang === "es" ? "Sobre el proyecto" : "Sobre o projeto")}
           </div>
@@ -50,7 +50,7 @@ export default async function SobrePage({
               const body = splitParagraphs(pickText(section.body, lang));
               if (!title && !body.length) return null;
               return (
-                <div key={section.id || `${idx}-${title}`} className="grid grid-cols-1 gap-8 lg:grid-cols-[320px_minmax(0,680px)] lg:items-start">
+                <div key={section.id || `${idx}-${title}`} className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_minmax(0,680px)] lg:items-start">
                   <div className="text-[20px] tracking-[0.02em] text-zinc-900">
                     {title || (lang === "en" ? "Section" : "Seção")}
                   </div>

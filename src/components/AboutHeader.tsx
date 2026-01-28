@@ -9,6 +9,7 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
 
   const ui = UI[lang] || UI.pt;
   const aboutLabel = lang === "en" ? "About" : "Sobre";
+  const backLabel = lang === "en" ? "Back to home" : lang === "es" ? "Volver al inicio" : "Voltar à home";
 
   useEffect(() => {
     const stored = window.localStorage.getItem("rw_theme");
@@ -56,7 +57,7 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
         <div className="hidden lg:flex lg:justify-center">
           <nav className="pt-2 text-[16px]">
             <a href={`/?lang=${lang}`} className="text-zinc-400 hover:text-zinc-700">
-              {lang === "en" ? "Back to home" : lang === "es" ? "Volver al inicio" : "Voltar a home"}
+              {backLabel}
             </a>
           </nav>
         </div>
@@ -67,7 +68,7 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
               href={`/?lang=${lang}`}
               className="text-zinc-400 hover:text-zinc-700 lg:hidden"
             >
-              {lang === "en" ? "Back to home" : lang === "es" ? "Volver al inicio" : "Voltar a home"}
+              {backLabel}
             </a>
             <span className="text-zinc-400">{aboutLabel}</span>
             {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
@@ -83,7 +84,7 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
             ))}
           </div>
 
-          <div className="inline-flex w-[74px] sm:w-[92px] justify-between pt-2 text-[14px] sm:text-[16px] shrink-0">
+          <div className="inline-flex items-center gap-1 pt-2 text-[14px] sm:text-[16px] shrink-0">
             <button
               onClick={() => setTheme("light")}
               className={theme === "light" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}

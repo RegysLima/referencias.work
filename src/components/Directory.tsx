@@ -699,7 +699,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               ))}
             </div>
 
-            <div className="inline-flex w-[74px] sm:w-[92px] justify-between pt-2 text-[14px] sm:text-[16px] shrink-0">
+            <div className="inline-flex items-center gap-1 pt-2 text-[14px] sm:text-[16px] shrink-0">
               <button
                 onClick={() => setTheme("light")}
                 className={theme === "light" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
