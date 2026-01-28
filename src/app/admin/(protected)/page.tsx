@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import type { Lang } from "@/lib/i18n";
 
 type RefItem = {
   id: string;
@@ -152,11 +153,14 @@ export default function AdminPage() {
   const [checkingThumbs, setCheckingThumbs] = useState(false);
   const [brokenThumbs, setBrokenThumbs] = useState<Record<string, boolean>>({});
   const [uploadingId, setUploadingId] = useState<string | null>(null);
-  const [aboutTitle, setAboutTitle] = useState("Sobre o projeto");
-  const [aboutBody, setAboutBody] = useState("");
+  const [aboutTitle, setAboutTitle] = useState<Record<Lang, string>>({ pt: "Sobre o projeto", en: "", es: "" });
+  const [aboutBody, setAboutBody] = useState<Record<Lang, string>>({ pt: "", en: "", es: "" });
   const [aboutSaving, setAboutSaving] = useState(false);
-  const [aboutSections, setAboutSections] = useState<Array<{ id: string; title: string; body: string }>>([]);
+  const [aboutSections, setAboutSections] = useState<
+    Array<{ id: string; title: Record<Lang, string>; body: Record<Lang, string> }>
+  >([]);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [aboutLang, setAboutLang] = useState<Lang>("pt");
   const [deleteConfirm, setDeleteConfirm] = useState<{
     open: boolean;
     itemId: string | null;
@@ -217,14 +221,22 @@ export default function AdminPage() {
         const res = await fetch("/api/admin/about");
         if (!res.ok) return;
         const data = await res.json();
-        setAboutTitle(data?.title || "Sobre o projeto");
-        setAboutBody(data?.body || "");
+        const normalizeText = (value: unknown): Record<Lang, string> => {
+          if (typeof value === "string") return { pt: value, en: "", es: "" };
+          if (value && typeof value === "object") {
+            const v = value as Partial<Record<Lang, string>>;
+            return { pt: v.pt || "", en: v.en || "", es: v.es || "" };
+          }
+          return { pt: "", en: "", es: "" };
+        };
+        setAboutTitle(normalizeText(data?.title || "Sobre o projeto"));
+        setAboutBody(normalizeText(data?.body || ""));
         const sections = Array.isArray(data?.sections) ? data.sections : [];
         setAboutSections(
-          sections.map((s: { id?: string; title?: string; body?: string }, idx: number) => ({
+          sections.map((s: { id?: string; title?: unknown; body?: unknown }, idx: number) => ({
             id: (s?.id || `section-${idx}-${Date.now()}`).toString(),
-            title: s?.title || "",
-            body: s?.body || "",
+            title: normalizeText(s?.title),
+            body: normalizeText(s?.body),
           }))
         );
       } catch {
@@ -936,12 +948,32 @@ export default function AdminPage() {
 
         {aboutOpen ? (
           <>
+            <div className="mt-4 flex items-center gap-3 text-xs text-zinc-400">
+              <span>Idioma:</span>
+              {(["pt", "es", "en"] as Lang[]).map((code) => (
+                <button
+                  key={code}
+                  onClick={() => setAboutLang(code)}
+                  className={[
+                    "rounded-full border px-2 py-1 text-[11px]",
+                    aboutLang === code
+                      ? "border-zinc-600 bg-zinc-900 text-zinc-200"
+                      : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-700",
+                  ].join(" ")}
+                >
+                  {code}
+                </button>
+              ))}
+            </div>
+
             <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[260px_1fr] lg:items-start">
               <div>
                 <label className="text-xs text-zinc-400">Título</label>
                 <input
-                  value={aboutTitle}
-                  onChange={(e) => setAboutTitle(e.target.value)}
+                  value={aboutTitle[aboutLang] || ""}
+                  onChange={(e) =>
+                    setAboutTitle((prev) => ({ ...prev, [aboutLang]: e.target.value }))
+                  }
                   className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                 />
               </div>
@@ -949,8 +981,10 @@ export default function AdminPage() {
               <div>
                 <label className="text-xs text-zinc-400">Texto</label>
                 <textarea
-                  value={aboutBody}
-                  onChange={(e) => setAboutBody(e.target.value)}
+                  value={aboutBody[aboutLang] || ""}
+                  onChange={(e) =>
+                    setAboutBody((prev) => ({ ...prev, [aboutLang]: e.target.value }))
+                  }
                   rows={6}
                   className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                 />
@@ -969,10 +1003,13 @@ export default function AdminPage() {
                       <div>
                         <label className="text-xs text-zinc-400">Título</label>
                         <input
-                          value={section.title}
+                          value={section.title[aboutLang] || ""}
                           onChange={(e) => {
                             const next = [...aboutSections];
-                            next[idx] = { ...next[idx], title: e.target.value };
+                            next[idx] = {
+                              ...next[idx],
+                              title: { ...next[idx].title, [aboutLang]: e.target.value },
+                            };
                             setAboutSections(next);
                           }}
                           className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
@@ -982,10 +1019,13 @@ export default function AdminPage() {
                       <div>
                         <label className="text-xs text-zinc-400">Texto</label>
                         <textarea
-                          value={section.body}
+                          value={section.body[aboutLang] || ""}
                           onChange={(e) => {
                             const next = [...aboutSections];
-                            next[idx] = { ...next[idx], body: e.target.value };
+                            next[idx] = {
+                              ...next[idx],
+                              body: { ...next[idx].body, [aboutLang]: e.target.value },
+                            };
                             setAboutSections(next);
                           }}
                           rows={4}
@@ -1013,7 +1053,11 @@ export default function AdminPage() {
                   onClick={() =>
                     setAboutSections((prev) => [
                       ...prev,
-                      { id: `section-${Date.now()}`, title: "", body: "" },
+                      {
+                        id: `section-${Date.now()}`,
+                        title: { pt: "", en: "", es: "" },
+                        body: { pt: "", en: "", es: "" },
+                      },
                     ])
                   }
                   className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"

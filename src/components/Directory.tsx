@@ -672,20 +672,19 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           {/* idioma + filtros */}
           <div
             className={[
-              "flex items-start justify-between gap-6 lg:justify-end transition-all duration-300",
+              "flex items-center justify-between gap-4 lg:justify-end transition-all duration-300 flex-nowrap",
               hideMobileMenus
                 ? "pointer-events-none max-h-0 opacity-0 mt-0"
                 : "max-h-40 opacity-100 mt-4 lg:mt-0",
             ].join(" ")}
           >
-            <div className="pt-2 text-[16px] whitespace-nowrap">
+            <div className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap flex items-center gap-2">
               <a
-                href="/sobre"
-                className="text-zinc-950 hover:text-zinc-700"
+                href={`/sobre?lang=${lang}`}
+                className="text-zinc-400 hover:text-zinc-700"
               >
-                Sobre
+                {lang === "en" ? "About" : "Sobre"}
               </a>
-              <span className="text-zinc-400">, </span>
               {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
                 <span key={code}>
                   <button
@@ -699,32 +698,32 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               ))}
             </div>
 
-              <div className="inline-flex w-[92px] justify-between pt-2 text-[16px]">
-                <button
-                  onClick={() => setTheme("light")}
-                  className={theme === "light" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
-                  aria-pressed={theme === "light"}
-                >
-                  Light
-                </button>
-                <span className="text-zinc-400">/</span>
-                <button
-                  onClick={() => setTheme("dark")}
-                  className={theme === "dark" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
-                  aria-pressed={theme === "dark"}
-                >
-                  Dark
-                </button>
-              </div>
-
+            <div className="inline-flex w-[74px] sm:w-[92px] justify-between pt-2 text-[14px] sm:text-[16px] shrink-0">
               <button
-                onClick={() => setFiltersOpen((v) => !v)}
-                className="inline-flex w-[88px] justify-end pt-2 text-[16px] text-zinc-950"
-                aria-expanded={filtersOpen}
+                onClick={() => setTheme("light")}
+                className={theme === "light" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
+                aria-pressed={theme === "light"}
               >
-                {filtersOpen ? `- ${ui.filters.toggle}` : `+ ${ui.filters.toggle}`}
+                Light
+              </button>
+              <span className="text-zinc-400">/</span>
+              <button
+                onClick={() => setTheme("dark")}
+                className={theme === "dark" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
+                aria-pressed={theme === "dark"}
+              >
+                Dark
               </button>
             </div>
+
+            <button
+              onClick={() => setFiltersOpen((v) => !v)}
+              className="inline-flex w-[72px] sm:w-[88px] justify-end pt-2 text-[14px] sm:text-[16px] text-zinc-950 shrink-0"
+              aria-expanded={filtersOpen}
+            >
+              {filtersOpen ? `- ${ui.filters.toggle}` : `+ ${ui.filters.toggle}`}
+            </button>
+          </div>
         </div>
       </header>
 

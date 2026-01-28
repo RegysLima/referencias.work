@@ -1,14 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
 import { kv } from "@vercel/kv";
+import type { Lang } from "@/lib/i18n";
 
 export type AboutContent = {
-  title: string;
-  body: string;
+  title: Record<Lang, string>;
+  body: Record<Lang, string>;
   sections?: Array<{
     id: string;
-    title: string;
-    body: string;
+    title: Record<Lang, string>;
+    body: Record<Lang, string>;
   }>;
   updatedAt?: string;
 };
@@ -19,6 +20,41 @@ const KV_ENABLED = Boolean(
   process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN,
 );
 
+const LANGS: Lang[] = ["pt", "en", "es"];
+
+function normalizeText(value: unknown): Record<Lang, string> {
+  if (typeof value === "string") {
+    return { pt: value, en: "", es: "" };
+  }
+  if (value && typeof value === "object") {
+    const v = value as Partial<Record<Lang, string>>;
+    return {
+      pt: v.pt || "",
+      en: v.en || "",
+      es: v.es || "",
+    };
+  }
+  return { pt: "", en: "", es: "" };
+}
+
+function normalizeSections(sections: unknown) {
+  if (!Array.isArray(sections)) return [];
+  return sections
+    .map((s, idx) => {
+      const obj = s as { id?: string; title?: unknown; body?: unknown };
+      const id = (obj?.id || `section-${idx}-${Date.now()}`).toString();
+      return {
+        id,
+        title: normalizeText(obj?.title),
+        body: normalizeText(obj?.body),
+      };
+    })
+    .filter((s) => {
+      const hasText = LANGS.some((lang) => s.title[lang] || s.body[lang]);
+      return Boolean(s.id) && hasText;
+    });
+}
+
 export async function loadAbout(): Promise<AboutContent> {
   if (KV_ENABLED) {
     const db = await kv.get<AboutContent>(KV_KEY);
@@ -28,7 +64,18 @@ export async function loadAbout(): Promise<AboutContent> {
   }
 
   const raw = fs.readFileSync(DB_PATH, "utf-8");
-  const fileDb = JSON.parse(raw) as AboutContent;
+  const parsed = JSON.parse(raw) as {
+    title?: unknown;
+    body?: unknown;
+    sections?: unknown;
+    updatedAt?: string;
+  };
+  const fileDb: AboutContent = {
+    title: normalizeText(parsed.title),
+    body: normalizeText(parsed.body),
+    sections: normalizeSections(parsed.sections),
+    updatedAt: parsed.updatedAt,
+  };
 
   if (KV_ENABLED) {
     await kv.set(KV_KEY, fileDb);
