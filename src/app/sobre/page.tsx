@@ -30,7 +30,9 @@ export default async function SobrePage({
 
   return (
     <main className="min-h-screen bg-white text-zinc-950">
-      <AboutHeader initialLang={lang} />
+      <div className="pt-10">
+        <AboutHeader initialLang={lang} />
+      </div>
       <div className="mx-auto w-full px-6 pb-16 pt-10 sm:px-10 lg:px-12">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_minmax(0,680px)_260px] lg:items-start">
           <div className="text-[22px] tracking-[0.02em] text-zinc-900">
