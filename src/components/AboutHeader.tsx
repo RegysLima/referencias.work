@@ -50,8 +50,7 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
   function changeLang(next: Lang) {
     setLang(next);
     persistLang(next);
-    router.replace(`/sobre?lang=${next}`);
-    router.refresh();
+    router.replace(`/sobre?lang=${next}`, { scroll: false });
   }
 
   return (
