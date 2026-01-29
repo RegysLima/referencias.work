@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   ALL_KEY,
@@ -672,18 +673,18 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           {/* idioma + filtros */}
           <div
             className={[
-              "flex items-center justify-between gap-4 sm:gap-6 lg:justify-end transition-all duration-300 flex-nowrap",
+              "flex items-center justify-between gap-6 lg:justify-end transition-all duration-300 flex-nowrap",
               hideMobileMenus
                 ? "pointer-events-none max-h-0 opacity-0 mt-0"
                 : "max-h-40 opacity-100 mt-4 lg:mt-0",
             ].join(" ")}
           >
-            <a
+            <Link
               href={`/sobre?lang=${lang}`}
               className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap text-zinc-400 hover:text-zinc-700"
             >
               {lang === "en" ? "About" : "Sobre"}
-            </a>
+            </Link>
 
             <div className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap">
               {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
@@ -699,7 +700,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               ))}
             </div>
 
-            <div className="inline-flex items-center gap-1 pt-2 text-[14px] sm:text-[16px] shrink-0">
+            <div className="inline-flex items-center gap-0 pt-2 text-[14px] sm:text-[16px] shrink-0">
               <button
                 onClick={() => setTheme("light")}
                 className={theme === "light" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}

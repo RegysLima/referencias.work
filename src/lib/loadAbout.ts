@@ -75,7 +75,6 @@ export async function loadAbout(): Promise<AboutContent> {
     const db = await kv.get<AboutContent>(KV_KEY);
     if (db) {
       const normalized = normalizeAbout(db);
-      await kv.set(KV_KEY, normalized);
       return normalized;
     }
   }
