@@ -80,7 +80,13 @@ export default function AboutContent({
 
       <footer className="mt-16 border-t border-zinc-200 pt-6">
         <div className="flex flex-col gap-4 text-[14px] text-zinc-600 sm:flex-row sm:items-start sm:justify-between">
-          <div>Projeto desenvolvido por Regys Lima</div>
+          <div>
+            {lang === "en"
+              ? "Project developed by Regys Lima"
+              : lang === "es"
+              ? "Proyecto desarrollado por Regys Lima"
+              : "Projeto desenvolvido por Regys Lima"}
+          </div>
           <div className="text-zinc-600">
             <a
               href="https://regys.design/"
@@ -88,7 +94,7 @@ export default function AboutContent({
               rel="noreferrer"
               className="underline decoration-zinc-400/50 underline-offset-4 hover:decoration-zinc-600"
             >
-              Portfólio
+              {lang === "en" ? "Portfolio" : lang === "es" ? "Portafolio" : "Portfólio"}
             </a>
             <span className="text-zinc-400">, </span>
             <a
@@ -106,14 +112,14 @@ export default function AboutContent({
               rel="noreferrer"
               className="underline decoration-zinc-400/50 underline-offset-4 hover:decoration-zinc-600"
             >
-              Linkedin
+              {lang === "en" ? "LinkedIn" : lang === "es" ? "Linkedin" : "Linkedin"}
             </a>
             <span className="text-zinc-400">, </span>
             <a
               href="mailto:regyslima07@gmail.com"
               className="underline decoration-zinc-400/50 underline-offset-4 hover:decoration-zinc-600"
             >
-              Contato
+              {lang === "en" ? "Contact" : lang === "es" ? "Contacto" : "Contato"}
             </a>
           </div>
         </div>
