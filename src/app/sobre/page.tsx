@@ -3,6 +3,7 @@ import AboutHeader from "@/components/AboutHeader";
 import type { Lang } from "@/lib/i18n";
 
 export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 function splitParagraphs(text: string) {
   return text
@@ -22,7 +23,8 @@ export default async function SobrePage({
   searchParams?: { lang?: string };
 }) {
   const about = await loadAbout();
-  const lang = (searchParams?.lang as Lang) || "pt";
+  const langParam = (searchParams?.lang as Lang) || "pt";
+  const lang = (["pt", "en", "es"] as Lang[]).includes(langParam) ? langParam : "pt";
   const paragraphs = splitParagraphs(pickText(about.body, lang));
   const sections = Array.isArray(about.sections) ? about.sections : [];
 
@@ -30,7 +32,7 @@ export default async function SobrePage({
     <main className="min-h-screen bg-white text-zinc-950">
       <AboutHeader initialLang={lang} />
       <div className="mx-auto w-full px-6 pb-16 pt-10 sm:px-10 lg:px-12">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_minmax(0,680px)] lg:items-start">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_minmax(0,680px)_260px] lg:items-start">
           <div className="text-[22px] tracking-[0.02em] text-zinc-900">
             {pickText(about.title, lang) || (lang === "en" ? "About the project" : lang === "es" ? "Sobre el proyecto" : "Sobre o projeto")}
           </div>
@@ -50,7 +52,7 @@ export default async function SobrePage({
               const body = splitParagraphs(pickText(section.body, lang));
               if (!title && !body.length) return null;
               return (
-                <div key={section.id || `${idx}-${title}`} className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_minmax(0,680px)] lg:items-start">
+                <div key={section.id || `${idx}-${title}`} className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_minmax(0,680px)_260px] lg:items-start">
                   <div className="text-[20px] tracking-[0.02em] text-zinc-900">
                     {title || (lang === "en" ? "Section" : "Seção")}
                   </div>

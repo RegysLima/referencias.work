@@ -21,6 +21,10 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
   }, []);
 
   useEffect(() => {
+    setLang(initialLang);
+  }, [initialLang]);
+
+  useEffect(() => {
     window.localStorage.setItem("rw_theme", theme);
     document.documentElement.dataset.theme = theme;
   }, [theme]);
@@ -29,9 +33,8 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  function setLangAndReload(next: Lang) {
+  function persistLang(next: Lang) {
     window.localStorage.setItem("rw_lang", next);
-    window.location.href = `/sobre?lang=${next}`;
   }
 
   return (
@@ -45,64 +48,75 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
     >
       <div className="mx-auto w-full px-6 sm:px-10 lg:px-12">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[360px_1fr_260px] lg:items-start">
-        <div className="space-y-3">
-          <a
-            href={`/?lang=${lang}`}
-            className="instrument-serif-regular block text-[44px] leading-none tracking-[-0.01em] sm:text-[52px]"
-          >
-            referencias.work
-          </a>
-        </div>
-
-        <div className="hidden lg:flex lg:justify-center">
-          <nav className="pt-2 text-[16px]">
-            <a href={`/?lang=${lang}`} className="text-zinc-400 hover:text-zinc-700">
-              {backLabel}
-            </a>
-          </nav>
-        </div>
-
-        <div className="flex items-center justify-between gap-4 sm:gap-6 lg:justify-end flex-nowrap">
-          <div className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap flex items-center gap-4 sm:gap-6">
+          <div className="space-y-3">
             <a
               href={`/?lang=${lang}`}
-              className="text-zinc-400 hover:text-zinc-700 lg:hidden"
+              className="instrument-serif-regular block text-[44px] leading-none tracking-[-0.01em] sm:text-[52px]"
+            >
+              referencias.work
+            </a>
+          </div>
+
+          <div className="hidden lg:flex lg:justify-start">
+            <nav className="pt-2 text-[16px]">
+              <a href={`/?lang=${lang}`} className="text-zinc-400 hover:text-zinc-700">
+                {backLabel}
+              </a>
+            </nav>
+          </div>
+
+          <div className="flex items-center justify-between gap-6 lg:justify-end flex-nowrap">
+            <a
+              href={`/?lang=${lang}`}
+              className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap text-zinc-400 hover:text-zinc-700 lg:hidden"
             >
               {backLabel}
             </a>
-            <span className="text-zinc-400">{aboutLabel}</span>
-            {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
-              <span key={code}>
-                <button
-                  onClick={() => setLangAndReload(code)}
-                  className={lang === code ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
-                >
-                  {code}
-                </button>
-                {idx < 2 ? <span className="text-zinc-400">/</span> : null}
-              </span>
-            ))}
-          </div>
 
-          <div className="inline-flex items-center gap-1 pt-2 text-[14px] sm:text-[16px] shrink-0">
-            <button
-              onClick={() => setTheme("light")}
-              className={theme === "light" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
-              aria-pressed={theme === "light"}
-            >
-              Light
-            </button>
-            <span className="text-zinc-400">/</span>
-            <button
-              onClick={() => setTheme("dark")}
-              className={theme === "dark" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
-              aria-pressed={theme === "dark"}
-            >
-              Dark
-            </button>
-          </div>
+            <span className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap text-zinc-400">
+              {aboutLabel}
+            </span>
 
-        </div>
+            <div className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap">
+              {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
+                <span key={code}>
+                  <a
+                    href={`/sobre?lang=${code}`}
+                    onClick={() => persistLang(code)}
+                    className={lang === code ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
+                  >
+                    {code}
+                  </a>
+                  {idx < 2 ? <span className="text-zinc-400">/</span> : null}
+                </span>
+              ))}
+            </div>
+
+            <div className="inline-flex items-center pt-2 text-[14px] sm:text-[16px] shrink-0">
+              <button
+                onClick={() => setTheme("light")}
+                className={theme === "light" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
+                aria-pressed={theme === "light"}
+              >
+                Light
+              </button>
+              <span className="text-zinc-400">/</span>
+              <button
+                onClick={() => setTheme("dark")}
+                className={theme === "dark" ? "text-zinc-950" : "text-zinc-400 hover:text-zinc-700"}
+                aria-pressed={theme === "dark"}
+              >
+                Dark
+              </button>
+            </div>
+
+            <a
+              href={`/?lang=${lang}`}
+              className="inline-flex whitespace-nowrap pt-2 text-[14px] sm:text-[16px] text-zinc-950 shrink-0"
+            >
+              + {ui.filters.toggle}
+            </a>
+          </div>
         </div>
       </div>
     </header>
