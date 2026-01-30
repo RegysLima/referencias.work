@@ -79,6 +79,10 @@ function normalizeUrl(u: string) {
   }
 }
 
+function isVideoUrl(src: string) {
+  return /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(src);
+}
+
 function normalizeMacro(raw: string) {
   const v = (raw || "").trim();
   const low = v.toLowerCase();
@@ -259,8 +263,9 @@ export default function AdminPage() {
     const candidates = items
       .filter((i) => (i.thumbnailUrl || "").trim())
       .map((i) => ({ id: i.id, url: (i.thumbnailUrl || "").trim() }));
+    const imageCandidates = candidates.filter((item) => !isVideoUrl(item.url));
 
-    if (!candidates.length) {
+    if (!imageCandidates.length) {
       showToast("Nenhuma imagem para verificar");
       return;
     }
@@ -269,7 +274,7 @@ export default function AdminPage() {
     setBrokenThumbs({});
     showToast("Verificando imagens…");
 
-    const queue = [...candidates];
+    const queue = [...imageCandidates];
     const next = async (): Promise<{ id: string; ok: boolean } | null> => {
       const item = queue.shift();
       if (!item) return null;
@@ -1106,12 +1111,24 @@ export default function AdminPage() {
                 >
                   <div className="aspect-[16/10] w-full bg-zinc-950">
                     {i.thumbnailUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={i.thumbnailUrl}
-                        alt=""
-                        className="h-full w-full object-cover transition group-hover:scale-[1.01]"
-                      />
+                      isVideoUrl(i.thumbnailUrl) ? (
+                        <video
+                          src={i.thumbnailUrl}
+                          muted
+                          loop
+                          playsInline
+                          autoPlay
+                          preload="metadata"
+                          className="h-full w-full object-cover transition group-hover:scale-[1.01]"
+                        />
+                      ) : (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={i.thumbnailUrl}
+                          alt=""
+                          className="h-full w-full object-cover transition group-hover:scale-[1.01]"
+                        />
+                      )
                     ) : (
                       <div className="flex h-full items-center justify-center text-xs text-zinc-500">
                         sem imagem
@@ -1351,7 +1368,7 @@ export default function AdminPage() {
 
                       <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
                         <div>
-                          <label className="text-xs text-zinc-400">Imagem (thumbnailUrl)</label>
+                          <label className="text-xs text-zinc-400">Imagem ou vídeo (thumbnailUrl)</label>
                           <input
                             value={i.thumbnailUrl ?? ""}
                             onChange={(e) =>

@@ -74,6 +74,10 @@ function getThumb(it: AnyItem) {
   return pickFirstString(it, ["thumbnailUrl", "thumb", "image", "cover", "thumbUrl", "thumbnail"]);
 }
 
+function isVideoUrl(src: string) {
+  return /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(src);
+}
+
 function getCountryKey(it: AnyItem) {
   return slugify(getCountry(it));
 }
@@ -886,8 +890,20 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <div className="border border-zinc-200">
               <div className="aspect-[16/9] w-full overflow-hidden bg-zinc-100">
                 {getThumb(spotlight) ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={getThumb(spotlight)} alt="" className="h-full w-full object-cover" />
+                  isVideoUrl(getThumb(spotlight)) ? (
+                    <video
+                      src={getThumb(spotlight)}
+                      muted
+                      loop
+                      playsInline
+                      autoPlay
+                      preload="metadata"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={getThumb(spotlight)} alt="" className="h-full w-full object-cover" />
+                  )
                 ) : (
                   <div className="flex h-full items-center justify-center font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-400">
                     {ui.noImage}
@@ -997,12 +1013,24 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               >
                 <div className="aspect-[4/3] w-full overflow-hidden bg-zinc-100">
                   {thumb ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={thumb}
-                      alt=""
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                    />
+                    isVideoUrl(thumb) ? (
+                      <video
+                        src={thumb}
+                        muted
+                        loop
+                        playsInline
+                        autoPlay
+                        preload="metadata"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                      />
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={thumb}
+                        alt=""
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                      />
+                    )
                   ) : (
                     <div className="flex h-full items-center justify-center font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-400">
                       {ui.noImage}
