@@ -78,6 +78,35 @@ function isVideoUrl(src: string) {
   return /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(src);
 }
 
+function isVimeoUrl(src: string) {
+  return /vimeo\.com/i.test(src);
+}
+
+function getVimeoEmbedSrc(src: string) {
+  try {
+    const url = new URL(src);
+    let pathname = url.pathname;
+    if (url.hostname === "vimeo.com") {
+      const idMatch = pathname.match(/\/(\d+)(?:$|\/)/);
+      if (!idMatch) return src;
+      pathname = `/video/${idMatch[1]}`;
+    }
+    const embed = new URL(`https://player.vimeo.com${pathname}`);
+    const params = new URLSearchParams(url.search);
+    params.set("autopause", "0");
+    params.set("controls", "0");
+    params.set("loop", "1");
+    params.set("muted", "1");
+    params.set("background", "1");
+    params.set("autoplay", "1");
+    params.set("playsinline", "1");
+    embed.search = params.toString();
+    return embed.toString();
+  } catch {
+    return src;
+  }
+}
+
 function getCountryKey(it: AnyItem) {
   return slugify(getCountry(it));
 }
@@ -890,7 +919,14 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <div className="border border-zinc-200">
               <div className="aspect-[16/9] w-full overflow-hidden bg-zinc-100">
                 {getThumb(spotlight) ? (
-                  isVideoUrl(getThumb(spotlight)) ? (
+                  isVimeoUrl(getThumb(spotlight)) ? (
+                    <iframe
+                      src={getVimeoEmbedSrc(getThumb(spotlight))}
+                      title=""
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      className="h-full w-full pointer-events-none"
+                    />
+                  ) : isVideoUrl(getThumb(spotlight)) ? (
                     <video
                       src={getThumb(spotlight)}
                       muted
@@ -1013,7 +1049,14 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               >
                 <div className="aspect-[4/3] w-full overflow-hidden bg-zinc-100">
                   {thumb ? (
-                    isVideoUrl(thumb) ? (
+                    isVimeoUrl(thumb) ? (
+                      <iframe
+                        src={getVimeoEmbedSrc(thumb)}
+                        title=""
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        className="h-full w-full pointer-events-none"
+                      />
+                    ) : isVideoUrl(thumb) ? (
                       <video
                         src={thumb}
                         muted

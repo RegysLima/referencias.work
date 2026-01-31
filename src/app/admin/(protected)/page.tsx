@@ -83,6 +83,35 @@ function isVideoUrl(src: string) {
   return /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(src);
 }
 
+function isVimeoUrl(src: string) {
+  return /vimeo\.com/i.test(src);
+}
+
+function getVimeoEmbedSrc(src: string) {
+  try {
+    const url = new URL(src);
+    let pathname = url.pathname;
+    if (url.hostname === "vimeo.com") {
+      const idMatch = pathname.match(/\/(\d+)(?:$|\/)/);
+      if (!idMatch) return src;
+      pathname = `/video/${idMatch[1]}`;
+    }
+    const embed = new URL(`https://player.vimeo.com${pathname}`);
+    const params = new URLSearchParams(url.search);
+    params.set("autopause", "0");
+    params.set("controls", "0");
+    params.set("loop", "1");
+    params.set("muted", "1");
+    params.set("background", "1");
+    params.set("autoplay", "1");
+    params.set("playsinline", "1");
+    embed.search = params.toString();
+    return embed.toString();
+  } catch {
+    return src;
+  }
+}
+
 function normalizeMacro(raw: string) {
   const v = (raw || "").trim();
   const low = v.toLowerCase();
@@ -263,7 +292,9 @@ export default function AdminPage() {
     const candidates = items
       .filter((i) => (i.thumbnailUrl || "").trim())
       .map((i) => ({ id: i.id, url: (i.thumbnailUrl || "").trim() }));
-    const imageCandidates = candidates.filter((item) => !isVideoUrl(item.url));
+    const imageCandidates = candidates.filter(
+      (item) => !isVideoUrl(item.url) && !isVimeoUrl(item.url)
+    );
 
     if (!imageCandidates.length) {
       showToast("Nenhuma imagem para verificar");
@@ -1111,7 +1142,14 @@ export default function AdminPage() {
                 >
                   <div className="aspect-[16/10] w-full bg-zinc-950">
                     {i.thumbnailUrl ? (
-                      isVideoUrl(i.thumbnailUrl) ? (
+                      isVimeoUrl(i.thumbnailUrl) ? (
+                        <iframe
+                          src={getVimeoEmbedSrc(i.thumbnailUrl)}
+                          title=""
+                          allow="autoplay; fullscreen; picture-in-picture"
+                          className="h-full w-full pointer-events-none"
+                        />
+                      ) : isVideoUrl(i.thumbnailUrl) ? (
                         <video
                           src={i.thumbnailUrl}
                           muted
@@ -1368,7 +1406,7 @@ export default function AdminPage() {
 
                       <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
                         <div>
-                          <label className="text-xs text-zinc-400">Imagem ou vídeo (thumbnailUrl)</label>
+                          <label className="text-xs text-zinc-400">Imagem, vídeo ou Vimeo (thumbnailUrl)</label>
                           <input
                             value={i.thumbnailUrl ?? ""}
                             onChange={(e) =>
