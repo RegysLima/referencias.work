@@ -79,7 +79,12 @@ function isVideoUrl(src: string) {
 }
 
 function isVimeoUrl(src: string) {
-  return /vimeo\.com/i.test(src);
+  try {
+    const url = new URL(src);
+    return /vimeo\.com$/i.test(url.hostname);
+  } catch {
+    return false;
+  }
 }
 
 function getVimeoEmbedSrc(src: string) {
@@ -105,6 +110,54 @@ function getVimeoEmbedSrc(src: string) {
   } catch {
     return src;
   }
+}
+
+function getVimeoFallbackSrc(src: string) {
+  try {
+    const url = new URL(src);
+    const idMatch = url.pathname.match(/\/playback\/(\d+)(?:\/|$)/);
+    if (!idMatch) return null;
+    const embed = new URL(`https://player.vimeo.com/video/${idMatch[1]}`);
+    embed.search = [
+      "autopause=0",
+      "controls=0",
+      "loop=1",
+      "muted=1",
+      "background=1",
+      "autoplay=1",
+      "playsinline=1",
+    ].join("&");
+    return embed.toString();
+  } catch {
+    return null;
+  }
+}
+
+function VideoThumb({ src, className }: { src: string; className: string }) {
+  const [failed, setFailed] = useState(false);
+  const fallback = getVimeoFallbackSrc(src);
+  if (failed && fallback) {
+    return (
+      <iframe
+        src={fallback}
+        title=""
+        allow="autoplay; fullscreen; picture-in-picture"
+        className={`${className} pointer-events-none`}
+      />
+    );
+  }
+  return (
+    <video
+      src={src}
+      muted
+      loop
+      playsInline
+      autoPlay
+      preload="metadata"
+      onError={() => setFailed(true)}
+      className={className}
+    />
+  );
 }
 
 function getCountryKey(it: AnyItem) {
@@ -932,15 +985,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                       className="h-full w-full pointer-events-none"
                     />
                   ) : isVideoUrl(getThumb(spotlight)) ? (
-                    <video
-                      src={getThumb(spotlight)}
-                      muted
-                      loop
-                      playsInline
-                      autoPlay
-                      preload="metadata"
-                      className="h-full w-full object-cover"
-                    />
+                    <VideoThumb src={getThumb(spotlight)} className="h-full w-full object-cover" />
                   ) : (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={getThumb(spotlight)} alt="" className="h-full w-full object-cover" />
@@ -1062,13 +1107,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                         className="h-full w-full pointer-events-none"
                       />
                     ) : isVideoUrl(thumb) ? (
-                      <video
+                      <VideoThumb
                         src={thumb}
-                        muted
-                        loop
-                        playsInline
-                        autoPlay
-                        preload="metadata"
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                       />
                     ) : (
