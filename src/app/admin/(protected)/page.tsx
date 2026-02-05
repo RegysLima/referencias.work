@@ -1453,54 +1453,53 @@ export default function AdminPage() {
                       </div>
 
 
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto_auto] sm:items-end">
-                        <div>
-                          <label className="text-xs text-zinc-400">Imagem, vídeo ou Vimeo (thumbnailUrl)</label>
-                          <input
-                            value={i.thumbnailUrl ?? ""}
-                            onChange={(e) =>
-                              updateItem(i.id, {
-                                thumbnailUrl: e.target.value || null,
-                                thumbnailSource: "manual",
-                              })
-                            }
-                            placeholder="https://..."
-                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-                          />
+                      <div>
+                        <label className="text-xs text-zinc-400">Thumbnail</label>
+                        <input
+                          value={i.thumbnailUrl ?? ""}
+                          onChange={(e) =>
+                            updateItem(i.id, {
+                              thumbnailUrl: e.target.value || null,
+                              thumbnailSource: "manual",
+                            })
+                          }
+                          placeholder="https://..."
+                          className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                        />
+                        <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                          <button
+                            onClick={() => openThumbPicker(i.id, i.url)}
+                            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                          >
+                            Escolher
+                          </button>
+
+                          <label className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 cursor-pointer text-center">
+                            {uploadingId === i.id ? "Enviando…" : "Upload"}
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              disabled={uploadingId === i.id}
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) uploadThumbnail(i.id, file);
+                                e.currentTarget.value = "";
+                              }}
+                            />
+                          </label>
+
+                          <button
+                            onClick={() => downloadThumbnail(i.thumbnailUrl || "", i.name || "thumbnail")}
+                            disabled={!i.thumbnailUrl}
+                            className={[
+                              "rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700",
+                              i.thumbnailUrl ? "cursor-pointer" : "cursor-not-allowed text-zinc-400 opacity-60",
+                            ].join(" ")}
+                          >
+                            Download
+                          </button>
                         </div>
-
-                        <button
-                          onClick={() => openThumbPicker(i.id, i.url)}
-                          className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
-                        >
-                          Escolher
-                        </button>
-
-                        <button
-                          onClick={() => downloadThumbnail(i.thumbnailUrl || "", i.name || "thumbnail")}
-                          disabled={!i.thumbnailUrl}
-                          className={[
-                            "rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700",
-                            i.thumbnailUrl ? "cursor-pointer" : "cursor-not-allowed text-zinc-400 opacity-60",
-                          ].join(" ")}
-                        >
-                          Download
-                        </button>
-
-                        <label className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 cursor-pointer text-center">
-                          {uploadingId === i.id ? "Enviando…" : "Upload"}
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            disabled={uploadingId === i.id}
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) uploadThumbnail(i.id, file);
-                              e.currentTarget.value = "";
-                            }}
-                          />
-                        </label>
                       </div>
 
                       <div className="text-xs text-zinc-500">
