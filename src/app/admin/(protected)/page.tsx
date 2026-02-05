@@ -112,6 +112,17 @@ function getVimeoEmbedSrc(src: string) {
   }
 }
 
+function getDownloadName(url: string, fallback: string) {
+  try {
+    const parsed = new URL(url);
+    const base = parsed.pathname.split("/").filter(Boolean).pop();
+    if (base) return base;
+  } catch {
+    // ignore
+  }
+  return `${fallback}.jpg`;
+}
+
 function normalizeMacro(raw: string) {
   const v = (raw || "").trim();
   const low = v.toLowerCase();
@@ -374,6 +385,31 @@ export default function AdminPage() {
       showToast("Falha no upload");
     } finally {
       setUploadingId(null);
+    }
+  }
+
+  async function downloadThumbnail(url: string, fallbackName: string) {
+    if (!url) return;
+    if (isVideoUrl(url) || isVimeoUrl(url)) {
+      showToast("Download indisponivel para videos");
+      return;
+    }
+    try {
+      const res = await fetch(url, { mode: "cors" });
+      if (!res.ok) throw new Error("download_failed");
+      const blob = await res.blob();
+      const href = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = href;
+      link.download = getDownloadName(url, fallbackName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(href), 1000);
+      showToast("Download iniciado");
+    } catch {
+      showToast("Nao foi possivel baixar. Abrindo em nova aba");
+      window.open(url, "_blank", "noopener,noreferrer");
     }
   }
 
@@ -1404,7 +1440,7 @@ export default function AdminPage() {
                       </div>
 
 
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto_auto] sm:items-end">
                         <div>
                           <label className="text-xs text-zinc-400">Imagem, vídeo ou Vimeo (thumbnailUrl)</label>
                           <input
@@ -1425,6 +1461,17 @@ export default function AdminPage() {
                           className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
                         >
                           Escolher
+                        </button>
+
+                        <button
+                          onClick={() => downloadThumbnail(i.thumbnailUrl || "", i.name || "thumbnail")}
+                          disabled={!i.thumbnailUrl}
+                          className={[
+                            "rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700",
+                            i.thumbnailUrl ? "cursor-pointer" : "cursor-not-allowed text-zinc-400 opacity-60",
+                          ].join(" ")}
+                        >
+                          Download
                         </button>
 
                         <label className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 cursor-pointer text-center">
