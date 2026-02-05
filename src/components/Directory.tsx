@@ -407,6 +407,11 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     areaPrimaryKey !== ALL_KEY ||
     areaSecondaryKey !== ALL_KEY;
 
+  const visibleItems = useMemo(
+    () => items.filter((it) => !it.hidden),
+    [items]
+  );
+
   function handleMacroClick(value: string) {
     if (!value) return;
     setMacroKey(value);
@@ -452,19 +457,19 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   /* -------- options -------- */
   const macroOptions = useMemo(() => {
-    const values = uniqSorted(items.map(getMacro).filter(Boolean));
+    const values = uniqSorted(visibleItems.map(getMacro).filter(Boolean));
     const list = values.map((value) => ({
       key: value,
       label: getMacroLabel(value, lang),
     }));
     list.sort((a, b) => a.label.localeCompare(b.label));
     return [{ key: ALL_KEY, label: ui.all }, ...list];
-  }, [items, lang, ui.all]);
+  }, [visibleItems, lang, ui.all]);
 
   const countryOptions = useMemo(() => {
     const keys = new Set<string>();
     const samples = new Map<string, string>();
-    for (const it of items) {
+    for (const it of visibleItems) {
       if (macroKey !== ALL_KEY && getMacro(it) !== macroKey) continue;
       const key = getCountryKey(it);
       if (key) {
@@ -478,12 +483,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     }));
     list.sort((a, b) => String(a.label).localeCompare(String(b.label)));
     return [{ key: ALL_KEY, label: ui.all }, ...list];
-  }, [items, macroKey, lang, ui.all]);
+  }, [visibleItems, macroKey, lang, ui.all]);
 
   const cityOptions = useMemo(() => {
     const keys = new Set<string>();
     const samples = new Map<string, string>();
-    for (const it of items) {
+    for (const it of visibleItems) {
       if (macroKey !== ALL_KEY && getMacro(it) !== macroKey) continue;
       if (countryKey !== ALL_KEY && getCountryKey(it) !== countryKey) continue;
       const key = getCityKey(it);
@@ -498,12 +503,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     }));
     list.sort((a, b) => String(a.label).localeCompare(String(b.label)));
     return [{ key: ALL_KEY, label: ui.all }, ...list];
-  }, [items, macroKey, countryKey, lang, ui.all]);
+  }, [visibleItems, macroKey, countryKey, lang, ui.all]);
 
   const areaPrimaryOptions = useMemo(() => {
     const keys = new Set<string>();
     const samples = new Map<string, string>();
-    for (const it of items) {
+    for (const it of visibleItems) {
       if (macroKey !== ALL_KEY && getMacro(it) !== macroKey) continue;
       if (countryKey !== ALL_KEY && getCountryKey(it) !== countryKey) continue;
       if (cityKey !== ALL_KEY && getCityKey(it) !== cityKey) continue;
@@ -520,12 +525,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     }));
     list.sort((a, b) => String(a.label).localeCompare(String(b.label)));
     return [{ key: ALL_KEY, label: ui.all }, ...list];
-  }, [items, macroKey, countryKey, cityKey, lang, ui.all]);
+  }, [visibleItems, macroKey, countryKey, cityKey, lang, ui.all]);
 
   const areaSecondaryOptions = useMemo(() => {
     const keys = new Set<string>();
     const samples = new Map<string, string>();
-    for (const it of items) {
+    for (const it of visibleItems) {
       if (macroKey !== ALL_KEY && getMacro(it) !== macroKey) continue;
       if (countryKey !== ALL_KEY && getCountryKey(it) !== countryKey) continue;
       if (cityKey !== ALL_KEY && getCityKey(it) !== cityKey) continue;
@@ -543,7 +548,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     }));
     list.sort((a, b) => String(a.label).localeCompare(String(b.label)));
     return [{ key: ALL_KEY, label: ui.all }, ...list];
-  }, [items, macroKey, countryKey, cityKey, lang, ui.all]);
+  }, [visibleItems, macroKey, countryKey, cityKey, lang, ui.all]);
 
   useEffect(() => {
     if (cityKey !== ALL_KEY && !cityOptions.some((o) => o.key === cityKey)) setCityKey(ALL_KEY);
@@ -557,7 +562,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   /* -------- filtering -------- */
   const filtered = useMemo(() => {
     const qq = q.trim().toLowerCase();
-    return items.filter((it) => {
+    return visibleItems.filter((it) => {
       const m = getMacro(it);
       const ctryKey = getCountryKey(it);
       const ctyKey = getCityKey(it);
@@ -600,7 +605,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         .toLowerCase();
       return hay.includes(qq);
     });
-  }, [items, q, macroKey, countryKey, cityKey, areaPrimaryKey, areaSecondaryKey, lang]);
+  }, [visibleItems, q, macroKey, countryKey, cityKey, areaPrimaryKey, areaSecondaryKey, lang]);
 
   const ordered = useMemo(() => {
     if (!seed) return filtered;

@@ -10,6 +10,7 @@ export type Reference = {
   country: string | null;
   city: string | null;
   thumbnailUrl: string | null;
+  hidden?: boolean;
   updatedAt: string;
   reviewFlags?: {
     country?: boolean;

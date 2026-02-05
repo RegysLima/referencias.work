@@ -19,6 +19,7 @@ type RefItem = {
 
   thumbnailUrl?: string | null;
   thumbnailSource?: string | null;
+  hidden?: boolean;
 
   updatedAt?: string | null;
   reviewedAt?: string | null;
@@ -1251,6 +1252,11 @@ export default function AdminPage() {
                           duplicado
                         </span>
                       ) : null}
+                      {i.hidden ? (
+                        <span className="rounded-full border border-zinc-700/60 bg-zinc-900/40 px-2 py-1 text-[11px] text-zinc-200">
+                          oculto
+                        </span>
+                      ) : null}
                     </div>
 
                     <div className="mt-2 text-sm text-zinc-400">
@@ -1276,6 +1282,13 @@ export default function AdminPage() {
                       className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
                     >
                       Revisado
+                    </button>
+
+                    <button
+                      onClick={() => updateItem(i.id, { hidden: !i.hidden })}
+                      className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                    >
+                      {i.hidden ? "Mostrar" : "Ocultar"}
                     </button>
 
                     <button
