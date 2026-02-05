@@ -169,7 +169,17 @@ function getCityKey(it: AnyItem) {
 }
 
 function getAreaKeyFromLabel(label: string) {
-  return slugify(label || "");
+  const key = slugify(label || "");
+  const aliases: Record<string, string> = {
+    ui: "digital",
+    "ui-ux": "digital",
+    ux: "digital",
+    exibicoes: "exposicoes",
+    expografia: "exposicoes",
+    documentary: "documental",
+    "creative-coding": "programacao-criativa",
+  };
+  return aliases[key] || key;
 }
 
 function getCountryLabel(it: AnyItem, lang: Lang) {

@@ -16,7 +16,7 @@
   },
   "agencia": {
     "pt": "Agência",
-    "en": "Agency:",
+    "en": "Agency",
     "es": "Agencia"
   },
   "analogica": {
@@ -116,23 +116,23 @@
   },
   "cientifica": {
     "pt": "Científica",
-    "en": "Training",
-    "es": "©emea 2004"
+    "en": "Scientific",
+    "es": "Científica"
   },
   "colagem": {
     "pt": "Colagem",
-    "en": "Gluing",
+    "en": "Collage",
     "es": "Collage"
   },
   "colorida": {
     "pt": "Colorido",
-    "en": "Color",
-    "es": "Aguja"
+    "en": "Colorful",
+    "es": "Colorido"
   },
   "colorido": {
     "pt": "Colorido",
-    "en": "Colourful",
-    "es": "Con color"
+    "en": "Colorful",
+    "es": "Colorido"
   },
   "comercial": {
     "pt": "Comercial",
@@ -155,17 +155,17 @@
     "es": "Cosmética"
   },
   "creative-coding": {
-    "pt": "Creative Coding",
+    "pt": "Programação Criativa",
     "en": "Creative Coding",
-    "es": "Codificación creativa"
+    "es": "Programación creativa"
   },
   "criativa": {
-    "pt": "Colorido",
+    "pt": "Criativo",
     "en": "Creative",
     "es": "Creativo"
   },
   "criativo": {
-    "pt": "Colorido",
+    "pt": "Criativo",
     "en": "Creative",
     "es": "Creativo"
   },
@@ -205,8 +205,8 @@
     "es": "Documental"
   },
   "documentary": {
-    "pt": "Documentary",
-    "en": "Documentary.",
+    "pt": "Documental",
+    "en": "Documentary",
     "es": "Documental"
   },
   "doodle": {
@@ -280,7 +280,7 @@
     "es": "Excentricidad"
   },
   "exibicoes": {
-    "pt": "Exibições",
+    "pt": "Exposições",
     "en": "Exhibitions",
     "es": "Exhibiciones"
   },
@@ -290,9 +290,9 @@
     "es": "Experimental"
   },
   "expografia": {
-    "pt": "Expografia",
-    "en": "Expography",
-    "es": "Expografía"
+    "pt": "Exposições",
+    "en": "Exhibitions",
+    "es": "Exhibiciones"
   },
   "exposicoes": {
     "pt": "Exposições",
@@ -307,12 +307,12 @@
   "feminista": {
     "pt": "Feminista",
     "en": "Feminism",
-    "es": "¿Feminista?"
+    "es": "Feminista"
   },
   "filmes": {
     "pt": "Filmes",
     "en": "Movies",
-    "es": "Cine como Asunto"
+    "es": "Películas"
   },
   "fine-art": {
     "pt": "Fine Art",
@@ -347,7 +347,7 @@
   "frutas": {
     "pt": "Frutas",
     "en": "Fruit",
-    "es": "Frambuesa"
+    "es": "Frutas"
   },
   "galeria": {
     "pt": "Galeria",
@@ -377,7 +377,7 @@
   "grafica": {
     "pt": "Gráfica",
     "en": "Printer (publishing)",
-    "es": "Gráfica:"
+    "es": "Gráfica"
   },
   "gratuitas": {
     "pt": "Gratuitas",
@@ -432,7 +432,7 @@
   "luxo": {
     "pt": "Luxo",
     "en": "Ultra High End",
-    "es": "Lujuria"
+    "es": "Lujo"
   },
   "macro": {
     "pt": "Macro",
@@ -542,7 +542,7 @@
   "posters": {
     "pt": "Posters",
     "en": "Posters",
-    "es": "Pósters:"
+    "es": "Pósters"
   },
   "praia": {
     "pt": "Praia",
@@ -566,7 +566,7 @@
   },
   "programacao-criativa": {
     "pt": "Programação Criativa",
-    "en": "Creative Programming",
+    "en": "Creative Coding",
     "es": "Programación creativa"
   },
   "psicodelica": {
@@ -642,7 +642,7 @@
   "surrealista": {
     "pt": "Surrealista",
     "en": "Surrealism",
-    "es": "Surrealista."
+    "es": "Surrealista"
   },
   "textura": {
     "pt": "Textura",
@@ -670,14 +670,14 @@
     "es": "Tipos de letra"
   },
   "ui": {
-    "pt": "UI",
-    "en": "UI",
-    "es": "UI"
+    "pt": "Digital",
+    "en": "Digital",
+    "es": "Digital"
   },
   "ui-ux": {
-    "pt": "Ui/ux",
-    "en": "Ui/ux",
-    "es": "Ui/ux"
+    "pt": "Digital",
+    "en": "Digital",
+    "es": "Digital"
   },
   "urbana": {
     "pt": "Urbana",
@@ -690,9 +690,9 @@
     "es": "Urbano"
   },
   "ux": {
-    "pt": "UX",
-    "en": "UX",
-    "es": "UX"
+    "pt": "Digital",
+    "en": "Digital",
+    "es": "Digital"
   },
   "veiculos": {
     "pt": "Veículos",
