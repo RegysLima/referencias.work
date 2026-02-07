@@ -142,7 +142,7 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
         src={fallback}
         title=""
         allow="autoplay; fullscreen; picture-in-picture"
-        className={`${className} pointer-events-none`}
+        className={`${className} pointer-events-none absolute inset-0 block`}
       />
     );
   }
@@ -155,7 +155,7 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       autoPlay
       preload="metadata"
       onError={() => setFailed(true)}
-      className={className}
+      className={`${className} absolute inset-0 block`}
       style={{ objectFit: "cover", width: "100%", height: "100%" }}
     />
   );
@@ -986,14 +986,14 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         <div className="pt-10">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.25fr_1fr] lg:items-start">
             <div className="border border-zinc-200">
-              <div className="aspect-[16/9] w-full overflow-hidden bg-zinc-100">
+              <div className="aspect-[16/9] w-full overflow-hidden bg-zinc-100 relative">
                 {getThumb(spotlight) ? (
                   isVimeoUrl(getThumb(spotlight)) ? (
                     <iframe
                       src={getVimeoEmbedSrc(getThumb(spotlight))}
                       title=""
                       allow="autoplay; fullscreen; picture-in-picture"
-                      className="h-full w-full pointer-events-none"
+                      className="h-full w-full pointer-events-none absolute inset-0"
                     />
                   ) : isVideoUrl(getThumb(spotlight)) ? (
                     <VideoThumb src={getThumb(spotlight)} className="h-full w-full object-cover" />
@@ -1108,14 +1108,14 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 rel="noreferrer"
                 className="group min-w-0 border border-zinc-200 bg-white"
               >
-                <div className="aspect-[4/3] w-full overflow-hidden bg-zinc-100">
+                <div className="aspect-[4/3] w-full overflow-hidden bg-zinc-100 relative">
                   {thumb ? (
                     isVimeoUrl(thumb) ? (
                       <iframe
                         src={getVimeoEmbedSrc(thumb)}
                         title=""
                         allow="autoplay; fullscreen; picture-in-picture"
-                        className="h-full w-full pointer-events-none"
+                        className="h-full w-full pointer-events-none absolute inset-0"
                       />
                     ) : isVideoUrl(thumb) ? (
                       <VideoThumb

@@ -158,7 +158,7 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
         src={fallback}
         title=""
         allow="autoplay; fullscreen; picture-in-picture"
-        className={`${className} pointer-events-none`}
+        className={`${className} pointer-events-none absolute inset-0 block`}
       />
     );
   }
@@ -171,7 +171,7 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       autoPlay
       preload="metadata"
       onError={() => setFailed(true)}
-      className={className}
+      className={`${className} absolute inset-0 block`}
       style={{ objectFit: "cover", width: "100%", height: "100%" }}
     />
   );
@@ -1028,14 +1028,14 @@ export default function AdminPage() {
                   className="group block w-full text-left"
                   title="Clique para editar"
                 >
-                  <div className="aspect-[16/10] w-full bg-zinc-950">
+                  <div className="aspect-[16/10] w-full bg-zinc-950 relative overflow-hidden">
                     {i.thumbnailUrl ? (
                       isVimeoUrl(i.thumbnailUrl) ? (
                         <iframe
                           src={getVimeoEmbedSrc(i.thumbnailUrl)}
                           title=""
                           allow="autoplay; fullscreen; picture-in-picture"
-                          className="h-full w-full pointer-events-none"
+                          className="h-full w-full pointer-events-none absolute inset-0"
                         />
                       ) : isVideoUrl(i.thumbnailUrl) ? (
                         <VideoThumb
