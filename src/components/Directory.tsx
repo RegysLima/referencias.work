@@ -996,7 +996,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <div className="border border-zinc-200">
               <div className="aspect-[16/9] w-full overflow-hidden bg-zinc-100 relative">
                 {getThumb(spotlight) ? (
-                  isVimeoUrl(getThumb(spotlight)) ? (
+                    isVimeoUrl(getThumb(spotlight)) ? (
                     <iframe
                       src={getVimeoEmbedSrc(getThumb(spotlight))}
                       title=""
@@ -1123,7 +1123,13 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                         src={getVimeoEmbedSrc(thumb)}
                         title=""
                         allow="autoplay; fullscreen; picture-in-picture"
-                        className="h-full w-full pointer-events-none absolute inset-0"
+                        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                        style={{
+                          width: "133.33%",
+                          height: "100%",
+                          minWidth: "100%",
+                          minHeight: "100%",
+                        }}
                       />
                     ) : isVideoUrl(thumb) ? (
                       <VideoThumb

@@ -1044,7 +1044,13 @@ export default function AdminPage() {
                           src={getVimeoEmbedSrc(i.thumbnailUrl)}
                           title=""
                           allow="autoplay; fullscreen; picture-in-picture"
-                          className="h-full w-full pointer-events-none absolute inset-0"
+                          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                          style={{
+                            width: "112%",
+                            height: "100%",
+                            minWidth: "100%",
+                            minHeight: "100%",
+                          }}
                         />
                       ) : isVideoUrl(i.thumbnailUrl) ? (
                         <VideoThumb
