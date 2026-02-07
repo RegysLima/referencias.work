@@ -230,6 +230,29 @@ function getStringField(it: unknown, key: string) {
   return typeof v === "string" ? v : "";
 }
 
+function hasValue(value: string | null | undefined) {
+  return Boolean((value ?? "").trim());
+}
+
+function hasActiveReviewFlags(it: RefItem) {
+  if (!it.reviewFlags) return false;
+  const needsCountry = Boolean(it.reviewFlags.country) && !hasValue(it.country);
+  const needsCity = Boolean(it.reviewFlags.city) && !hasValue(it.city);
+  return needsCountry || needsCity;
+}
+
+function normalizeReviewFlags(it: RefItem) {
+  if (!it.reviewFlags) return it;
+  const nextFlags = { ...it.reviewFlags };
+  if (nextFlags.country && hasValue(it.country)) delete nextFlags.country;
+  if (nextFlags.city && hasValue(it.city)) delete nextFlags.city;
+  const hasAny = Boolean(nextFlags.country || nextFlags.city);
+  return {
+    ...it,
+    reviewFlags: hasAny ? nextFlags : undefined,
+  };
+}
+
 type ThumbModalState = {
   open: boolean;
   itemId: string | null;
@@ -306,7 +329,7 @@ export default function AdminPage() {
         };
       });
 
-      setItems(normalized);
+      setItems(normalized.map(normalizeReviewFlags));
 
       const draft: Record<string, string> = {};
       for (const it of normalized) draft[it.id] = (it.areasSecondary ?? []).join(", ");
@@ -446,7 +469,7 @@ export default function AdminPage() {
       if (onlyNoImage && i.thumbnailUrl) return false;
       if (onlyBrokenImages && !brokenThumbs[i.id]) return false;
       if (onlyUnreviewed && i.reviewedAt) return false;
-      if (onlyNeedsReview && !i.reviewFlags) return false;
+      if (onlyNeedsReview && !hasActiveReviewFlags(i)) return false;
 
       if (onlyDuplicates) {
         const k = normalizeUrl(i.url);
@@ -465,7 +488,7 @@ export default function AdminPage() {
         i.country ?? "",
         i.city ?? "",
         i.reviewedAt ? "revisado" : "nao revisado",
-        i.reviewFlags ? "revisar" : "",
+        hasActiveReviewFlags(i) ? "revisar" : "",
       ]
         .join(" ")
         .toLowerCase();
@@ -527,7 +550,7 @@ export default function AdminPage() {
         setSaveState((s) => (s === "saved" ? "idle" : s));
         setSaveMessage((m) => (saveState === "saved" ? "" : m));
 
-        return next;
+        return normalizeReviewFlags(next);
       })
     );
   }
@@ -1102,7 +1125,7 @@ export default function AdminPage() {
                         </span>
                       ) : null}
 
-                      {i.reviewFlags ? (
+                      {hasActiveReviewFlags(i) ? (
                         <span className="rounded-full border border-amber-700/60 bg-amber-950/25 px-2 py-1 text-[11px] text-amber-200">
                           revisar
                         </span>
