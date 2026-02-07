@@ -156,7 +156,15 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       preload="metadata"
       onError={() => setFailed(true)}
       className={`${className} absolute inset-0 block`}
-      style={{ objectFit: "cover", width: "100%", height: "100%" }}
+      style={{
+        objectFit: "cover",
+        objectPosition: "center",
+        width: "100%",
+        height: "100%",
+        minWidth: "100%",
+        minHeight: "100%",
+        display: "block",
+      }}
     />
   );
 }
