@@ -1,3 +1,4 @@
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 import Directory from "@/components/Directory";
 import { loadReferences } from "@/lib/loadReferences";
 
@@ -7,6 +8,7 @@ export default async function Page() {
   const db = await loadReferences();
   return (
     <main className="min-h-screen bg-white text-zinc-950">
+      <AnalyticsTracker />
       <Directory items={db.items as unknown as Record<string, unknown>[]} />
     </main>
   );

@@ -156,6 +156,7 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       preload="metadata"
       onError={() => setFailed(true)}
       className={className}
+      style={{ objectFit: "cover", width: "100%", height: "100%" }}
     />
   );
 }

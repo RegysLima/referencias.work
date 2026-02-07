@@ -1,6 +1,7 @@
 import { loadAbout } from "@/lib/loadAbout";
 import AboutHeader from "@/components/AboutHeader";
 import AboutContent from "@/components/AboutContent";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 import type { Lang } from "@/lib/i18n";
 
 export const revalidate = 0;
@@ -17,6 +18,7 @@ export default async function SobrePage({
 
   return (
     <main className="min-h-screen bg-white text-zinc-950 pt-10">
+      <AnalyticsTracker />
       <AboutHeader initialLang={lang} />
       <AboutContent about={about} initialLang={lang} />
     </main>
