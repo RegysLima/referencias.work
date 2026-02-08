@@ -1165,7 +1165,7 @@ export default function AdminPage() {
                         onClick={() => openUrl(i.url)}
                         aria-label="Abrir"
                         title="Abrir"
-                        className="group flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
+                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
                         <span
                           className="h-5 w-5 bg-white transition group-hover:bg-black"
@@ -1186,7 +1186,7 @@ export default function AdminPage() {
                         onClick={() => markReviewed(i.id)}
                         aria-label="Revisado"
                         title="Revisado"
-                        className="group flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
+                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
                         <span
                           className="h-5 w-5 bg-white transition group-hover:bg-black"
@@ -1207,7 +1207,7 @@ export default function AdminPage() {
                         onClick={() => updateItem(i.id, { hidden: !i.hidden })}
                         aria-label={i.hidden ? "Mostrar" : "Ocultar"}
                         title={i.hidden ? "Mostrar" : "Ocultar"}
-                        className="group flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
+                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
                         <span
                           className="h-5 w-5 bg-white transition group-hover:bg-black"
@@ -1228,7 +1228,7 @@ export default function AdminPage() {
                         onClick={() => confirmRemove(i)}
                         aria-label="Excluir"
                         title="Excluir"
-                        className="group flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
+                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
                         <span
                           className="h-5 w-5 bg-white transition group-hover:bg-black"
