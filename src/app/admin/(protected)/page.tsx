@@ -1299,23 +1299,23 @@ export default function AdminPage() {
                       </div>
 
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-  <div>
-    <label className="text-xs text-zinc-400">País</label>
-    <input
-      value={i.country ?? ""}
-      onChange={(e) => updateItem(i.id, { country: e.target.value || null })}
-      className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-    />
-  </div>
+                        <div>
+                          <label className="text-xs text-zinc-400">País</label>
+                          <input
+                            value={i.country ?? ""}
+                            onChange={(e) => updateItem(i.id, { country: e.target.value || null })}
+                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                          />
+                        </div>
 
-      <div>
-        <label className="text-xs text-zinc-400">Cidade</label>
-        <input
-          value={i.city ?? ""}
-          onChange={(e) => updateItem(i.id, { city: e.target.value || null })}
-          className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-        />
-      </div>
+                        <div>
+                          <label className="text-xs text-zinc-400">Cidade</label>
+                          <input
+                            value={i.city ?? ""}
+                            onChange={(e) => updateItem(i.id, { city: e.target.value || null })}
+                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                          />
+                        </div>
 
                         <div className="sm:col-span-2">
                           <button
@@ -1327,7 +1327,10 @@ export default function AdminPage() {
                                 const res = await fetch(`/api/admin/location?url=${encodeURIComponent(u)}`);
                                 const data = await res.json();
                                 if (data?.country || data?.city) {
-                                  updateItem(i.id, { country: data.country ?? i.country ?? null, city: data.city ?? i.city ?? null });
+                                  updateItem(i.id, {
+                                    country: data.country ?? i.country ?? null,
+                                    city: data.city ?? i.city ?? null,
+                                  });
                                   showToast("Localização sugerida");
                                 } else {
                                   showToast("Não encontrei localização no site");
@@ -1342,7 +1345,6 @@ export default function AdminPage() {
                           </button>
                         </div>
                       </div>
-
 
                       <div>
                         <label className="text-xs text-zinc-400">Thumbnail</label>
@@ -1403,6 +1405,7 @@ export default function AdminPage() {
             );
           })}
         </div>
+      </div>
       </div>
 
       <datalist id="area-options">
