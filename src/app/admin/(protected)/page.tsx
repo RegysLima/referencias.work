@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 
 type RefItem = {
   id: string;
@@ -787,138 +786,7 @@ export default function AdminPage() {
   }, [deleteConfirm.open]);
 
   return (
-    <div className="mx-auto max-w-6xl px-6 pb-10 pt-4">
-      {/* TOP BAR STICKY */}
-      <div className="sticky top-0 z-30 -mx-6 border-b border-zinc-800 bg-zinc-950/92 px-6 py-4 backdrop-blur">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-semibold">Admin</h1>
-
-            {saveMessage ? (
-              <div
-                className={[
-                  "mt-2 text-xs",
-                  saveState === "error" ? "text-red-300" : "text-zinc-400",
-                ].join(" ")}
-              >
-                {saveMessage}
-              </div>
-            ) : null}
-          </div>
-
-          <div className="flex gap-2">
-            <Link
-              href="/"
-              className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
-            >
-              Home
-            </Link>
-
-            <button
-              onClick={addNew}
-              className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
-            >
-              + Adicionar
-            </button>
-
-            <button
-              onClick={saveAll}
-              disabled={saveState === "saving"}
-              className={[
-                "rounded-xl border px-3 py-2 text-sm transition disabled:opacity-60",
-                saveBtnClass,
-              ].join(" ")}
-            >
-              {saveBtnLabel}
-            </button>
-
-            <button
-              onClick={logout}
-              className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
-            >
-              Sair
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Buscar por nome, url, área, país..."
-            className="w-full max-w-md rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none focus:border-zinc-600"
-          />
-
-          <select
-            value={macroFilter}
-            onChange={(e) => setMacroFilter(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none focus:border-zinc-600"
-          >
-            <option value="Todos">Todas as categorias</option>
-            {MACROS.map((m) => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
-
-          <label className="flex items-center gap-2 text-sm text-zinc-300">
-            <input
-              type="checkbox"
-              checked={onlyNoImage}
-              onChange={(e) => setOnlyNoImage(e.target.checked)}
-            />
-            Somente sem imagem
-          </label>
-
-          <label className="flex items-center gap-2 text-sm text-zinc-300">
-            <input
-              type="checkbox"
-              checked={onlyUnreviewed}
-              onChange={(e) => setOnlyUnreviewed(e.target.checked)}
-            />
-            Somente não revisados
-          </label>
-
-          <label className="flex items-center gap-2 text-sm text-zinc-300">
-            <input
-              type="checkbox"
-              checked={onlyDuplicates}
-              onChange={(e) => setOnlyDuplicates(e.target.checked)}
-            />
-            Duplicados (URL)
-          </label>
-
-          <label className="flex items-center gap-2 text-sm text-zinc-300">
-            <input
-              type="checkbox"
-              checked={onlyNeedsReview}
-              onChange={(e) => setOnlyNeedsReview(e.target.checked)}
-            />
-            Revisar dúvidas
-          </label>
-
-          <label className="flex items-center gap-2 text-sm text-zinc-300">
-            <input
-              type="checkbox"
-              checked={onlyBrokenImages}
-              onChange={(e) => setOnlyBrokenImages(e.target.checked)}
-            />
-            Somente imagens quebradas
-          </label>
-
-          <button
-            onClick={checkBrokenImages}
-            disabled={checkingThumbs}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 disabled:opacity-60"
-          >
-            {checkingThumbs ? "Verificando…" : "Verificar imagens"}
-          </button>
-
-          <div className="ml-auto text-sm text-zinc-400">{filtered.length} itens</div>
-        </div>
-      </div>
-
+    <div className="mx-auto max-w-6xl px-6 pb-10 pt-6">
       {/* TOAST */}
       {toast ? (
         <div className="fixed bottom-6 right-6 z-50 rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 text-sm text-zinc-200 shadow-lg">
@@ -1036,175 +904,314 @@ export default function AdminPage() {
         </div>
       ) : null}
 
-      <div className="mt-10 border-t border-zinc-800 pt-6">
-        <div className="text-sm text-zinc-400">Referências</div>
-      </div>
+      <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+        <aside className="h-fit lg:sticky lg:top-6">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-950/40 p-4">
+            <div className="text-xs text-zinc-400">{filtered.length} itens</div>
 
-      {/* CONTENT - GRID */}
-      <div className="pt-6">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((i) => {
-            const isOpen = openId === i.id;
-            const k = normalizeUrl(i.url);
-            const dup = k && (duplicateMap.get(k) ?? 0) >= 2;
-            const brokenThumb = brokenThumbs[i.id];
+            <button
+              onClick={addNew}
+              className="mt-4 w-full rounded-xl border border-white bg-white px-3 py-2 text-sm text-black hover:opacity-90"
+            >
+              + Adicionar
+            </button>
 
-            return (
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Buscar"
+              className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none focus:border-zinc-600"
+            />
+
+            <select
+              value={macroFilter}
+              onChange={(e) => setMacroFilter(e.target.value)}
+              className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none focus:border-zinc-600"
+            >
+              <option value="Todos">Todas as categorias</option>
+              {MACROS.map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
+
+            <div className="mt-4 space-y-3">
+              <label className="flex items-center justify-between text-sm text-zinc-300">
+                <span>Sem imagem</span>
+                <span className="relative inline-flex h-5 w-9">
+                  <input
+                    type="checkbox"
+                    checked={onlyNoImage}
+                    onChange={(e) => setOnlyNoImage(e.target.checked)}
+                    className="peer sr-only"
+                  />
+                  <span className="absolute inset-0 rounded-full bg-zinc-800 transition peer-checked:bg-white/90" />
+                  <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-zinc-200 transition peer-checked:translate-x-4 peer-checked:bg-black" />
+                </span>
+              </label>
+
+              <label className="flex items-center justify-between text-sm text-zinc-300">
+                <span>Não revisados</span>
+                <span className="relative inline-flex h-5 w-9">
+                  <input
+                    type="checkbox"
+                    checked={onlyUnreviewed}
+                    onChange={(e) => setOnlyUnreviewed(e.target.checked)}
+                    className="peer sr-only"
+                  />
+                  <span className="absolute inset-0 rounded-full bg-zinc-800 transition peer-checked:bg-white/90" />
+                  <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-zinc-200 transition peer-checked:translate-x-4 peer-checked:bg-black" />
+                </span>
+              </label>
+
+              <label className="flex items-center justify-between text-sm text-zinc-300">
+                <span>URL Duplicadas</span>
+                <span className="relative inline-flex h-5 w-9">
+                  <input
+                    type="checkbox"
+                    checked={onlyDuplicates}
+                    onChange={(e) => setOnlyDuplicates(e.target.checked)}
+                    className="peer sr-only"
+                  />
+                  <span className="absolute inset-0 rounded-full bg-zinc-800 transition peer-checked:bg-white/90" />
+                  <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-zinc-200 transition peer-checked:translate-x-4 peer-checked:bg-black" />
+                </span>
+              </label>
+
+              <label className="flex items-center justify-between text-sm text-zinc-300">
+                <span>Revisar dúvidas</span>
+                <span className="relative inline-flex h-5 w-9">
+                  <input
+                    type="checkbox"
+                    checked={onlyNeedsReview}
+                    onChange={(e) => setOnlyNeedsReview(e.target.checked)}
+                    className="peer sr-only"
+                  />
+                  <span className="absolute inset-0 rounded-full bg-zinc-800 transition peer-checked:bg-white/90" />
+                  <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-zinc-200 transition peer-checked:translate-x-4 peer-checked:bg-black" />
+                </span>
+              </label>
+
+              <label className="flex items-center justify-between text-sm text-zinc-300">
+                <span>Imagens quebradas</span>
+                <span className="relative inline-flex h-5 w-9">
+                  <input
+                    type="checkbox"
+                    checked={onlyBrokenImages}
+                    onChange={(e) => setOnlyBrokenImages(e.target.checked)}
+                    className="peer sr-only"
+                  />
+                  <span className="absolute inset-0 rounded-full bg-zinc-800 transition peer-checked:bg-white/90" />
+                  <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-zinc-200 transition peer-checked:translate-x-4 peer-checked:bg-black" />
+                </span>
+              </label>
+            </div>
+
+            <button
+              onClick={checkBrokenImages}
+              disabled={checkingThumbs}
+              className="mt-4 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 disabled:opacity-60"
+            >
+              {checkingThumbs ? "Verificando…" : "Verificar imagens"}
+            </button>
+
+            <button
+              onClick={saveAll}
+              disabled={saveState === "saving"}
+              className={[
+                "mt-3 w-full rounded-xl border px-3 py-2 text-sm transition disabled:opacity-60",
+                saveBtnClass,
+              ].join(" ")}
+            >
+              {saveBtnLabel}
+            </button>
+
+            {saveMessage ? (
               <div
-                key={i.id}
-                className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/20"
+                className={[
+                  "mt-2 text-xs",
+                  saveState === "error" ? "text-red-300" : "text-zinc-400",
+                ].join(" ")}
               >
-                <button
-                  type="button"
-                  onClick={() => setOpenId(isOpen ? null : i.id)}
-                  className="group block w-full text-left"
-                  title="Clique para editar"
+                {saveMessage}
+              </div>
+            ) : null}
+
+            <button
+              onClick={logout}
+              className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+            >
+              Sair
+            </button>
+          </div>
+        </aside>
+
+        <div>
+          {/* CONTENT - GRID */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {filtered.map((i) => {
+              const isOpen = openId === i.id;
+              const k = normalizeUrl(i.url);
+              const dup = k && (duplicateMap.get(k) ?? 0) >= 2;
+              const brokenThumb = brokenThumbs[i.id];
+
+              return (
+                <div
+                  key={i.id}
+                  className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/20"
                 >
-                  <div className="aspect-[16/10] w-full bg-zinc-950 relative overflow-hidden">
-                    {i.thumbnailUrl ? (
-                      isVimeoUrl(i.thumbnailUrl) ? (
-                        <iframe
-                          src={getVimeoEmbedSrc(i.thumbnailUrl)}
-                          title=""
-                          allow="autoplay; fullscreen; picture-in-picture"
-                          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                          style={{
-                            width: "112%",
-                            height: "100%",
-                            minWidth: "100%",
-                            minHeight: "100%",
-                          }}
-                        />
-                      ) : isVideoUrl(i.thumbnailUrl) ? (
-                        <VideoThumb
-                          src={i.thumbnailUrl}
-                          className="h-full w-full object-cover transition group-hover:scale-[1.01]"
-                        />
+                  <button
+                    type="button"
+                    onClick={() => setOpenId(isOpen ? null : i.id)}
+                    className="group block w-full text-left"
+                    title="Clique para editar"
+                  >
+                    <div className="aspect-[16/10] w-full bg-zinc-950 relative overflow-hidden">
+                      {i.thumbnailUrl ? (
+                        isVimeoUrl(i.thumbnailUrl) ? (
+                          <iframe
+                            src={getVimeoEmbedSrc(i.thumbnailUrl)}
+                            title=""
+                            allow="autoplay; fullscreen; picture-in-picture"
+                            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                            style={{
+                              width: "112%",
+                              height: "100%",
+                              minWidth: "100%",
+                              minHeight: "100%",
+                            }}
+                          />
+                        ) : isVideoUrl(i.thumbnailUrl) ? (
+                          <VideoThumb
+                            src={i.thumbnailUrl}
+                            className="h-full w-full object-cover transition group-hover:scale-[1.01]"
+                          />
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={i.thumbnailUrl}
+                            alt=""
+                            className="h-full w-full object-cover transition group-hover:scale-[1.01]"
+                          />
+                        )
                       ) : (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={i.thumbnailUrl}
-                          alt=""
-                          className="h-full w-full object-cover transition group-hover:scale-[1.01]"
-                        />
-                      )
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-xs text-zinc-500">
-                        sem imagem
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <div className="truncate text-base font-medium">{i.name}</div>
-                        <div className="mt-1 truncate text-xs text-zinc-400">{i.url}</div>
-                      </div>
-
-                      <span className="shrink-0 rounded-full border border-zinc-800 bg-zinc-950 px-2 py-1 text-[11px] text-zinc-300">
-                        {normalizeMacro(i.macroType) || "—"}
-                      </span>
+                        <div className="flex h-full items-center justify-center text-xs text-zinc-500">
+                          sem imagem
+                        </div>
+                      )}
                     </div>
 
-                    <div className="mt-3 flex flex-wrap items-center gap-2">
-                      <span
-                        className={[
-                          "rounded-full border px-2 py-1 text-[11px]",
-                          i.reviewedAt
-                            ? "border-emerald-700/60 bg-emerald-950/30 text-emerald-200"
-                            : "border-zinc-800 bg-zinc-950 text-zinc-300",
-                        ].join(" ")}
+                    <div className="p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="truncate text-base font-medium">{i.name}</div>
+                          <div className="mt-1 truncate text-xs text-zinc-400">{i.url}</div>
+                        </div>
+
+                        <span className="shrink-0 rounded-full border border-zinc-800 bg-zinc-950 px-2 py-1 text-[11px] text-zinc-300">
+                          {normalizeMacro(i.macroType) || "—"}
+                        </span>
+                      </div>
+
+                      <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <span
+                          className={[
+                            "rounded-full border px-2 py-1 text-[11px]",
+                            i.reviewedAt
+                              ? "border-emerald-700/60 bg-emerald-950/30 text-emerald-200"
+                              : "border-zinc-800 bg-zinc-950 text-zinc-300",
+                          ].join(" ")}
+                        >
+                          {i.reviewedAt ? "revisado" : "pendente"}
+                        </span>
+
+                        {brokenThumb ? (
+                          <span className="rounded-full border border-red-700/60 bg-red-950/30 px-2 py-1 text-[11px] text-red-200">
+                            imagem quebrada
+                          </span>
+                        ) : null}
+
+                        {hasActiveReviewFlags(i) ? (
+                          <span className="rounded-full border border-amber-700/60 bg-amber-950/25 px-2 py-1 text-[11px] text-amber-200">
+                            revisar
+                          </span>
+                        ) : null}
+
+                        {dup ? (
+                          <span className="rounded-full border border-amber-700/60 bg-amber-950/25 px-2 py-1 text-[11px] text-amber-200">
+                            duplicado
+                          </span>
+                        ) : null}
+                        {i.hidden ? (
+                          <span className="rounded-full border border-zinc-700/60 bg-zinc-900/40 px-2 py-1 text-[11px] text-zinc-200">
+                            oculto
+                          </span>
+                        ) : null}
+                      </div>
+
+                      <div className="mt-2 text-sm text-zinc-400">
+                        {i.areaPrimary ? i.areaPrimary : "—"}
+                        {i.areasSecondary?.length ? (
+                          <span className="text-zinc-500"> · {i.areasSecondary.join(" · ")}</span>
+                        ) : null}
+                      </div>
+                    </div>
+                  </button>
+
+                  <div className="px-4 pb-4">
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => openUrl(i.url)}
+                        className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
                       >
-                        {i.reviewedAt ? "revisado" : "pendente"}
-                      </span>
+                        Abrir
+                      </button>
 
-                      {brokenThumb ? (
-                        <span className="rounded-full border border-red-700/60 bg-red-950/30 px-2 py-1 text-[11px] text-red-200">
-                          imagem quebrada
-                        </span>
-                      ) : null}
+                      <button
+                        onClick={() => markReviewed(i.id)}
+                        className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                      >
+                        Revisado
+                      </button>
 
-                      {hasActiveReviewFlags(i) ? (
-                        <span className="rounded-full border border-amber-700/60 bg-amber-950/25 px-2 py-1 text-[11px] text-amber-200">
-                          revisar
-                        </span>
-                      ) : null}
+                      <button
+                        onClick={() => updateItem(i.id, { hidden: !i.hidden })}
+                        className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                      >
+                        {i.hidden ? "Mostrar" : "Ocultar"}
+                      </button>
 
-                      {dup ? (
-                        <span className="rounded-full border border-amber-700/60 bg-amber-950/25 px-2 py-1 text-[11px] text-amber-200">
-                          duplicado
-                        </span>
-                      ) : null}
-                      {i.hidden ? (
-                        <span className="rounded-full border border-zinc-700/60 bg-zinc-900/40 px-2 py-1 text-[11px] text-zinc-200">
-                          oculto
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <div className="mt-2 text-sm text-zinc-400">
-                      {i.areaPrimary ? i.areaPrimary : "—"}
-                      {i.areasSecondary?.length ? (
-                        <span className="text-zinc-500"> · {i.areasSecondary.join(" · ")}</span>
-                      ) : null}
+                      <button
+                        onClick={() => confirmRemove(i)}
+                        className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                      >
+                        Excluir
+                      </button>
                     </div>
                   </div>
-                </button>
 
-                <div className="px-4 pb-4">
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => openUrl(i.url)}
-                      className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
-                    >
-                      Abrir
-                    </button>
+                  {isOpen ? (
+                    <div className="border-t border-zinc-800 bg-zinc-950/30 p-4">
+                      <div className="grid grid-cols-1 gap-3">
+                        <div>
+                          <label className="text-xs text-zinc-400">Nome</label>
+                          <input
+                            value={i.name ?? ""}
+                            onChange={(e) => updateItem(i.id, { name: e.target.value })}
+                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                          />
+                        </div>
 
-                    <button
-                      onClick={() => markReviewed(i.id)}
-                      className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
-                    >
-                      Revisado
-                    </button>
-
-                    <button
-                      onClick={() => updateItem(i.id, { hidden: !i.hidden })}
-                      className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
-                    >
-                      {i.hidden ? "Mostrar" : "Ocultar"}
-                    </button>
-
-                    <button
-                      onClick={() => confirmRemove(i)}
-                      className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
-                    >
-                      Excluir
-                    </button>
-                  </div>
-                </div>
-
-                {isOpen ? (
-                  <div className="border-t border-zinc-800 bg-zinc-950/30 p-4">
-                    <div className="grid grid-cols-1 gap-3">
-                      <div>
-                        <label className="text-xs text-zinc-400">Nome</label>
-                        <input
-                          value={i.name ?? ""}
-                          onChange={(e) => updateItem(i.id, { name: e.target.value })}
-                          className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-xs text-zinc-400">URL</label>
-                        <input
-                          value={i.url ?? ""}
-                          onChange={(e) => updateItem(i.id, { url: e.target.value })}
-                          placeholder="https://..."
-                          className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-                        />
-                      </div>
+                        <div>
+                          <label className="text-xs text-zinc-400">URL</label>
+                          <input
+                            value={i.url ?? ""}
+                            onChange={(e) => updateItem(i.id, { url: e.target.value })}
+                            placeholder="https://..."
+                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                          />
+                        </div>
 
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
