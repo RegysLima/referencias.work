@@ -1160,33 +1160,89 @@ export default function AdminPage() {
                   </button>
 
                   <div className="px-4 pb-4">
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-3">
                       <button
                         onClick={() => openUrl(i.url)}
-                        className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                        aria-label="Abrir"
+                        title="Abrir"
+                        className="group flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
-                        Abrir
+                        <span
+                          className="h-5 w-5 bg-white transition group-hover:bg-black"
+                          style={{
+                            WebkitMaskImage: "url(/icons/admin/abrir.svg)",
+                            maskImage: "url(/icons/admin/abrir.svg)",
+                            WebkitMaskRepeat: "no-repeat",
+                            maskRepeat: "no-repeat",
+                            WebkitMaskPosition: "center",
+                            maskPosition: "center",
+                            WebkitMaskSize: "contain",
+                            maskSize: "contain",
+                          }}
+                        />
                       </button>
 
                       <button
                         onClick={() => markReviewed(i.id)}
-                        className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                        aria-label="Revisado"
+                        title="Revisado"
+                        className="group flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
-                        Revisado
+                        <span
+                          className="h-5 w-5 bg-white transition group-hover:bg-black"
+                          style={{
+                            WebkitMaskImage: "url(/icons/admin/revisado.svg)",
+                            maskImage: "url(/icons/admin/revisado.svg)",
+                            WebkitMaskRepeat: "no-repeat",
+                            maskRepeat: "no-repeat",
+                            WebkitMaskPosition: "center",
+                            maskPosition: "center",
+                            WebkitMaskSize: "contain",
+                            maskSize: "contain",
+                          }}
+                        />
                       </button>
 
                       <button
                         onClick={() => updateItem(i.id, { hidden: !i.hidden })}
-                        className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                        aria-label={i.hidden ? "Mostrar" : "Ocultar"}
+                        title={i.hidden ? "Mostrar" : "Ocultar"}
+                        className="group flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
-                        {i.hidden ? "Mostrar" : "Ocultar"}
+                        <span
+                          className="h-5 w-5 bg-white transition group-hover:bg-black"
+                          style={{
+                            WebkitMaskImage: "url(/icons/admin/ocultar.svg)",
+                            maskImage: "url(/icons/admin/ocultar.svg)",
+                            WebkitMaskRepeat: "no-repeat",
+                            maskRepeat: "no-repeat",
+                            WebkitMaskPosition: "center",
+                            maskPosition: "center",
+                            WebkitMaskSize: "contain",
+                            maskSize: "contain",
+                          }}
+                        />
                       </button>
 
                       <button
                         onClick={() => confirmRemove(i)}
-                        className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                        aria-label="Excluir"
+                        title="Excluir"
+                        className="group flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
-                        Excluir
+                        <span
+                          className="h-5 w-5 bg-white transition group-hover:bg-black"
+                          style={{
+                            WebkitMaskImage: "url(/icons/admin/excluir.svg)",
+                            maskImage: "url(/icons/admin/excluir.svg)",
+                            WebkitMaskRepeat: "no-repeat",
+                            maskRepeat: "no-repeat",
+                            WebkitMaskPosition: "center",
+                            maskPosition: "center",
+                            WebkitMaskSize: "contain",
+                            maskSize: "contain",
+                          }}
+                        />
                       </button>
                     </div>
                   </div>
