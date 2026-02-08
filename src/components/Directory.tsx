@@ -74,6 +74,25 @@ function getThumb(it: AnyItem) {
   return pickFirstString(it, ["thumbnailUrl", "thumb", "image", "cover", "thumbUrl", "thumbnail"]);
 }
 
+function trackReferenceClick(name: string, url: string) {
+  try {
+    const payload = JSON.stringify({ type: "ref", refName: name, refUrl: url });
+    const blob = new Blob([payload], { type: "application/json" });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon("/api/analytics/track", blob);
+      return;
+    }
+    fetch("/api/analytics/track", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: payload,
+      keepalive: true,
+    }).catch(() => null);
+  } catch {
+    // ignore
+  }
+}
+
 function isVideoUrl(src: string) {
   return /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(src);
 }
@@ -1086,6 +1105,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   href={getUrl(spotlight)}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => trackReferenceClick(getName(spotlight), getUrl(spotlight))}
                   className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]"
                 >
                   {ui.visit}
@@ -1114,6 +1134,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 href={url}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackReferenceClick(name, url)}
                 className="group min-w-0 border border-zinc-200 bg-white"
               >
                 <div className="aspect-[4/3] w-full overflow-hidden bg-zinc-100 relative">

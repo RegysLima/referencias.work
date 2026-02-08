@@ -1,117 +1,370 @@
-import { kv } from "@vercel/kv";
+"use client";
 
-const KV_KEY = "analytics:summary";
-const KV_ENABLED = Boolean(
-  process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN,
-);
+import { useEffect, useMemo, useState } from "react";
 
 type Summary = {
   total: number;
+  refTotal?: number;
   byPath: Record<string, number>;
   byDay: Record<string, number>;
   byLang: Record<string, number>;
+  byDayPath?: Record<string, Record<string, number>>;
+  byDayLang?: Record<string, Record<string, number>>;
+  byDayPathLang?: Record<string, Record<string, Record<string, number>>>;
+  byRef?: Record<string, number>;
+  byDayRef?: Record<string, Record<string, number>>;
   lastUpdated?: string | null;
+};
+
+const EMPTY: Summary = {
+  total: 0,
+  refTotal: 0,
+  byPath: {},
+  byDay: {},
+  byLang: {},
+  byDayPath: {},
+  byDayLang: {},
+  byDayPathLang: {},
+  byRef: {},
+  byDayRef: {},
+  lastUpdated: null,
 };
 
 function toRows(obj: Record<string, number>) {
   return Object.entries(obj).sort((a, b) => b[1] - a[1]);
 }
 
-export default async function AdminAnalyticsPage() {
-  const summary: Summary = KV_ENABLED
-    ? ((await kv.get<Summary>(KV_KEY)) || {
-        total: 0,
-        byPath: {},
-        byDay: {},
-        byLang: {},
-        lastUpdated: null,
-      })
-    : {
-        total: 0,
-        byPath: {},
-        byDay: {},
-        byLang: {},
-        lastUpdated: null,
-      };
+function toDayKey(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
 
-  const pathRows = toRows(summary.byPath).slice(0, 10);
-  const dayRows = toRows(summary.byDay).slice(0, 10);
-  const langRows = toRows(summary.byLang);
+function getLastDays(count: number) {
+  const days: string[] = [];
+  for (let i = count - 1; i >= 0; i -= 1) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push(toDayKey(d));
+  }
+  return days;
+}
+
+function getRangeDays(range: string, keys: string[]) {
+  if (range === "all") {
+    return [...keys].sort();
+  }
+  const n = Number(range);
+  if (!Number.isFinite(n) || n <= 0) return [];
+  return getLastDays(n);
+}
+
+function pickPathLabel(path: string) {
+  if (path === "/") return "Home";
+  if (path === "/sobre") return "Sobre";
+  return path;
+}
+
+function getDayCount(
+  summary: Summary,
+  day: string,
+  pathFilter: string,
+  langFilter: string
+) {
+  const path = pathFilter === "all" ? "" : pathFilter;
+  const lang = langFilter === "all" ? "" : langFilter;
+
+  if (path && lang) {
+    return summary.byDayPathLang?.[day]?.[path]?.[lang] || 0;
+  }
+  if (path) {
+    return summary.byDayPath?.[day]?.[path] || 0;
+  }
+  if (lang) {
+    return summary.byDayLang?.[day]?.[lang] || 0;
+  }
+  return summary.byDay?.[day] || 0;
+}
+
+function sumByDayRef(summary: Summary, days: string[]) {
+  const result: Record<string, number> = {};
+  for (const day of days) {
+    const row = summary.byDayRef?.[day];
+    if (!row) continue;
+    for (const [key, count] of Object.entries(row)) {
+      result[key] = (result[key] || 0) + count;
+    }
+  }
+  return result;
+}
+
+function BarChart({
+  data,
+  height = 120,
+}: {
+  data: { label: string; value: number }[];
+  height?: number;
+}) {
+  const max = Math.max(1, ...data.map((d) => d.value));
+  const barGap = 2;
+  const barWidth = 100 / Math.max(1, data.length);
+  return (
+    <svg viewBox={`0 0 100 ${height}`} className="h-28 w-full">
+      {data.map((d, idx) => {
+        const x = idx * barWidth + barGap / 2;
+        const w = barWidth - barGap;
+        const h = (d.value / max) * (height - 12);
+        const y = height - h;
+        return (
+          <rect
+            key={d.label}
+            x={x}
+            y={y}
+            width={w}
+            height={h}
+            rx="2"
+            className="fill-zinc-200/80"
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
+export default function AdminAnalyticsPage() {
+  const [summary, setSummary] = useState<Summary>(EMPTY);
+  const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState("30");
+  const [pathFilter, setPathFilter] = useState("all");
+  const [langFilter, setLangFilter] = useState("all");
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    fetch("/api/admin/analytics")
+      .then((res) => (res.ok ? res.json() : EMPTY))
+      .then((data) => {
+        if (!active) return;
+        setSummary({ ...EMPTY, ...data });
+      })
+      .catch(() => {
+        if (!active) return;
+        setSummary(EMPTY);
+      })
+      .finally(() => {
+        if (!active) return;
+        setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const pathOptions = useMemo(
+    () => ["all", ...toRows(summary.byPath).map(([path]) => path)],
+    [summary.byPath]
+  );
+  const langOptions = useMemo(
+    () => ["all", ...toRows(summary.byLang).map(([lang]) => lang)],
+    [summary.byLang]
+  );
+
+  const dayKeys = useMemo(() => Object.keys(summary.byDay || {}), [summary.byDay]);
+  const rangeDays = useMemo(() => getRangeDays(range, dayKeys), [range, dayKeys]);
+
+  const daySeries = useMemo(
+    () =>
+      rangeDays.map((day) => ({
+        label: day,
+        value: getDayCount(summary, day, pathFilter, langFilter),
+      })),
+    [rangeDays, summary, pathFilter, langFilter]
+  );
+
+  const totalInRange = useMemo(
+    () => daySeries.reduce((acc, d) => acc + d.value, 0),
+    [daySeries]
+  );
+
+  const last7Days = useMemo(() => getLastDays(7), []);
+  const last30Days = useMemo(() => getLastDays(30), []);
+  const last7Total = useMemo(
+    () => last7Days.reduce((acc, day) => acc + (summary.byDay?.[day] || 0), 0),
+    [last7Days, summary.byDay]
+  );
+  const last30Total = useMemo(
+    () => last30Days.reduce((acc, day) => acc + (summary.byDay?.[day] || 0), 0),
+    [last30Days, summary.byDay]
+  );
+
+  const topPath = useMemo(() => toRows(summary.byPath)[0], [summary.byPath]);
+  const topRef = useMemo(() => toRows(summary.byRef || {})[0], [summary.byRef]);
+
+  const filteredRefs = useMemo(() => {
+    if (range === "all") return summary.byRef || {};
+    return sumByDayRef(summary, rangeDays);
+  }, [summary, range, rangeDays]);
+
+  const refRows = useMemo(() => toRows(filteredRefs).slice(0, 10), [filteredRefs]);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-10 sm:px-10 lg:px-12">
+    <div className="mx-auto w-full max-w-7xl px-6 pb-16 pt-10 sm:px-10 lg:px-12">
       <div className="mb-6 text-sm uppercase tracking-[0.18em] text-zinc-400">Analytics</div>
 
-      {!KV_ENABLED ? (
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5 text-sm text-zinc-400">
-          KV não configurado.
+      <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-4">
+        <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-300">
+          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Filtros</div>
+
+          <select
+            value={range}
+            onChange={(e) => setRange(e.target.value)}
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+          >
+            <option value="7">Últimos 7 dias</option>
+            <option value="30">Últimos 30 dias</option>
+            <option value="90">Últimos 90 dias</option>
+            <option value="all">Todo o período</option>
+          </select>
+
+          <select
+            value={pathFilter}
+            onChange={(e) => setPathFilter(e.target.value)}
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+          >
+            {pathOptions.map((path) => (
+              <option key={path} value={path}>
+                {path === "all" ? "Todas as páginas" : pickPathLabel(path)}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={langFilter}
+            onChange={(e) => setLangFilter(e.target.value)}
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+          >
+            {langOptions.map((lang) => (
+              <option key={lang} value={lang}>
+                {lang === "all" ? "Todos os idiomas" : lang.toUpperCase()}
+              </option>
+            ))}
+          </select>
         </div>
-      ) : (
-        <>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
-              <div className="text-xs text-zinc-500">Total</div>
-              <div className="mt-2 text-2xl text-zinc-100">{summary.total}</div>
-            </div>
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
-              <div className="text-xs text-zinc-500">Ultima atualizacao</div>
-              <div className="mt-2 text-sm text-zinc-300">
-                {summary.lastUpdated ? new Date(summary.lastUpdated).toLocaleString() : "—"}
-              </div>
-            </div>
+      </div>
+
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Total visitas</div>
+          <div className="mt-2 text-2xl text-zinc-100">{summary.total}</div>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Últimos 7 dias</div>
+          <div className="mt-2 text-2xl text-zinc-100">{last7Total}</div>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Últimos 30 dias</div>
+          <div className="mt-2 text-2xl text-zinc-100">{last30Total}</div>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Visitas no filtro</div>
+          <div className="mt-2 text-2xl text-zinc-100">{totalInRange}</div>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Top página</div>
+          <div className="mt-2 text-sm text-zinc-300">
+            {topPath ? pickPathLabel(topPath[0]) : "—"}
           </div>
-
-          <div className="mt-8 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
-              <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Por pagina</div>
-              <div className="mt-4 space-y-2 text-sm text-zinc-300">
-                {pathRows.length ? (
-                  pathRows.map(([path, count]) => (
-                    <div key={path} className="flex items-center justify-between">
-                      <span className="truncate">{path}</span>
-                      <span className="text-zinc-500">{count}</span>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-zinc-500">—</div>
-                )}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
-              <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Por dia</div>
-              <div className="mt-4 space-y-2 text-sm text-zinc-300">
-                {dayRows.length ? (
-                  dayRows.map(([day, count]) => (
-                    <div key={day} className="flex items-center justify-between">
-                      <span>{day}</span>
-                      <span className="text-zinc-500">{count}</span>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-zinc-500">—</div>
-                )}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
-              <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Idiomas</div>
-              <div className="mt-4 space-y-2 text-sm text-zinc-300">
-                {langRows.length ? (
-                  langRows.map(([lang, count]) => (
-                    <div key={lang} className="flex items-center justify-between">
-                      <span>{lang}</span>
-                      <span className="text-zinc-500">{count}</span>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-zinc-500">—</div>
-                )}
-              </div>
-            </div>
+          <div className="mt-1 text-xs text-zinc-500">{topPath ? topPath[1] : "—"}</div>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Cliques em referências</div>
+          <div className="mt-2 text-2xl text-zinc-100">{summary.refTotal || 0}</div>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Top referência</div>
+          <div className="mt-2 text-sm text-zinc-300">
+            {topRef ? topRef[0] : "—"}
           </div>
-        </>
-      )}
+          <div className="mt-1 text-xs text-zinc-500">{topRef ? topRef[1] : "—"}</div>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Última atualização</div>
+          <div className="mt-2 text-sm text-zinc-300">
+            {summary.lastUpdated ? new Date(summary.lastUpdated).toLocaleString() : "—"}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-3">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5 lg:col-span-2">
+          <div className="flex items-center justify-between">
+            <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Visitas por dia</div>
+            {loading ? <div className="text-xs text-zinc-500">Carregando…</div> : null}
+          </div>
+          {daySeries.length ? (
+            <div className="mt-4">
+              <BarChart data={daySeries} />
+              <div className="mt-2 flex justify-between text-[11px] text-zinc-500">
+                <span>{daySeries[0]?.label}</span>
+                <span>{daySeries[daySeries.length - 1]?.label}</span>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-6 text-sm text-zinc-500">Sem dados para o período.</div>
+          )}
+        </div>
+
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Idiomas</div>
+          <div className="mt-4 space-y-2 text-sm text-zinc-300">
+            {toRows(summary.byLang).length ? (
+              toRows(summary.byLang).map(([lang, count]) => (
+                <div key={lang} className="flex items-center justify-between">
+                  <span>{lang.toUpperCase()}</span>
+                  <span className="text-zinc-500">{count}</span>
+                </div>
+              ))
+            ) : (
+              <div className="text-zinc-500">—</div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Páginas</div>
+          <div className="mt-4 space-y-2 text-sm text-zinc-300">
+            {toRows(summary.byPath).length ? (
+              toRows(summary.byPath).map(([path, count]) => (
+                <div key={path} className="flex items-center justify-between">
+                  <span className="truncate">{pickPathLabel(path)}</span>
+                  <span className="text-zinc-500">{count}</span>
+                </div>
+              ))
+            ) : (
+              <div className="text-zinc-500">—</div>
+            )}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5 lg:col-span-2">
+          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Ranking de referências</div>
+          <div className="mt-4 space-y-2 text-sm text-zinc-300">
+            {refRows.length ? (
+              refRows.map(([ref, count], idx) => (
+                <div key={`${ref}-${idx}`} className="flex items-center justify-between">
+                  <span className="truncate">{ref}</span>
+                  <span className="text-zinc-500">{count}</span>
+                </div>
+              ))
+            ) : (
+              <div className="text-zinc-500">—</div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

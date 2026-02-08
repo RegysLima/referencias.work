@@ -19,7 +19,7 @@ export default function AnalyticsTracker() {
 
   useEffect(() => {
     const lang = getLang(searchParams);
-    const payload = JSON.stringify({ path: pathname, lang });
+    const payload = JSON.stringify({ type: "page", path: pathname, lang });
     const blob = new Blob([payload], { type: "application/json" });
     if (navigator.sendBeacon) {
       navigator.sendBeacon("/api/analytics/track", blob);

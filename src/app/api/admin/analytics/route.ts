@@ -8,9 +8,15 @@ const KV_ENABLED = Boolean(
 
 type Summary = {
   total: number;
+  refTotal?: number;
   byPath: Record<string, number>;
   byDay: Record<string, number>;
   byLang: Record<string, number>;
+  byDayPath?: Record<string, Record<string, number>>;
+  byDayLang?: Record<string, Record<string, number>>;
+  byDayPathLang?: Record<string, Record<string, Record<string, number>>>;
+  byRef?: Record<string, number>;
+  byDayRef?: Record<string, Record<string, number>>;
   lastUpdated?: string;
 };
 
@@ -25,6 +31,11 @@ export async function GET() {
       byPath: {},
       byDay: {},
       byLang: {},
+      byDayPath: {},
+      byDayLang: {},
+      byDayPathLang: {},
+      byRef: {},
+      byDayRef: {},
       lastUpdated: null,
     };
 
