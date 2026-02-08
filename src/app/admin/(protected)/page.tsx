@@ -685,7 +685,6 @@ export default function AdminPage() {
 
   function markReviewed(id: string) {
     updateItem(id, { reviewedAt: new Date().toISOString() });
-    showToast("Marcado como revisado");
     setAutoSavePending(true);
   }
 
@@ -1026,17 +1025,6 @@ export default function AdminPage() {
             >
               {saveBtnLabel}
             </button>
-
-            {saveMessage ? (
-              <div
-                className={[
-                  "mt-2 text-xs",
-                  saveState === "error" ? "text-red-300" : "text-zinc-400",
-                ].join(" ")}
-              >
-                {saveMessage}
-              </div>
-            ) : null}
 
             <button
               onClick={logout}
