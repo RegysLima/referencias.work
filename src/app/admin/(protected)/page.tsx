@@ -786,7 +786,7 @@ export default function AdminPage() {
   }, [deleteConfirm.open]);
 
   return (
-    <div className="mx-auto max-w-6xl px-6 pb-10 pt-6">
+    <div className="mx-auto max-w-7xl px-6 pb-10 pt-6">
       {/* TOAST */}
       {toast ? (
         <div className="fixed bottom-6 right-6 z-50 rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 text-sm text-zinc-200 shadow-lg">

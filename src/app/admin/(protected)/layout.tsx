@@ -18,11 +18,11 @@ export default async function AdminProtectedLayout({
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
-      <div className="mx-auto w-full max-w-6xl px-6 pt-8 sm:px-10 lg:px-12">
+      <div className="mx-auto w-full max-w-7xl px-6 pt-8 sm:px-10 lg:px-12">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="text-2xl font-semibold">Admin</div>
           <nav className="flex flex-wrap items-center gap-2 text-sm text-zinc-400">
-            <Link href="/" className="hover:text-zinc-200">
+            <Link href="/" target="_blank" rel="noreferrer" className="hover:text-zinc-200">
               Home
             </Link>
             <span className="text-zinc-700">/</span>
