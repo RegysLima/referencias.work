@@ -925,7 +925,7 @@ export default function AdminPage() {
             <select
               value={macroFilter}
               onChange={(e) => setMacroFilter(e.target.value)}
-              className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none focus:border-zinc-600"
+              className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-10 text-sm outline-none focus:border-zinc-600"
             >
               <option value="Todos">Todas as categorias</option>
               {MACROS.map((m) => (
@@ -1263,7 +1263,7 @@ export default function AdminPage() {
                           <select
                             value={normalizeMacro(i.macroType ?? "Designers")}
                             onChange={(e) => updateItem(i.id, { macroType: e.target.value })}
-                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-10 text-sm"
                           >
                             {MACROS.map((m) => (
                               <option key={m} value={m}>

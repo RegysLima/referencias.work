@@ -63,14 +63,31 @@ function pickPathLabel(path: string) {
   return path;
 }
 
+function formatDateBR(value: string | null | undefined, withTime = false) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return withTime ? date.toLocaleString("pt-BR") : date.toLocaleDateString("pt-BR");
+}
+
+function parsePathFilter(value: string) {
+  const parts = value.split("||");
+  if (parts.length === 2) {
+    return { path: parts[0], lang: parts[1] };
+  }
+  return { path: value, lang: "" };
+}
+
 function getDayCount(
   summary: Summary,
   day: string,
   pathFilter: string,
   langFilter: string
 ) {
-  const path = pathFilter === "all" ? "" : pathFilter;
-  const lang = langFilter === "all" ? "" : langFilter;
+  const parsed = parsePathFilter(pathFilter);
+  const path = pathFilter === "all" ? "" : parsed.path;
+  const langOverride = parsed.lang;
+  const lang = langOverride || (langFilter === "all" ? "" : langFilter);
 
   if (path && lang) {
     return summary.byDayPathLang?.[day]?.[path]?.[lang] || 0;
@@ -121,10 +138,45 @@ function BarChart({
             width={w}
             height={h}
             rx="2"
-            className="fill-zinc-200/80"
+            className="fill-[#0000CD]"
           />
         );
       })}
+    </svg>
+  );
+}
+
+function LineChart({
+  data,
+  height = 120,
+}: {
+  data: { label: string; value: number }[];
+  height?: number;
+}) {
+  const max = Math.max(1, ...data.map((d) => d.value));
+  const step = data.length > 1 ? 100 / (data.length - 1) : 100;
+  const points = data.map((d, idx) => {
+    const x = idx * step;
+    const y = height - (d.value / max) * (height - 12);
+    return `${x},${y}`;
+  });
+  const path = points.length ? `M ${points.join(" L ")}` : "";
+  const areaPath = points.length
+    ? `M 0,${height} L ${points.join(" L ")} L 100,${height} Z`
+    : "";
+
+  return (
+    <svg viewBox={`0 0 100 ${height}`} className="h-28 w-full">
+      <defs>
+        <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0000CD" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#0000CD" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      {areaPath ? <path d={areaPath} fill="url(#lineFill)" /> : null}
+      {path ? (
+        <path d={path} fill="none" stroke="#0000CD" strokeWidth="1.8" />
+      ) : null}
     </svg>
   );
 }
@@ -158,10 +210,28 @@ export default function AdminAnalyticsPage() {
     };
   }, []);
 
-  const pathOptions = useMemo(
-    () => ["all", ...toRows(summary.byPath).map(([path]) => path)],
-    [summary.byPath]
-  );
+  const pathOptions = useMemo(() => {
+    const base = toRows(summary.byPath).map(([path]) => ({ value: path, label: pickPathLabel(path) }));
+    const withLang: { value: string; label: string }[] = [];
+    if (summary.byDayPathLang) {
+      const seen = new Set<string>();
+      for (const day of Object.keys(summary.byDayPathLang)) {
+        const paths = summary.byDayPathLang[day] || {};
+        for (const [path, langs] of Object.entries(paths)) {
+          for (const lang of Object.keys(langs || {})) {
+            const key = `${path}||${lang}`;
+            if (seen.has(key)) continue;
+            seen.add(key);
+            withLang.push({
+              value: key,
+              label: `${pickPathLabel(path)} (${lang.toUpperCase()})`,
+            });
+          }
+        }
+      }
+    }
+    return [{ value: "all", label: "Todas as páginas" }, ...base, ...withLang];
+  }, [summary.byPath, summary.byDayPathLang]);
   const langOptions = useMemo(
     () => ["all", ...toRows(summary.byLang).map(([lang]) => lang)],
     [summary.byLang]
@@ -216,7 +286,7 @@ export default function AdminAnalyticsPage() {
           <select
             value={range}
             onChange={(e) => setRange(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-10 text-sm"
           >
             <option value="7">Últimos 7 dias</option>
             <option value="30">Últimos 30 dias</option>
@@ -227,11 +297,11 @@ export default function AdminAnalyticsPage() {
           <select
             value={pathFilter}
             onChange={(e) => setPathFilter(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-10 text-sm"
           >
-            {pathOptions.map((path) => (
-              <option key={path} value={path}>
-                {path === "all" ? "Todas as páginas" : pickPathLabel(path)}
+            {pathOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
               </option>
             ))}
           </select>
@@ -239,7 +309,7 @@ export default function AdminAnalyticsPage() {
           <select
             value={langFilter}
             onChange={(e) => setLangFilter(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-10 text-sm"
           >
             {langOptions.map((lang) => (
               <option key={lang} value={lang}>
@@ -291,7 +361,7 @@ export default function AdminAnalyticsPage() {
         <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
           <div className="text-xs text-zinc-500">Última atualização</div>
           <div className="mt-2 text-sm text-zinc-300">
-            {summary.lastUpdated ? new Date(summary.lastUpdated).toLocaleString() : "—"}
+            {formatDateBR(summary.lastUpdated, true)}
           </div>
         </div>
       </div>
@@ -304,10 +374,10 @@ export default function AdminAnalyticsPage() {
           </div>
           {daySeries.length ? (
             <div className="mt-4">
-              <BarChart data={daySeries} />
+              <LineChart data={daySeries} />
               <div className="mt-2 flex justify-between text-[11px] text-zinc-500">
-                <span>{daySeries[0]?.label}</span>
-                <span>{daySeries[daySeries.length - 1]?.label}</span>
+                <span>{formatDateBR(daySeries[0]?.label)}</span>
+                <span>{formatDateBR(daySeries[daySeries.length - 1]?.label)}</span>
               </div>
             </div>
           ) : (
