@@ -211,31 +211,17 @@ export default function AdminAnalyticsPage() {
   }, []);
 
   const pathOptions = useMemo(() => {
-    const base = toRows(summary.byPath).map(([path]) => ({ value: path, label: pickPathLabel(path) }));
-    const withLang: { value: string; label: string }[] = [];
-    if (summary.byDayPathLang) {
-      const seen = new Set<string>();
-      for (const day of Object.keys(summary.byDayPathLang)) {
-        const paths = summary.byDayPathLang[day] || {};
-        for (const [path, langs] of Object.entries(paths)) {
-          for (const lang of Object.keys(langs || {})) {
-            const key = `${path}||${lang}`;
-            if (seen.has(key)) continue;
-            seen.add(key);
-            withLang.push({
-              value: key,
-              label: `${pickPathLabel(path)} (${lang.toUpperCase()})`,
-            });
-          }
-        }
-      }
-    }
-    return [{ value: "all", label: "Todas as páginas" }, ...base, ...withLang];
-  }, [summary.byPath, summary.byDayPathLang]);
-  const langOptions = useMemo(
-    () => ["all", ...toRows(summary.byLang).map(([lang]) => lang)],
-    [summary.byLang]
-  );
+    const base = toRows(summary.byPath).map(([path]) => ({
+      value: path,
+      label: pickPathLabel(path),
+    }));
+    return [{ value: "all", label: "Todas as páginas" }, ...base];
+  }, [summary.byPath]);
+  const langOptions = useMemo(() => {
+    const base = toRows(summary.byLang).map(([lang]) => lang);
+    const merged = new Set(["pt", "es", "en", ...base]);
+    return ["all", ...Array.from(merged)];
+  }, [summary.byLang]);
 
   const dayKeys = useMemo(() => Object.keys(summary.byDay || {}), [summary.byDay]);
   const rangeDays = useMemo(() => getRangeDays(range, dayKeys), [range, dayKeys]);
@@ -286,7 +272,7 @@ export default function AdminAnalyticsPage() {
           <select
             value={range}
             onChange={(e) => setRange(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-10 text-sm"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-12 text-sm"
           >
             <option value="7">Últimos 7 dias</option>
             <option value="30">Últimos 30 dias</option>
@@ -297,7 +283,7 @@ export default function AdminAnalyticsPage() {
           <select
             value={pathFilter}
             onChange={(e) => setPathFilter(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-10 text-sm"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-12 text-sm"
           >
             {pathOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -309,7 +295,7 @@ export default function AdminAnalyticsPage() {
           <select
             value={langFilter}
             onChange={(e) => setLangFilter(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-10 text-sm"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-12 text-sm"
           >
             {langOptions.map((lang) => (
               <option key={lang} value={lang}>
