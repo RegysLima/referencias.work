@@ -155,9 +155,12 @@ function LineChart({
 }) {
   const max = Math.max(1, ...data.map((d) => d.value));
   const step = data.length > 1 ? 100 / (data.length - 1) : 100;
+  const padding = 2;
+  const innerHeight = height - padding * 2;
+  const baseY = height - padding;
   const points = data.map((d, idx) => {
     const x = idx * step;
-    const y = height - (d.value / max) * (height - 12);
+    const y = baseY - (d.value / max) * innerHeight;
     return `${x},${y}`;
   });
   const path = points.length ? `M ${points.join(" L ")}` : "";
@@ -166,7 +169,11 @@ function LineChart({
     : "";
 
   return (
-    <svg viewBox={`0 0 100 ${height}`} className="h-28 w-full">
+    <svg
+      viewBox={`0 0 100 ${height}`}
+      preserveAspectRatio="none"
+      className="h-28 w-full"
+    >
       <defs>
         <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#0000CD" stopOpacity="0.35" />
@@ -174,9 +181,7 @@ function LineChart({
         </linearGradient>
       </defs>
       {areaPath ? <path d={areaPath} fill="url(#lineFill)" /> : null}
-      {path ? (
-        <path d={path} fill="none" stroke="#0000CD" strokeWidth="1.8" />
-      ) : null}
+      {path ? <path d={path} fill="none" stroke="#0000CD" strokeWidth="1.8" /> : null}
     </svg>
   );
 }
@@ -260,6 +265,20 @@ export default function AdminAnalyticsPage() {
   }, [summary, range, rangeDays]);
 
   const refRows = useMemo(() => toRows(filteredRefs).slice(0, 10), [filteredRefs]);
+  const rangeLabel = useMemo(() => {
+    const label =
+      range === "7"
+        ? "Últimos 7 dias"
+        : range === "30"
+        ? "Últimos 30 dias"
+        : range === "90"
+        ? "Últimos 90 dias"
+        : "Todo o período";
+    if (!rangeDays.length) return label;
+    return `${label} · ${formatDateBR(rangeDays[0])} – ${formatDateBR(
+      rangeDays[rangeDays.length - 1]
+    )}`;
+  }, [range, rangeDays]);
 
   return (
     <div className="mx-auto w-full max-w-7xl px-6 pb-16 pt-10 sm:px-10 lg:px-12">
@@ -272,7 +291,7 @@ export default function AdminAnalyticsPage() {
           <select
             value={range}
             onChange={(e) => setRange(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-12 text-sm"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
           >
             <option value="7">Últimos 7 dias</option>
             <option value="30">Últimos 30 dias</option>
@@ -283,7 +302,7 @@ export default function AdminAnalyticsPage() {
           <select
             value={pathFilter}
             onChange={(e) => setPathFilter(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-12 text-sm"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
           >
             {pathOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -295,7 +314,7 @@ export default function AdminAnalyticsPage() {
           <select
             value={langFilter}
             onChange={(e) => setLangFilter(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 pr-12 text-sm"
+            className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
           >
             {langOptions.map((lang) => (
               <option key={lang} value={lang}>
@@ -354,9 +373,11 @@ export default function AdminAnalyticsPage() {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
         <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5 lg:col-span-2">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Visitas por dia</div>
-            {loading ? <div className="text-xs text-zinc-500">Carregando…</div> : null}
+            <div className="text-[11px] text-zinc-500">
+              {loading ? "Carregando…" : rangeLabel}
+            </div>
           </div>
           {daySeries.length ? (
             <div className="mt-4">
