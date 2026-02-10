@@ -317,40 +317,55 @@ export default function AdminAnalyticsPage() {
         <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-300">
           <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Filtros</div>
 
-          <select
-            value={range}
-            onChange={(e) => setRange(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
-          >
-            <option value="7">Últimos 7 dias</option>
-            <option value="30">Últimos 30 dias</option>
-            <option value="90">Últimos 90 dias</option>
-            <option value="all">Todo o período</option>
-          </select>
+          <div className="relative">
+            <select
+              value={range}
+              onChange={(e) => setRange(e.target.value)}
+              className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
+            >
+              <option value="7">Últimos 7 dias</option>
+              <option value="30">Últimos 30 dias</option>
+              <option value="90">Últimos 90 dias</option>
+              <option value="all">Todo o período</option>
+            </select>
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[11px] text-zinc-500">
+              v
+            </span>
+          </div>
 
-          <select
-            value={pathFilter}
-            onChange={(e) => setPathFilter(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
-          >
-            {pathOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              value={pathFilter}
+              onChange={(e) => setPathFilter(e.target.value)}
+              className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
+            >
+              {pathOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[11px] text-zinc-500">
+              v
+            </span>
+          </div>
 
-          <select
-            value={langFilter}
-            onChange={(e) => setLangFilter(e.target.value)}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
-          >
-            {langOptions.map((lang) => (
-              <option key={lang} value={lang}>
-                {lang === "all" ? "Todos os idiomas" : lang.toUpperCase()}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              value={langFilter}
+              onChange={(e) => setLangFilter(e.target.value)}
+              className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
+            >
+              {langOptions.map((lang) => (
+                <option key={lang} value={lang}>
+                  {lang === "all" ? "Todos os idiomas" : lang.toUpperCase()}
+                </option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[11px] text-zinc-500">
+              v
+            </span>
+          </div>
         </div>
       </div>
 
