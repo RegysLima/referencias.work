@@ -1263,7 +1263,8 @@ export default function AdminPage() {
                           <select
                             value={normalizeMacro(i.macroType ?? "Designers")}
                             onChange={(e) => updateItem(i.id, { macroType: e.target.value })}
-                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
+                            className="mt-1 w-full min-w-0 rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-8 text-sm"
+                            style={{ textOverflow: "ellipsis" }}
                           >
                             {MACROS.map((m) => (
                               <option key={m} value={m}>
