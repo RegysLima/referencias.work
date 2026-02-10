@@ -70,6 +70,12 @@ function formatDateBR(value: string | null | undefined, withTime = false) {
   return withTime ? date.toLocaleString("pt-BR") : date.toLocaleDateString("pt-BR");
 }
 
+function formatMonthLabel(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return date.toLocaleDateString("pt-BR", { month: "short", year: "2-digit" });
+}
+
 function parsePathFilter(value: string) {
   const parts = value.split("||");
   if (parts.length === 2) {
@@ -181,7 +187,15 @@ function LineChart({
         </linearGradient>
       </defs>
       {areaPath ? <path d={areaPath} fill="url(#lineFill)" /> : null}
-      {path ? <path d={path} fill="none" stroke="#0000CD" strokeWidth="1.8" /> : null}
+      {path ? (
+        <path
+          d={path}
+          fill="none"
+          stroke="#0000CD"
+          strokeWidth="1.8"
+          vectorEffect="non-scaling-stroke"
+        />
+      ) : null}
     </svg>
   );
 }
@@ -265,6 +279,21 @@ export default function AdminAnalyticsPage() {
   }, [summary, range, rangeDays]);
 
   const refRows = useMemo(() => toRows(filteredRefs).slice(0, 10), [filteredRefs]);
+  const tickDays = useMemo(() => {
+    const len = rangeDays.length;
+    if (!len) return [];
+    const maxTicks = 6;
+    if (len <= maxTicks) return rangeDays;
+    const step = Math.max(1, Math.floor((len - 1) / (maxTicks - 1)));
+    const ticks: string[] = [];
+    for (let i = 0; i < len; i += step) ticks.push(rangeDays[i]);
+    if (ticks[ticks.length - 1] !== rangeDays[len - 1]) ticks.push(rangeDays[len - 1]);
+    return ticks;
+  }, [rangeDays]);
+  const tickLabel = useMemo(() => {
+    const longRange = range === "all" || rangeDays.length > 60;
+    return (day: string) => (longRange ? formatMonthLabel(day) : formatDateBR(day));
+  }, [range, rangeDays.length]);
   const rangeLabel = useMemo(() => {
     const label =
       range === "7"
@@ -383,8 +412,9 @@ export default function AdminAnalyticsPage() {
             <div className="mt-4">
               <LineChart data={daySeries} />
               <div className="mt-2 flex justify-between text-[11px] text-zinc-500">
-                <span>{formatDateBR(daySeries[0]?.label)}</span>
-                <span>{formatDateBR(daySeries[daySeries.length - 1]?.label)}</span>
+                {tickDays.map((day) => (
+                  <span key={day}>{tickLabel(day)}</span>
+                ))}
               </div>
             </div>
           ) : (
