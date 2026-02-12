@@ -353,6 +353,10 @@ function getRandomSeed() {
 
 /* ---------------- UI constants ---------------- */
 const MACRO_MENU = ["all", "Studios", "Designers", "Illustrators", "Photographers", "Foundries"];
+const PIX_CODE =
+  "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4";
+const SUPPORT_CARD_DISMISS_KEY = "rw_support_card_dismiss_until";
+const SUPPORT_CARD_DISMISS_MS = 7 * 24 * 60 * 60 * 1000;
 
 export default function Directory({ items }: { items: AnyItem[] }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -374,8 +378,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   const [visibleCount, setVisibleCount] = useState(20);
   const [toast, setToast] = useState<string | null>(null);
-  const [pixModalOpen, setPixModalOpen] = useState(false);
   const [pixCopied, setPixCopied] = useState(false);
+  const [supportCardVisible, setSupportCardVisible] = useState(false);
+  const [supportCardExpanded, setSupportCardExpanded] = useState(true);
+  const [supportCardDismissed, setSupportCardDismissed] = useState(false);
 
   const ui = UI[lang] || UI.pt;
   const hideMobileMenus = isMobile && isMobileCollapsed && !mobileMenuOpen;
@@ -459,6 +465,32 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }, [pixCopied]);
 
   useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(SUPPORT_CARD_DISMISS_KEY);
+      const until = Number(raw || 0);
+      if (until && Number.isFinite(until) && until > Date.now()) {
+        setSupportCardDismissed(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    if (supportCardDismissed) return;
+
+    const onScroll = () => {
+      if (window.scrollY > 520) {
+        setSupportCardVisible(true);
+      }
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [supportCardDismissed]);
+
+  useEffect(() => {
     if (hideMobileMenus && filtersOpen) {
       setFiltersOpen(false);
     }
@@ -475,6 +507,29 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   function showToast(message: string) {
     setToast(message);
+  }
+
+  async function copyPixCode() {
+    try {
+      await navigator.clipboard.writeText(PIX_CODE);
+      setPixCopied(true);
+    } catch {
+      showToast("Não foi possível copiar");
+    }
+  }
+
+  function dismissSupportCard() {
+    setSupportCardDismissed(true);
+    setSupportCardVisible(false);
+    setSupportCardExpanded(false);
+    try {
+      window.localStorage.setItem(
+        SUPPORT_CARD_DISMISS_KEY,
+        String(Date.now() + SUPPORT_CARD_DISMISS_MS)
+      );
+    } catch {
+      // ignore
+    }
   }
 
   function handleClear() {
@@ -1288,25 +1343,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <div className="flex flex-col items-center gap-4 sm:border-r sm:border-zinc-200 sm:pr-10">
               <div className="text-xs uppercase tracking-[0.18em] text-zinc-900">Em reais via pix</div>
               <button
-                onClick={() => setPixModalOpen(true)}
-                className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em] hidden sm:inline-flex"
+                onClick={copyPixCode}
+                className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]"
               >
-                Código / QR Code
-              </button>
-              <button
-                onClick={async () => {
-                  try {
-                    await navigator.clipboard.writeText(
-                      "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4"
-                    );
-                    setPixCopied(true);
-                  } catch {
-                    showToast("Não foi possível copiar");
-                  }
-                }}
-                className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em] sm:hidden"
-              >
-                {pixCopied ? "Código copiado" : "Código / QR Code"}
+                {pixCopied ? "Código copiado" : "Copiar código Pix"}
               </button>
             </div>
 
@@ -1385,52 +1425,75 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         </div>
       ) : null}
 
-      {pixModalOpen ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => setPixModalOpen(false)}
-        >
+      {!supportCardDismissed && supportCardVisible ? (
+        <div className="fixed bottom-5 right-5 z-50 max-w-[min(92vw,360px)]">
           <div
-            className="w-full max-w-md overflow-hidden rounded-2xl border border-zinc-200 bg-white p-6 text-zinc-900"
-            onClick={(e) => e.stopPropagation()}
+            className={[
+              "rounded-2xl border p-4 shadow-lg backdrop-blur transition-all",
+              theme === "dark"
+                ? "border-zinc-700 bg-zinc-950/95 text-zinc-100"
+                : "border-zinc-200 bg-white/95 text-zinc-900",
+            ].join(" ")}
           >
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start justify-between gap-3">
               <div>
-                <div className="text-xs uppercase tracking-[0.18em] text-zinc-900">Em reais via pix</div>
-                <div className="mt-2 text-lg">Código / QR Code</div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-zinc-500">
+                  {lang === "en" ? "Support" : lang === "es" ? "Apoyo" : "Apoio"}
+                </div>
+                <div className="mt-1 text-sm">
+                  {lang === "en"
+                    ? "Keep referencias.work alive"
+                    : lang === "es"
+                    ? "Mantén vivo referencias.work"
+                    : "Mantenha o referencias.work vivo"}
+                </div>
               </div>
-              <button
-                onClick={() => setPixModalOpen(false)}
-                className="text-sm text-zinc-500 hover:text-zinc-700 cursor-pointer"
-              >
-                Fechar
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setSupportCardExpanded((v) => !v)}
+                  className="text-xs text-zinc-500 hover:text-zinc-700"
+                  aria-expanded={supportCardExpanded}
+                >
+                  {supportCardExpanded ? "−" : "+"}
+                </button>
+                <button
+                  onClick={dismissSupportCard}
+                  className="text-xs text-zinc-500 hover:text-zinc-700"
+                  aria-label="Fechar card de apoio"
+                >
+                  x
+                </button>
+              </div>
             </div>
 
-            <div className="mt-6 flex flex-col items-center gap-4">
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
-                  "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4"
-                )}`}
-                alt="QR Code Pix"
-                className="h-[220px] w-[220px] border border-zinc-200"
-              />
-              <button
-                onClick={async () => {
-                  try {
-                    await navigator.clipboard.writeText(
-                      "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4"
-                    );
-                    setPixCopied(true);
-                  } catch {
-                    showToast("Não foi possível copiar");
-                  }
-                }}
-                className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]"
-              >
-                {pixCopied ? "Código copiado" : "Copiar código Pix"}
-              </button>
-            </div>
+            {supportCardExpanded ? (
+              <div className="mt-4 space-y-3">
+                <p className="text-xs leading-relaxed text-zinc-500">
+                  {lang === "en"
+                    ? "Optional contribution. Any amount helps curation and maintenance."
+                    : lang === "es"
+                    ? "Contribución opcional. Cualquier monto ayuda con la curaduría y mantenimiento."
+                    : "Contribuição opcional. Qualquer valor ajuda na curadoria e manutenção."}
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={copyPixCode}
+                    className="btn cursor-pointer px-3 py-2 text-sm tracking-[0.02em]"
+                  >
+                    {pixCopied ? "Pix copiado ✓" : "Pix"}
+                  </button>
+                  <form action="https://www.paypal.com/donate" method="post" target="_top">
+                    <input type="hidden" name="hosted_button_id" value="E9XXLCKPSMR3E" />
+                    <button
+                      type="submit"
+                      className="btn w-full cursor-pointer px-3 py-2 text-sm tracking-[0.02em]"
+                    >
+                      PayPal
+                    </button>
+                  </form>
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       ) : null}
