@@ -355,8 +355,7 @@ function getRandomSeed() {
 const MACRO_MENU = ["all", "Studios", "Designers", "Illustrators", "Photographers", "Foundries"];
 const PIX_CODE =
   "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4";
-const SUPPORT_CARD_DISMISS_KEY = "rw_support_card_dismiss_until";
-const SUPPORT_CARD_DISMISS_MS = 7 * 24 * 60 * 60 * 1000;
+const SUPPORT_CARD_DISMISS_KEY = "rw_support_card_dismissed";
 
 export default function Directory({ items }: { items: AnyItem[] }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -380,7 +379,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [toast, setToast] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
   const [supportCardVisible, setSupportCardVisible] = useState(false);
-  const [supportCardExpanded, setSupportCardExpanded] = useState(true);
   const [supportCardDismissed, setSupportCardDismissed] = useState(false);
 
   const ui = UI[lang] || UI.pt;
@@ -466,9 +464,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   useEffect(() => {
     try {
-      const raw = window.localStorage.getItem(SUPPORT_CARD_DISMISS_KEY);
-      const until = Number(raw || 0);
-      if (until && Number.isFinite(until) && until > Date.now()) {
+      const dismissed = window.localStorage.getItem(SUPPORT_CARD_DISMISS_KEY);
+      if (dismissed === "1") {
         setSupportCardDismissed(true);
       }
     } catch {
@@ -521,12 +518,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   function dismissSupportCard() {
     setSupportCardDismissed(true);
     setSupportCardVisible(false);
-    setSupportCardExpanded(false);
     try {
-      window.localStorage.setItem(
-        SUPPORT_CARD_DISMISS_KEY,
-        String(Date.now() + SUPPORT_CARD_DISMISS_MS)
-      );
+      window.localStorage.setItem(SUPPORT_CARD_DISMISS_KEY, "1");
     } catch {
       // ignore
     }
@@ -1426,21 +1419,26 @@ export default function Directory({ items }: { items: AnyItem[] }) {
       ) : null}
 
       {!supportCardDismissed && supportCardVisible ? (
-        <div className="fixed bottom-5 right-5 z-50 max-w-[min(92vw,360px)]">
+        <div className="fixed bottom-4 left-1/2 z-50 w-[min(92vw,390px)] -translate-x-1/2 lg:bottom-5 lg:left-auto lg:right-5 lg:w-[390px] lg:translate-x-0">
           <div
             className={[
-              "rounded-2xl border p-4 shadow-lg backdrop-blur transition-all",
+              "rounded-2xl border p-5 shadow-lg backdrop-blur transition-all",
               theme === "dark"
-                ? "border-zinc-700 bg-zinc-950/95 text-zinc-100"
-                : "border-zinc-200 bg-white/95 text-zinc-900",
+                ? "border-zinc-300/70 bg-white/85 text-zinc-950"
+                : "border-zinc-700/80 bg-zinc-950/85 text-zinc-50",
             ].join(" ")}
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <div className="text-[11px] uppercase tracking-[0.18em] text-zinc-500">
+                <div
+                  className={[
+                    "text-xs uppercase tracking-[0.2em]",
+                    theme === "dark" ? "text-zinc-500" : "text-zinc-400",
+                  ].join(" ")}
+                >
                   {lang === "en" ? "Support" : lang === "es" ? "Apoyo" : "Apoio"}
                 </div>
-                <div className="mt-1 text-sm">
+                <div className="mt-1 text-base leading-snug">
                   {lang === "en"
                     ? "Keep referencias.work alive"
                     : lang === "es"
@@ -1448,52 +1446,61 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                     : "Mantenha o referencias.work vivo"}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setSupportCardExpanded((v) => !v)}
-                  className="text-xs text-zinc-500 hover:text-zinc-700"
-                  aria-expanded={supportCardExpanded}
-                >
-                  {supportCardExpanded ? "−" : "+"}
-                </button>
-                <button
-                  onClick={dismissSupportCard}
-                  className="text-xs text-zinc-500 hover:text-zinc-700"
-                  aria-label="Fechar card de apoio"
-                >
-                  x
-                </button>
-              </div>
+              <button
+                onClick={dismissSupportCard}
+                className={[
+                  "text-sm",
+                  theme === "dark"
+                    ? "text-zinc-500 hover:text-zinc-700"
+                    : "text-zinc-300 hover:text-zinc-100",
+                ].join(" ")}
+                aria-label="Fechar card de apoio"
+              >
+                x
+              </button>
             </div>
 
-            {supportCardExpanded ? (
-              <div className="mt-4 space-y-3">
-                <p className="text-xs leading-relaxed text-zinc-500">
-                  {lang === "en"
-                    ? "Optional contribution. Any amount helps curation and maintenance."
-                    : lang === "es"
-                    ? "Contribución opcional. Cualquier monto ayuda con la curaduría y mantenimiento."
-                    : "Contribuição opcional. Qualquer valor ajuda na curadoria e manutenção."}
-                </p>
-                <div className="grid grid-cols-2 gap-2">
+            <div className="mt-4 space-y-3">
+              <p
+                className={[
+                  "text-sm leading-relaxed",
+                  theme === "dark" ? "text-zinc-600" : "text-zinc-300",
+                ].join(" ")}
+              >
+                {lang === "en"
+                  ? "Optional contribution. Any amount helps curation and maintenance."
+                  : lang === "es"
+                  ? "Contribución opcional. Cualquier monto ayuda con la curaduría y mantenimiento."
+                  : "Contribuição opcional. Qualquer valor ajuda na curadoria e manutenção."}
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={copyPixCode}
+                    className={[
+                      "cursor-pointer rounded-xl border px-4 py-3 text-base tracking-[0.02em] transition",
+                      theme === "dark"
+                        ? "border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-100"
+                        : "border-zinc-500 bg-zinc-50 text-zinc-950 hover:bg-white",
+                    ].join(" ")}
+                >
+                  {pixCopied ? "Pix copiado ✓" : "Pix"}
+                </button>
+                <form action="https://www.paypal.com/donate" method="post" target="_top">
+                  <input type="hidden" name="hosted_button_id" value="E9XXLCKPSMR3E" />
                   <button
-                    onClick={copyPixCode}
-                    className="btn cursor-pointer px-3 py-2 text-sm tracking-[0.02em]"
+                    type="submit"
+                    className={[
+                      "w-full cursor-pointer rounded-xl border px-4 py-3 text-base tracking-[0.02em] transition",
+                      theme === "dark"
+                        ? "border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-100"
+                        : "border-zinc-500 bg-zinc-50 text-zinc-950 hover:bg-white",
+                    ].join(" ")}
                   >
-                    {pixCopied ? "Pix copiado ✓" : "Pix"}
+                    PayPal
                   </button>
-                  <form action="https://www.paypal.com/donate" method="post" target="_top">
-                    <input type="hidden" name="hosted_button_id" value="E9XXLCKPSMR3E" />
-                    <button
-                      type="submit"
-                      className="btn w-full cursor-pointer px-3 py-2 text-sm tracking-[0.02em]"
-                    >
-                      PayPal
-                    </button>
-                  </form>
-                </div>
+                </form>
               </div>
-            ) : null}
+            </div>
           </div>
         </div>
       ) : null}
