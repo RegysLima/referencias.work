@@ -17,7 +17,7 @@ type Summary = {
   byDayPathLang?: Record<string, Record<string, Record<string, number>>>;
   byRef?: Record<string, number>;
   byDayRef?: Record<string, Record<string, number>>;
-  lastUpdated?: string;
+  lastUpdated?: string | null;
 };
 
 type AnalyticsLang = "pt" | "es" | "en";
