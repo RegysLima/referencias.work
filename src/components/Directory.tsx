@@ -1433,10 +1433,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 </div>
                 <div className="mt-1 text-base leading-snug">
                   {lang === "en"
-                    ? "Keep referencias.work alive"
+                    ? "Help this project keep growing."
                     : lang === "es"
-                    ? "Mantén vivo referencias.work"
-                    : "Mantenha o referencias.work vivo"}
+                    ? "Ayuda a que este proyecto siga creciendo."
+                    : "Ajude esse projeto a continuar crescendo."}
                 </div>
               </div>
               <button
@@ -1461,10 +1461,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 ].join(" ")}
               >
                 {lang === "en"
-                  ? "Optional contribution. Any amount helps curation and maintenance."
+                  ? "Your contribution strengthens the curation and keeps referencias.work active."
                   : lang === "es"
-                  ? "Contribución opcional. Cualquier monto ayuda con la curaduría y mantenimiento."
-                  : "Contribuição opcional. Qualquer valor ajuda na curadoria e manutenção."}
+                  ? "Tu contribución fortalece la curaduría y mantiene referencias.work activo."
+                  : "Sua contribuição fortalece a curadoria e mantém o referencias.work ativo."}
               </p>
               <div className="grid grid-cols-2 gap-3">
                 <button
