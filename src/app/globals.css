@@ -49,6 +49,18 @@ body {
   color: #ffffff;
 }
 
+/* Filter selects: force readable native dropdowns across browsers (notably Firefox) */
+.rw-filter-select {
+  color: #18181b;
+  background-color: transparent;
+}
+
+.rw-filter-select option,
+.rw-filter-select optgroup {
+  color: #18181b;
+  background-color: #ffffff;
+}
+
 :root[data-theme="dark"] .btn {
   border-color: #e4e4e7;
   color: #e4e4e7;
@@ -57,6 +69,18 @@ body {
 :root[data-theme="dark"] .btn:hover {
   background: #ffffff;
   color: #000000;
+}
+
+:root[data-theme="dark"] .rw-filter-select {
+  color: #f4f4f5;
+  background-color: transparent;
+  color-scheme: dark;
+}
+
+:root[data-theme="dark"] .rw-filter-select option,
+:root[data-theme="dark"] .rw-filter-select optgroup {
+  color: #f4f4f5;
+  background-color: #111827;
 }
 
 :root[data-theme="dark"] .bg-white {

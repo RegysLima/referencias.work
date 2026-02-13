@@ -929,7 +929,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 setSpotlightIndex(0);
                 newSeed();
               }}
-              className="mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
+              className="rw-filter-select mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
             >
               {macroOptions.map((o) => (
                 <option key={o.key} value={o.key}>
@@ -950,7 +950,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 setVisibleCount(10);
                 setSpotlightIndex(0);
               }}
-              className="mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
+              className="rw-filter-select mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
             >
               {areaPrimaryOptions.map((o) => (
                 <option key={o.key} value={o.key}>
@@ -971,7 +971,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 setVisibleCount(10);
                 setSpotlightIndex(0);
               }}
-              className="mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
+              className="rw-filter-select mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
             >
               {areaSecondaryOptions.map((o) => (
                 <option key={o.key} value={o.key}>
@@ -993,7 +993,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 setSpotlightIndex(0);
                 newSeed();
               }}
-              className="mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
+              className="rw-filter-select mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
             >
               {countryOptions.map((o) => (
                 <option key={o.key} value={o.key}>
@@ -1015,7 +1015,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 setSpotlightIndex(0);
                 newSeed();
               }}
-              className="mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
+              className="rw-filter-select mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
             >
               {cityOptions.map((o) => (
                 <option key={o.key} value={o.key}>
