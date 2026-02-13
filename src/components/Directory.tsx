@@ -1417,8 +1417,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             className={[
               "rounded-none border p-5 shadow-lg backdrop-blur transition-all",
               theme === "dark"
-                ? "border-zinc-300/70 bg-white/85 text-zinc-950"
-                : "border-zinc-700/80 bg-zinc-950/85 text-zinc-50",
+                ? "border-zinc-300/70 bg-white/85 text-[#111111]"
+                : "border-zinc-700/80 bg-zinc-950/85 text-[#f5f5f5]",
             ].join(" ")}
           >
             <div className="flex items-start justify-between gap-3">
@@ -1426,7 +1426,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 <div
                   className={[
                     "text-xs uppercase tracking-[0.2em]",
-                    theme === "dark" ? "text-zinc-700" : "text-zinc-300",
+                    theme === "dark" ? "text-[#3f3f46]" : "text-zinc-300",
                   ].join(" ")}
                 >
                   {lang === "en" ? "Support" : lang === "es" ? "Apoyo" : "Apoio"}
@@ -1444,7 +1444,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 className={[
                   "text-sm underline underline-offset-2",
                   theme === "dark"
-                    ? "text-zinc-700 hover:text-zinc-900"
+                    ? "text-[#3f3f46] hover:text-[#111111]"
                     : "text-zinc-300 hover:text-zinc-100",
                 ].join(" ")}
                 aria-label="Fechar card de apoio"
@@ -1457,7 +1457,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               <p
                 className={[
                   "text-sm leading-relaxed",
-                  theme === "dark" ? "text-zinc-800" : "text-zinc-200",
+                  theme === "dark" ? "text-[#1f2937]" : "text-zinc-200",
                 ].join(" ")}
               >
                 {lang === "en"
@@ -1472,7 +1472,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   className={[
                     "cursor-pointer rounded-none border px-4 py-3 text-base tracking-[0.02em] transition",
                     theme === "dark"
-                      ? "border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-100"
+                      ? "border-zinc-300 bg-white text-[#111111] hover:bg-zinc-100"
                       : "border-zinc-500 bg-zinc-50 text-zinc-950 hover:bg-white",
                   ].join(" ")}
                 >
@@ -1485,7 +1485,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                     className={[
                       "w-full cursor-pointer rounded-none border px-4 py-3 text-base tracking-[0.02em] transition",
                       theme === "dark"
-                        ? "border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-100"
+                        ? "border-zinc-300 bg-white text-[#111111] hover:bg-zinc-100"
                         : "border-zinc-500 bg-zinc-50 text-zinc-950 hover:bg-white",
                     ].join(" ")}
                   >
