@@ -20,8 +20,66 @@ type Summary = {
   lastUpdated?: string;
 };
 
+type AnalyticsLang = "pt" | "es" | "en";
+
 function todayKey() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function normalizeLang(value: string | undefined): AnalyticsLang {
+  const cleaned = (value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z-]/g, "");
+
+  if (cleaned.startsWith("pt")) return "pt";
+  if (cleaned.startsWith("es")) return "es";
+  if (cleaned.startsWith("en")) return "en";
+  return "pt";
+}
+
+function normalizeLangMap(input: Record<string, number> | undefined) {
+  const out: Record<AnalyticsLang, number> = { pt: 0, es: 0, en: 0 };
+  const source = input || {};
+  for (const [key, count] of Object.entries(source)) {
+    const lang = normalizeLang(key);
+    out[lang] = (out[lang] || 0) + (count || 0);
+  }
+  return out;
+}
+
+function normalizeByDayLang(
+  input: Record<string, Record<string, number>> | undefined
+) {
+  const out: Record<string, Record<AnalyticsLang, number>> = {};
+  const source = input || {};
+  for (const [day, row] of Object.entries(source)) {
+    out[day] = normalizeLangMap(row);
+  }
+  return out;
+}
+
+function normalizeByDayPathLang(
+  input: Record<string, Record<string, Record<string, number>>> | undefined
+) {
+  const out: Record<string, Record<string, Record<AnalyticsLang, number>>> = {};
+  const source = input || {};
+  for (const [day, byPath] of Object.entries(source)) {
+    out[day] = {};
+    for (const [path, byLang] of Object.entries(byPath || {})) {
+      out[day][path] = normalizeLangMap(byLang);
+    }
+  }
+  return out;
+}
+
+function normalizeSummaryLangs(summary: Summary): Summary {
+  return {
+    ...summary,
+    byLang: normalizeLangMap(summary.byLang),
+    byDayLang: normalizeByDayLang(summary.byDayLang),
+    byDayPathLang: normalizeByDayPathLang(summary.byDayPathLang),
+  };
 }
 
 export async function POST(req: Request) {
@@ -38,11 +96,11 @@ export async function POST(req: Request) {
   };
   const type = (body?.type || "page").toString().slice(0, 20);
   const path = (body?.path || "/").toString().slice(0, 200);
-  const lang = (body?.lang || "pt").toString().slice(0, 10);
+  const lang = normalizeLang((body?.lang || "pt").toString().slice(0, 24));
   const refName = (body?.refName || "").toString().slice(0, 200);
   const refUrl = (body?.refUrl || "").toString().slice(0, 400);
 
-  const current = (await kv.get<Summary>(KV_KEY)) || {
+  const currentRaw = (await kv.get<Summary>(KV_KEY)) || {
     total: 0,
     byPath: {},
     byDay: {},
@@ -53,6 +111,7 @@ export async function POST(req: Request) {
     byRef: {},
     byDayRef: {},
   };
+  const current = normalizeSummaryLangs(currentRaw);
 
   const day = todayKey();
   if (type === "ref") {
