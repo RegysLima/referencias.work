@@ -374,7 +374,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [seed, setSeed] = useState<number | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
 
-  const [visibleCount, setVisibleCount] = useState(20);
+  const [visibleCount, setVisibleCount] = useState(10);
   const [toast, setToast] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
   const [supportCardVisible, setSupportCardVisible] = useState(false);
@@ -523,7 +523,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     setCityKey(ALL_KEY);
     setAreaPrimaryKey(ALL_KEY);
     setAreaSecondaryKey(ALL_KEY);
-    setVisibleCount(20);
+    setVisibleCount(10);
     setSpotlightIndex(0);
     newSeed();
   }
@@ -544,7 +544,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   function handleMacroClick(value: string) {
     if (!value) return;
     setMacroKey(value);
-    setVisibleCount(20);
+    setVisibleCount(10);
     setSpotlightIndex(0);
     newSeed();
     setFiltersOpen(true);
@@ -553,7 +553,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   function handleCountryClick(value: string) {
     if (!value) return;
     setCountryKey(value);
-    setVisibleCount(20);
+    setVisibleCount(10);
     setSpotlightIndex(0);
     newSeed();
     setFiltersOpen(true);
@@ -562,7 +562,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   function handleCityClick(value: string) {
     if (!value) return;
     setCityKey(value);
-    setVisibleCount(20);
+    setVisibleCount(10);
     setSpotlightIndex(0);
     newSeed();
     setFiltersOpen(true);
@@ -571,7 +571,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   function handleAreaPrimaryClick(value: string) {
     if (!value) return;
     setAreaPrimaryKey(value);
-    setVisibleCount(20);
+    setVisibleCount(10);
     setSpotlightIndex(0);
     setFiltersOpen(true);
   }
@@ -579,7 +579,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   function handleAreaSecondaryClick(value: string) {
     if (!value) return;
     setAreaSecondaryKey(value);
-    setVisibleCount(20);
+    setVisibleCount(10);
     setSpotlightIndex(0);
     setFiltersOpen(true);
   }
@@ -822,7 +822,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                           } else {
                             setMacroKey((cur) => (cur === value ? ALL_KEY : value));
                           }
-                          setVisibleCount(20);
+                          setVisibleCount(10);
                           setSpotlightIndex(0);
                           newSeed();
                         }}
@@ -925,7 +925,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               value={macroKey}
               onChange={(e) => {
                 setMacroKey(e.target.value);
-                setVisibleCount(20);
+                setVisibleCount(10);
                 setSpotlightIndex(0);
                 newSeed();
               }}
@@ -947,7 +947,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               value={areaPrimaryKey}
               onChange={(e) => {
                 setAreaPrimaryKey(e.target.value);
-                setVisibleCount(20);
+                setVisibleCount(10);
                 setSpotlightIndex(0);
               }}
               className="mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
@@ -968,7 +968,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               value={areaSecondaryKey}
               onChange={(e) => {
                 setAreaSecondaryKey(e.target.value);
-                setVisibleCount(20);
+                setVisibleCount(10);
                 setSpotlightIndex(0);
               }}
               className="mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none"
@@ -989,7 +989,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               value={countryKey}
               onChange={(e) => {
                 setCountryKey(e.target.value);
-                setVisibleCount(20);
+                setVisibleCount(10);
                 setSpotlightIndex(0);
                 newSeed();
               }}
@@ -1011,7 +1011,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               value={cityKey}
               onChange={(e) => {
                 setCityKey(e.target.value);
-                setVisibleCount(20);
+                setVisibleCount(10);
                 setSpotlightIndex(0);
                 newSeed();
               }}
@@ -1290,7 +1290,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           <div className="flex justify-center pt-10">
             <button
               onClick={() => {
-                setVisibleCount((n) => Math.min(n + 20, Math.max(0, total - 1)));
+                setVisibleCount((n) => Math.min(n + 5, Math.max(0, total - 1)));
                 if (!isMobile && !supportCardDismissed) setSupportCardVisible(true);
               }}
               className="btn cursor-pointer px-6 py-3 text-[16px] tracking-[0.02em]"
