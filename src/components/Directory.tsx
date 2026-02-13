@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ALL_KEY,
   AREA_LABELS,
@@ -355,7 +355,6 @@ function getRandomSeed() {
 const MACRO_MENU = ["all", "Studios", "Designers", "Illustrators", "Photographers", "Foundries"];
 const PIX_CODE =
   "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4";
-const SUPPORT_CARD_DISMISS_KEY = "rw_support_card_dismissed";
 
 export default function Directory({ items }: { items: AnyItem[] }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -380,6 +379,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [pixCopied, setPixCopied] = useState(false);
   const [supportCardVisible, setSupportCardVisible] = useState(false);
   const [supportCardDismissed, setSupportCardDismissed] = useState(false);
+  const [hideSupportCardBySection, setHideSupportCardBySection] = useState(false);
+  const supportSectionRef = useRef<HTMLElement | null>(null);
 
   const ui = UI[lang] || UI.pt;
   const hideMobileMenus = isMobile && isMobileCollapsed && !mobileMenuOpen;
@@ -463,29 +464,23 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }, [pixCopied]);
 
   useEffect(() => {
-    try {
-      const dismissed = window.localStorage.getItem(SUPPORT_CARD_DISMISS_KEY);
-      if (dismissed === "1") {
-        setSupportCardDismissed(true);
-      }
-    } catch {
-      // ignore
-    }
-  }, []);
-
-  useEffect(() => {
     if (supportCardDismissed) return;
 
     const onScroll = () => {
-      if (window.scrollY > 520) {
+      if (isMobile && window.scrollY > 1600) {
         setSupportCardVisible(true);
       }
+
+      const supportSection = supportSectionRef.current;
+      if (!supportSection) return;
+      const rect = supportSection.getBoundingClientRect();
+      setHideSupportCardBySection(rect.top <= window.innerHeight - 24);
     };
 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [supportCardDismissed]);
+  }, [supportCardDismissed, isMobile]);
 
   useEffect(() => {
     if (hideMobileMenus && filtersOpen) {
@@ -518,11 +513,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   function dismissSupportCard() {
     setSupportCardDismissed(true);
     setSupportCardVisible(false);
-    try {
-      window.localStorage.setItem(SUPPORT_CARD_DISMISS_KEY, "1");
-    } catch {
-      // ignore
-    }
   }
 
   function handleClear() {
@@ -1299,7 +1289,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         {visibleCount < Math.max(0, total - 1) && (
           <div className="flex justify-center pt-10">
             <button
-              onClick={() => setVisibleCount((n) => Math.min(n + 20, Math.max(0, total - 1)))}
+              onClick={() => {
+                setVisibleCount((n) => Math.min(n + 20, Math.max(0, total - 1)));
+                if (!isMobile && !supportCardDismissed) setSupportCardVisible(true);
+              }}
               className="btn cursor-pointer px-6 py-3 text-[16px] tracking-[0.02em]"
             >
               {ui.loadMore}
@@ -1308,7 +1301,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         )}
       </div>
 
-      <section className="mt-16 border-t border-zinc-200 pt-8">
+      <section ref={supportSectionRef} className="mt-16 border-t border-zinc-200 pt-8">
         <div className="flex flex-col gap-6">
           <h2 className="mx-auto max-w-[560px] text-center text-[22px] leading-snug text-zinc-900">
             {lang === "en" ? (
@@ -1418,11 +1411,11 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         </div>
       ) : null}
 
-      {!supportCardDismissed && supportCardVisible ? (
+      {!supportCardDismissed && supportCardVisible && !hideSupportCardBySection ? (
         <div className="fixed bottom-4 left-1/2 z-50 w-[min(92vw,390px)] -translate-x-1/2 lg:bottom-5 lg:left-auto lg:right-5 lg:w-[390px] lg:translate-x-0">
           <div
             className={[
-              "rounded-2xl border p-5 shadow-lg backdrop-blur transition-all",
+              "rounded-none border p-5 shadow-lg backdrop-blur transition-all",
               theme === "dark"
                 ? "border-zinc-300/70 bg-white/85 text-zinc-950"
                 : "border-zinc-700/80 bg-zinc-950/85 text-zinc-50",
@@ -1433,7 +1426,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 <div
                   className={[
                     "text-xs uppercase tracking-[0.2em]",
-                    theme === "dark" ? "text-zinc-500" : "text-zinc-400",
+                    theme === "dark" ? "text-zinc-700" : "text-zinc-300",
                   ].join(" ")}
                 >
                   {lang === "en" ? "Support" : lang === "es" ? "Apoyo" : "Apoio"}
@@ -1449,14 +1442,14 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               <button
                 onClick={dismissSupportCard}
                 className={[
-                  "text-sm",
+                  "text-sm underline underline-offset-2",
                   theme === "dark"
-                    ? "text-zinc-500 hover:text-zinc-700"
+                    ? "text-zinc-700 hover:text-zinc-900"
                     : "text-zinc-300 hover:text-zinc-100",
                 ].join(" ")}
                 aria-label="Fechar card de apoio"
               >
-                x
+                Fechar
               </button>
             </div>
 
@@ -1464,7 +1457,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               <p
                 className={[
                   "text-sm leading-relaxed",
-                  theme === "dark" ? "text-zinc-600" : "text-zinc-300",
+                  theme === "dark" ? "text-zinc-800" : "text-zinc-200",
                 ].join(" ")}
               >
                 {lang === "en"
@@ -1476,12 +1469,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={copyPixCode}
-                    className={[
-                      "cursor-pointer rounded-xl border px-4 py-3 text-base tracking-[0.02em] transition",
-                      theme === "dark"
-                        ? "border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-100"
-                        : "border-zinc-500 bg-zinc-50 text-zinc-950 hover:bg-white",
-                    ].join(" ")}
+                  className={[
+                    "cursor-pointer rounded-none border px-4 py-3 text-base tracking-[0.02em] transition",
+                    theme === "dark"
+                      ? "border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-100"
+                      : "border-zinc-500 bg-zinc-50 text-zinc-950 hover:bg-white",
+                  ].join(" ")}
                 >
                   {pixCopied ? "Pix copiado ✓" : "Pix"}
                 </button>
@@ -1490,7 +1483,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   <button
                     type="submit"
                     className={[
-                      "w-full cursor-pointer rounded-xl border px-4 py-3 text-base tracking-[0.02em] transition",
+                      "w-full cursor-pointer rounded-none border px-4 py-3 text-base tracking-[0.02em] transition",
                       theme === "dark"
                         ? "border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-100"
                         : "border-zinc-500 bg-zinc-50 text-zinc-950 hover:bg-white",
