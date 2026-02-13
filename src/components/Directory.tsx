@@ -1472,7 +1472,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   className={[
                     "cursor-pointer rounded-none border px-4 py-3 text-base tracking-[0.02em] transition",
                     theme === "dark"
-                      ? "border-zinc-300 bg-white text-[#111111] hover:bg-zinc-100"
+                      ? "border-zinc-300 bg-[#ffffff] text-[#111111] hover:bg-[#f3f4f6]"
                       : "border-zinc-500 bg-zinc-50 text-zinc-950 hover:bg-white",
                   ].join(" ")}
                 >
@@ -1485,7 +1485,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                     className={[
                       "w-full cursor-pointer rounded-none border px-4 py-3 text-base tracking-[0.02em] transition",
                       theme === "dark"
-                        ? "border-zinc-300 bg-white text-[#111111] hover:bg-zinc-100"
+                        ? "border-zinc-300 bg-[#ffffff] text-[#111111] hover:bg-[#f3f4f6]"
                         : "border-zinc-500 bg-zinc-50 text-zinc-950 hover:bg-white",
                     ].join(" ")}
                   >
