@@ -377,6 +377,13 @@ export default function AdminPage() {
     return map;
   }, [items]);
 
+  function setBrokenThumbState(id: string, broken: boolean) {
+    setBrokenThumbs((prev) => {
+      if (prev[id] === broken) return prev;
+      return { ...prev, [id]: broken };
+    });
+  }
+
   async function checkBrokenImages() {
     const candidates = items
       .filter((i) => (i.thumbnailUrl || "").trim())
@@ -1137,6 +1144,8 @@ export default function AdminPage() {
                           <img
                             src={i.thumbnailUrl}
                             alt=""
+                            onError={() => setBrokenThumbState(i.id, true)}
+                            onLoad={() => setBrokenThumbState(i.id, false)}
                             className="h-full w-full object-cover transition group-hover:scale-[1.01]"
                           />
                         )
