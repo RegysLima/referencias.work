@@ -5,14 +5,25 @@ import { useEffect, useMemo, useState } from "react";
 type Summary = {
   total: number;
   refTotal?: number;
+  searchTotal?: number;
   byPath: Record<string, number>;
   byDay: Record<string, number>;
   byLang: Record<string, number>;
+  byType?: Record<string, number>;
   byDayPath?: Record<string, Record<string, number>>;
   byDayLang?: Record<string, Record<string, number>>;
+  byDayType?: Record<string, Record<string, number>>;
   byDayPathLang?: Record<string, Record<string, Record<string, number>>>;
   byRef?: Record<string, number>;
   byDayRef?: Record<string, Record<string, number>>;
+  bySearchQuery?: Record<string, number>;
+  byDaySearchQuery?: Record<string, Record<string, number>>;
+  donation?: {
+    cardView: number;
+    pixClick: number;
+    paypalClick: number;
+    dismiss: number;
+  };
   lastUpdated?: string | null;
 };
 
@@ -22,11 +33,21 @@ const EMPTY: Summary = {
   byPath: {},
   byDay: {},
   byLang: {},
+  byType: {},
   byDayPath: {},
   byDayLang: {},
+  byDayType: {},
   byDayPathLang: {},
   byRef: {},
   byDayRef: {},
+  bySearchQuery: {},
+  byDaySearchQuery: {},
+  donation: {
+    cardView: 0,
+    pixClick: 0,
+    paypalClick: 0,
+    dismiss: 0,
+  },
   lastUpdated: null,
 };
 
@@ -119,37 +140,28 @@ function sumByDayRef(summary: Summary, days: string[]) {
   return result;
 }
 
-function BarChart({
-  data,
-  height = 120,
-}: {
-  data: { label: string; value: number }[];
-  height?: number;
-}) {
-  const max = Math.max(1, ...data.map((d) => d.value));
-  const barGap = 2;
-  const barWidth = 100 / Math.max(1, data.length);
-  return (
-    <svg viewBox={`0 0 100 ${height}`} className="h-28 w-full">
-      {data.map((d, idx) => {
-        const x = idx * barWidth + barGap / 2;
-        const w = barWidth - barGap;
-        const h = (d.value / max) * (height - 12);
-        const y = height - h;
-        return (
-          <rect
-            key={d.label}
-            x={x}
-            y={y}
-            width={w}
-            height={h}
-            rx="2"
-            className="fill-[#0000CD]"
-          />
-        );
-      })}
-    </svg>
-  );
+function sumByDayType(summary: Summary, days: string[]) {
+  const result: Record<string, number> = {};
+  for (const day of days) {
+    const row = summary.byDayType?.[day];
+    if (!row) continue;
+    for (const [key, count] of Object.entries(row)) {
+      result[key] = (result[key] || 0) + count;
+    }
+  }
+  return result;
+}
+
+function sumByDaySearchQuery(summary: Summary, days: string[]) {
+  const result: Record<string, number> = {};
+  for (const day of days) {
+    const row = summary.byDaySearchQuery?.[day];
+    if (!row) continue;
+    for (const [key, count] of Object.entries(row)) {
+      result[key] = (result[key] || 0) + count;
+    }
+  }
+  return result;
 }
 
 function LineChart({
@@ -209,7 +221,6 @@ export default function AdminAnalyticsPage() {
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
     fetch("/api/admin/analytics")
       .then((res) => (res.ok ? res.json() : EMPTY))
       .then((data) => {
@@ -278,7 +289,35 @@ export default function AdminAnalyticsPage() {
     return sumByDayRef(summary, rangeDays);
   }, [summary, range, rangeDays]);
 
+  const filteredTypes = useMemo(() => {
+    if (range === "all") return summary.byType || {};
+    return sumByDayType(summary, rangeDays);
+  }, [summary, range, rangeDays]);
+
+  const filteredSearchQueries = useMemo(() => {
+    if (range === "all") return summary.bySearchQuery || {};
+    return sumByDaySearchQuery(summary, rangeDays);
+  }, [summary, range, rangeDays]);
+
   const refRows = useMemo(() => toRows(filteredRefs).slice(0, 10), [filteredRefs]);
+  const searchRows = useMemo(
+    () => toRows(filteredSearchQueries).slice(0, 10),
+    [filteredSearchQueries]
+  );
+  const interactionRows = useMemo(
+    () =>
+      toRows(filteredTypes)
+        .filter(([type]) => type !== "page")
+        .slice(0, 10),
+    [filteredTypes]
+  );
+  const donationViews = filteredTypes["donation_card_view"] || 0;
+  const pixClicks = filteredTypes["donation_pix_click"] || 0;
+  const paypalClicks = filteredTypes["donation_paypal_click"] || 0;
+  const donationClickRate = donationViews
+    ? (((pixClicks + paypalClicks) / donationViews) * 100).toFixed(1)
+    : "0.0";
+  const searchTotalInRange = filteredTypes.search || summary.searchTotal || 0;
   const tickDays = useMemo(() => {
     const len = rangeDays.length;
     if (!len) return [];
@@ -430,6 +469,28 @@ export default function AdminAnalyticsPage() {
         </div>
       </div>
 
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Buscas no período</div>
+          <div className="mt-2 text-2xl text-zinc-100">{searchTotalInRange}</div>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Views do card de apoio</div>
+          <div className="mt-2 text-2xl text-zinc-100">{donationViews}</div>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Cliques Pix + PayPal</div>
+          <div className="mt-2 text-2xl text-zinc-100">{pixClicks + paypalClicks}</div>
+          <div className="mt-1 text-xs text-zinc-500">
+            Pix: {pixClicks} · PayPal: {paypalClicks}
+          </div>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Taxa clique no apoio</div>
+          <div className="mt-2 text-2xl text-zinc-100">{donationClickRate}%</div>
+        </div>
+      </div>
+
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
         <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5 lg:col-span-2">
           <div className="flex items-center justify-between gap-3">
@@ -493,6 +554,44 @@ export default function AdminAnalyticsPage() {
               refRows.map(([ref, count], idx) => (
                 <div key={`${ref}-${idx}`} className="flex items-center justify-between">
                   <span className="truncate">{ref}</span>
+                  <span className="text-zinc-500">{count}</span>
+                </div>
+              ))
+            ) : (
+              <div className="text-zinc-500">—</div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5 lg:col-span-2">
+          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
+            Top buscas
+          </div>
+          <div className="mt-4 space-y-2 text-sm text-zinc-300">
+            {searchRows.length ? (
+              searchRows.map(([query, count], idx) => (
+                <div key={`${query}-${idx}`} className="flex items-center justify-between">
+                  <span className="truncate">{query}</span>
+                  <span className="text-zinc-500">{count}</span>
+                </div>
+              ))
+            ) : (
+              <div className="text-zinc-500">—</div>
+            )}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
+            Eventos de interação
+          </div>
+          <div className="mt-4 space-y-2 text-sm text-zinc-300">
+            {interactionRows.length ? (
+              interactionRows.map(([type, count]) => (
+                <div key={type} className="flex items-center justify-between">
+                  <span className="truncate">{type}</span>
                   <span className="text-zinc-500">{count}</span>
                 </div>
               ))

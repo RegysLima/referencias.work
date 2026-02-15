@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { sendAnalyticsEvent } from "@/lib/analyticsClient";
 
 function normalizeLang(value: string | null | undefined) {
   const cleaned = (value || "")
@@ -31,18 +32,7 @@ export default function AnalyticsTracker() {
 
   useEffect(() => {
     const lang = getLang(searchParams);
-    const payload = JSON.stringify({ type: "page", path: pathname, lang });
-    const blob = new Blob([payload], { type: "application/json" });
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon("/api/analytics/track", blob);
-      return;
-    }
-    fetch("/api/analytics/track", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: payload,
-      keepalive: true,
-    }).catch(() => null);
+    sendAnalyticsEvent({ type: "page", path: pathname, lang });
   }, [pathname, searchParams]);
 
   return null;

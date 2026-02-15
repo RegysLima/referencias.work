@@ -13,6 +13,7 @@ import {
   slugify,
   type Lang,
 } from "@/lib/i18n";
+import { sendAnalyticsEvent } from "@/lib/analyticsClient";
 
 type AnyItem = Record<string, unknown>;
 
@@ -74,23 +75,19 @@ function getThumb(it: AnyItem) {
   return pickFirstString(it, ["thumbnailUrl", "thumb", "image", "cover", "thumbUrl", "thumbnail"]);
 }
 
-function trackReferenceClick(name: string, url: string) {
-  try {
-    const payload = JSON.stringify({ type: "ref", refName: name, refUrl: url });
-    const blob = new Blob([payload], { type: "application/json" });
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon("/api/analytics/track", blob);
-      return;
-    }
-    fetch("/api/analytics/track", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: payload,
-      keepalive: true,
-    }).catch(() => null);
-  } catch {
-    // ignore
-  }
+function trackReferenceClick(
+  name: string,
+  url: string,
+  context?: { lang?: string; query?: string; macro?: string }
+) {
+  sendAnalyticsEvent({
+    type: "ref",
+    refName: name,
+    refUrl: url,
+    lang: context?.lang,
+    query: context?.query || "",
+    value: context?.macro || "",
+  });
 }
 
 function isVideoUrl(src: string) {
@@ -412,6 +409,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [supportCardDismissed, setSupportCardDismissed] = useState(false);
   const [hideSupportCardBySection, setHideSupportCardBySection] = useState(false);
   const supportSectionRef = useRef<HTMLElement | null>(null);
+  const donationViewTrackedRef = useRef(false);
+  const searchTrackTimerRef = useRef<number | null>(null);
 
   const ui = UI[lang] || UI.pt;
   const hideMobileMenus = isMobile && isMobileCollapsed && !mobileMenuOpen;
@@ -533,6 +532,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }
 
   async function copyPixCode() {
+    sendAnalyticsEvent({ type: "donation_pix_click", lang });
     try {
       await navigator.clipboard.writeText(PIX_CODE);
       setPixCopied(true);
@@ -542,6 +542,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }
 
   function dismissSupportCard() {
+    sendAnalyticsEvent({ type: "donation_card_dismiss", lang });
     setSupportCardDismissed(true);
     setSupportCardVisible(false);
   }
@@ -574,6 +575,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   function handleMacroClick(value: string) {
     if (!value) return;
+    sendAnalyticsEvent({ type: "filter_apply", lang, filter: "macro", value });
     setMacroKey(value);
     setVisibleCount(10);
     setSpotlightIndex(0);
@@ -583,6 +585,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   function handleCountryClick(value: string) {
     if (!value) return;
+    sendAnalyticsEvent({ type: "filter_apply", lang, filter: "country", value });
     setCountryKey(value);
     setVisibleCount(10);
     setSpotlightIndex(0);
@@ -592,6 +595,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   function handleCityClick(value: string) {
     if (!value) return;
+    sendAnalyticsEvent({ type: "filter_apply", lang, filter: "city", value });
     setCityKey(value);
     setVisibleCount(10);
     setSpotlightIndex(0);
@@ -601,6 +605,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   function handleAreaPrimaryClick(value: string) {
     if (!value) return;
+    sendAnalyticsEvent({ type: "filter_apply", lang, filter: "area_primary", value });
     setAreaPrimaryKey(value);
     setVisibleCount(10);
     setSpotlightIndex(0);
@@ -609,6 +614,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   function handleAreaSecondaryClick(value: string) {
     if (!value) return;
+    sendAnalyticsEvent({ type: "filter_apply", lang, filter: "area_secondary", value });
     setAreaSecondaryKey(value);
     setVisibleCount(10);
     setSpotlightIndex(0);
@@ -809,6 +815,35 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const total = ordered.length;
 
   useEffect(() => {
+    const query = q.trim();
+    if (!query || query.length < 2) return;
+    if (searchTrackTimerRef.current) {
+      window.clearTimeout(searchTrackTimerRef.current);
+    }
+    searchTrackTimerRef.current = window.setTimeout(() => {
+      sendAnalyticsEvent({
+        type: "search",
+        lang,
+        query,
+        results: total,
+      });
+      searchTrackTimerRef.current = null;
+    }, 700);
+    return () => {
+      if (searchTrackTimerRef.current) {
+        window.clearTimeout(searchTrackTimerRef.current);
+        searchTrackTimerRef.current = null;
+      }
+    };
+  }, [q, total, lang]);
+
+  useEffect(() => {
+    if (!supportCardVisible || donationViewTrackedRef.current) return;
+    donationViewTrackedRef.current = true;
+    sendAnalyticsEvent({ type: "donation_card_view", lang });
+  }, [supportCardVisible, lang]);
+
+  useEffect(() => {
     setSpotlightIndex(0);
   }, [q, macroKey, countryKey, cityKey, areaPrimaryKey, areaSecondaryKey, seed]);
 
@@ -882,6 +917,18 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                     <span key={value}>
                       <button
                         onClick={() => {
+                          const nextValue =
+                            value === "all"
+                              ? ALL_KEY
+                              : macroKey === value
+                              ? ALL_KEY
+                              : value;
+                          sendAnalyticsEvent({
+                            type: "filter_apply",
+                            lang,
+                            filter: "macro",
+                            value: nextValue,
+                          });
                           if (value === "all") {
                             setMacroKey(ALL_KEY);
                           } else {
@@ -989,6 +1036,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <select
               value={macroKey}
               onChange={(e) => {
+                sendAnalyticsEvent({
+                  type: "filter_apply",
+                  lang,
+                  filter: "macro",
+                  value: e.target.value,
+                });
                 setMacroKey(e.target.value);
                 setVisibleCount(10);
                 setSpotlightIndex(0);
@@ -1011,6 +1064,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <select
               value={areaPrimaryKey}
               onChange={(e) => {
+                sendAnalyticsEvent({
+                  type: "filter_apply",
+                  lang,
+                  filter: "area_primary",
+                  value: e.target.value,
+                });
                 setAreaPrimaryKey(e.target.value);
                 setVisibleCount(10);
                 setSpotlightIndex(0);
@@ -1032,6 +1091,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <select
               value={areaSecondaryKey}
               onChange={(e) => {
+                sendAnalyticsEvent({
+                  type: "filter_apply",
+                  lang,
+                  filter: "area_secondary",
+                  value: e.target.value,
+                });
                 setAreaSecondaryKey(e.target.value);
                 setVisibleCount(10);
                 setSpotlightIndex(0);
@@ -1053,6 +1118,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <select
               value={countryKey}
               onChange={(e) => {
+                sendAnalyticsEvent({
+                  type: "filter_apply",
+                  lang,
+                  filter: "country",
+                  value: e.target.value,
+                });
                 setCountryKey(e.target.value);
                 setVisibleCount(10);
                 setSpotlightIndex(0);
@@ -1075,6 +1146,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <select
               value={cityKey}
               onChange={(e) => {
+                sendAnalyticsEvent({
+                  type: "filter_apply",
+                  lang,
+                  filter: "city",
+                  value: e.target.value,
+                });
                 setCityKey(e.target.value);
                 setVisibleCount(10);
                 setSpotlightIndex(0);
@@ -1208,7 +1285,13 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   href={getUrl(spotlight)}
                   target="_blank"
                   rel="noreferrer"
-                  onClick={() => trackReferenceClick(getName(spotlight), getUrl(spotlight))}
+                  onClick={() =>
+                    trackReferenceClick(getName(spotlight), getUrl(spotlight), {
+                      lang,
+                      query: q.trim(),
+                      macro: getMacro(spotlight),
+                    })
+                  }
                   className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]"
                 >
                   {ui.visit}
@@ -1237,7 +1320,13 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 href={url}
                 target="_blank"
                 rel="noreferrer"
-                onClick={() => trackReferenceClick(name, url)}
+                onClick={() =>
+                  trackReferenceClick(name, url, {
+                    lang,
+                    query: q.trim(),
+                    macro: m,
+                  })
+                }
                 className="group min-w-0 border border-zinc-200 bg-white"
               >
                 <div className="aspect-[4/3] w-full overflow-hidden bg-zinc-100 relative">
@@ -1355,6 +1444,11 @@ export default function Directory({ items }: { items: AnyItem[] }) {
           <div className="flex justify-center pt-10">
             <button
               onClick={() => {
+                sendAnalyticsEvent({
+                  type: "load_more_click",
+                  lang,
+                  value: String(visibleCount),
+                });
                 setVisibleCount((n) => Math.min(n + 5, Math.max(0, total - 1)));
                 if (!isMobile && !supportCardDismissed) setSupportCardVisible(true);
               }}
@@ -1407,7 +1501,11 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               </div>
               <form action="https://www.paypal.com/donate" method="post" target="_top">
                 <input type="hidden" name="hosted_button_id" value="E9XXLCKPSMR3E" />
-                <button type="submit" className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]">
+                <button
+                  type="submit"
+                  onClick={() => sendAnalyticsEvent({ type: "donation_paypal_click", lang })}
+                  className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]"
+                >
                   {lang === "es" ? "Donar" : "Donate"}
                 </button>
               </form>
@@ -1547,6 +1645,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   <input type="hidden" name="hosted_button_id" value="E9XXLCKPSMR3E" />
                   <button
                     type="submit"
+                    onClick={() => sendAnalyticsEvent({ type: "donation_paypal_click", lang })}
                     className={[
                       "w-full cursor-pointer rounded-none border px-4 py-3 text-base tracking-[0.02em] transition",
                       theme === "dark"

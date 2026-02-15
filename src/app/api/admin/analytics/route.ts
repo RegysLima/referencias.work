@@ -9,14 +9,25 @@ const KV_ENABLED = Boolean(
 type Summary = {
   total: number;
   refTotal?: number;
+  searchTotal?: number;
   byPath: Record<string, number>;
   byDay: Record<string, number>;
   byLang: Record<string, number>;
+  byType?: Record<string, number>;
   byDayPath?: Record<string, Record<string, number>>;
   byDayLang?: Record<string, Record<string, number>>;
+  byDayType?: Record<string, Record<string, number>>;
   byDayPathLang?: Record<string, Record<string, Record<string, number>>>;
   byRef?: Record<string, number>;
   byDayRef?: Record<string, Record<string, number>>;
+  bySearchQuery?: Record<string, number>;
+  byDaySearchQuery?: Record<string, Record<string, number>>;
+  donation?: {
+    cardView: number;
+    pixClick: number;
+    paypalClick: number;
+    dismiss: number;
+  };
   lastUpdated?: string | null;
 };
 
@@ -75,6 +86,16 @@ function normalizeSummaryLangs(summary: Summary): Summary {
     byLang: normalizeLangMap(summary.byLang),
     byDayLang: normalizeByDayLang(summary.byDayLang),
     byDayPathLang: normalizeByDayPathLang(summary.byDayPathLang),
+    byType: summary.byType || {},
+    byDayType: summary.byDayType || {},
+    bySearchQuery: summary.bySearchQuery || {},
+    byDaySearchQuery: summary.byDaySearchQuery || {},
+    donation: summary.donation || {
+      cardView: 0,
+      pixClick: 0,
+      paypalClick: 0,
+      dismiss: 0,
+    },
   };
 }
 
@@ -89,11 +110,21 @@ export async function GET() {
       byPath: {},
       byDay: {},
       byLang: {},
+      byType: {},
       byDayPath: {},
       byDayLang: {},
+      byDayType: {},
       byDayPathLang: {},
       byRef: {},
       byDayRef: {},
+      bySearchQuery: {},
+      byDaySearchQuery: {},
+      donation: {
+        cardView: 0,
+        pixClick: 0,
+        paypalClick: 0,
+        dismiss: 0,
+      },
       lastUpdated: null,
     };
   const summary = normalizeSummaryLangs(summaryRaw);

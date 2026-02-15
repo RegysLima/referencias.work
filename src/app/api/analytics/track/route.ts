@@ -9,14 +9,25 @@ const KV_ENABLED = Boolean(
 type Summary = {
   total: number;
   refTotal?: number;
+  searchTotal?: number;
   byPath: Record<string, number>;
   byDay: Record<string, number>;
   byLang: Record<string, number>;
+  byType?: Record<string, number>;
   byDayPath?: Record<string, Record<string, number>>;
   byDayLang?: Record<string, Record<string, number>>;
+  byDayType?: Record<string, Record<string, number>>;
   byDayPathLang?: Record<string, Record<string, Record<string, number>>>;
   byRef?: Record<string, number>;
   byDayRef?: Record<string, Record<string, number>>;
+  bySearchQuery?: Record<string, number>;
+  byDaySearchQuery?: Record<string, Record<string, number>>;
+  donation?: {
+    cardView: number;
+    pixClick: number;
+    paypalClick: number;
+    dismiss: number;
+  };
   lastUpdated?: string | null;
 };
 
@@ -82,6 +93,24 @@ function normalizeSummaryLangs(summary: Summary): Summary {
   };
 }
 
+function normalizeType(value: string | undefined) {
+  const cleaned = (value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9_:-]/g, "")
+    .slice(0, 32);
+  return cleaned || "page";
+}
+
+function normalizeSearchQuery(value: string | undefined) {
+  const cleaned = (value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, 120);
+  return cleaned;
+}
+
 export async function POST(req: Request) {
   if (!KV_ENABLED) {
     return NextResponse.json({ ok: false, error: "KV disabled" }, { status: 503 });
@@ -93,27 +122,78 @@ export async function POST(req: Request) {
     type?: string;
     refName?: string;
     refUrl?: string;
+    query?: string;
+    filter?: string;
+    value?: string;
+    results?: number;
+    sessionId?: string;
+    utmSource?: string;
+    utmCampaign?: string;
+    utmMedium?: string;
+    referrer?: string;
+    device?: string;
   };
-  const type = (body?.type || "page").toString().slice(0, 20);
+  const type = normalizeType((body?.type || "page").toString());
   const path = (body?.path || "/").toString().slice(0, 200);
   const lang = normalizeLang((body?.lang || "pt").toString().slice(0, 24));
   const refName = (body?.refName || "").toString().slice(0, 200);
   const refUrl = (body?.refUrl || "").toString().slice(0, 400);
+  const query = normalizeSearchQuery((body?.query || "").toString());
+  const results = Number.isFinite(Number(body?.results)) ? Number(body?.results) : undefined;
 
   const currentRaw = (await kv.get<Summary>(KV_KEY)) || {
     total: 0,
     byPath: {},
     byDay: {},
     byLang: {},
+    byType: {},
     byDayPath: {},
     byDayLang: {},
+    byDayType: {},
     byDayPathLang: {},
     byRef: {},
     byDayRef: {},
+    bySearchQuery: {},
+    byDaySearchQuery: {},
+    donation: {
+      cardView: 0,
+      pixClick: 0,
+      paypalClick: 0,
+      dismiss: 0,
+    },
   };
   const current = normalizeSummaryLangs(currentRaw);
+  current.byType = current.byType || {};
+  current.byDayType = current.byDayType || {};
+  current.bySearchQuery = current.bySearchQuery || {};
+  current.byDaySearchQuery = current.byDaySearchQuery || {};
+  current.donation = current.donation || { cardView: 0, pixClick: 0, paypalClick: 0, dismiss: 0 };
 
   const day = todayKey();
+  current.byType[type] = (current.byType[type] || 0) + 1;
+  current.byDayType[day] = current.byDayType[day] || {};
+  current.byDayType[day][type] = (current.byDayType[day][type] || 0) + 1;
+
+  if (type === "search") {
+    current.searchTotal = (current.searchTotal || 0) + 1;
+    if (query) {
+      current.bySearchQuery[query] = (current.bySearchQuery[query] || 0) + 1;
+      current.byDaySearchQuery[day] = current.byDaySearchQuery[day] || {};
+      current.byDaySearchQuery[day][query] =
+        (current.byDaySearchQuery[day][query] || 0) + 1;
+    }
+    if (typeof results === "number" && results <= 0) {
+      const key = "search_no_results";
+      current.byType[key] = (current.byType[key] || 0) + 1;
+      current.byDayType[day][key] = (current.byDayType[day][key] || 0) + 1;
+    }
+  }
+
+  if (type === "donation_card_view") current.donation.cardView += 1;
+  if (type === "donation_pix_click") current.donation.pixClick += 1;
+  if (type === "donation_paypal_click") current.donation.paypalClick += 1;
+  if (type === "donation_card_dismiss") current.donation.dismiss += 1;
+
   if (type === "ref") {
     current.refTotal = (current.refTotal || 0) + 1;
     const key = refName || refUrl || "unknown";
