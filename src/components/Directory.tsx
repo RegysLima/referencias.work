@@ -322,6 +322,37 @@ function uniqSorted(values: string[]) {
   return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b));
 }
 
+function normalizeSearchText(value: string) {
+  return (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function tokenizeSearchQuery(query: string) {
+  const normalized = normalizeSearchText(query);
+  if (!normalized) return [];
+  return normalized.split(/\s+/).filter(Boolean);
+}
+
+function scoreTokenInText(
+  text: string,
+  token: string,
+  startsWithScore: number,
+  wordStartsWithScore: number,
+  includesScore: number
+) {
+  if (!text) return 0;
+  if (text === token) return startsWithScore + 15;
+  if (text.startsWith(token)) return startsWithScore;
+  const words = text.split(/\s+/);
+  if (words.some((w) => w.startsWith(token))) return wordStartsWithScore;
+  if (text.includes(token)) return includesScore;
+  return 0;
+}
+
 /* ---------------- seeded shuffle ---------------- */
 function mulberry32(seed: number) {
   return function () {
@@ -690,8 +721,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   /* -------- filtering -------- */
   const filtered = useMemo(() => {
-    const qq = q.trim().toLowerCase();
-    return visibleItems.filter((it) => {
+    const queryTokens = tokenizeSearchQuery(q);
+    const normalizedQuery = normalizeSearchText(q);
+
+    const base = visibleItems.filter((it) => {
       const m = getMacro(it);
       const ctryKey = getCountryKey(it);
       const ctyKey = getCityKey(it);
@@ -715,31 +748,63 @@ export default function Directory({ items }: { items: AnyItem[] }) {
       )
         return false;
 
-      if (!qq) return true;
-
-      const hay = [
-        getName(it),
-        getUrl(it),
-        m,
-        getCountry(it),
-        getCity(it),
-        getCountryLabel(it, lang),
-        getCityLabel(it, lang),
-        pArea,
-        ...sAreas,
-        getAreaLabel(pArea, lang),
-        ...sAreas.map((s) => getAreaLabel(s, lang)),
-      ]
-        .join(" ")
-        .toLowerCase();
-      return hay.includes(qq);
+      return true;
     });
+
+    if (!queryTokens.length) return base;
+
+    const ranked = base
+      .map((it) => {
+        const name = normalizeSearchText(getName(it));
+        const url = normalizeSearchText(getUrl(it));
+        const macro = normalizeSearchText(getMacro(it));
+        const country = normalizeSearchText(getCountry(it));
+        const city = normalizeSearchText(getCity(it));
+        const countryLabel = normalizeSearchText(getCountryLabel(it, lang));
+        const cityLabel = normalizeSearchText(getCityLabel(it, lang));
+        const primaryAreaRaw = getPrimaryArea(it);
+        const secondaryAreasRaw = getSecondaryAreas(it);
+        const areaRaw = normalizeSearchText([primaryAreaRaw, ...secondaryAreasRaw].join(" "));
+        const areaLabel = normalizeSearchText(
+          [
+            getAreaLabel(primaryAreaRaw, lang),
+            ...secondaryAreasRaw.map((s) => getAreaLabel(s, lang)),
+          ].join(" ")
+        );
+
+        let score = 0;
+        for (const token of queryTokens) {
+          const tokenScore = Math.max(
+            scoreTokenInText(name, token, 140, 120, 95),
+            scoreTokenInText(url, token, 110, 95, 70),
+            scoreTokenInText(country, token, 48, 42, 35),
+            scoreTokenInText(city, token, 48, 42, 35),
+            scoreTokenInText(countryLabel, token, 44, 38, 30),
+            scoreTokenInText(cityLabel, token, 44, 38, 30),
+            scoreTokenInText(areaRaw, token, 38, 34, 26),
+            scoreTokenInText(areaLabel, token, 34, 30, 22),
+            scoreTokenInText(macro, token, 32, 28, 20)
+          );
+          if (!tokenScore) return null;
+          score += tokenScore;
+        }
+
+        if (normalizedQuery && name.includes(normalizedQuery)) score += 90;
+        if (normalizedQuery && url.includes(normalizedQuery)) score += 45;
+
+        return { it, score };
+      })
+      .filter((entry): entry is { it: AnyItem; score: number } => Boolean(entry))
+      .sort((a, b) => b.score - a.score || getName(a.it).localeCompare(getName(b.it)));
+
+    return ranked.map((entry) => entry.it);
   }, [visibleItems, q, macroKey, countryKey, cityKey, areaPrimaryKey, areaSecondaryKey, lang]);
 
   const ordered = useMemo(() => {
+    if (tokenizeSearchQuery(q).length) return filtered;
     if (!seed) return filtered;
     return seededShuffle(filtered, seed);
-  }, [filtered, seed]);
+  }, [filtered, seed, q]);
 
   const total = ordered.length;
 

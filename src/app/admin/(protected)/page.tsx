@@ -78,6 +78,37 @@ function normalizeUrl(u: string) {
   }
 }
 
+function normalizeSearchText(value: string) {
+  return (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function tokenizeSearchQuery(query: string) {
+  const normalized = normalizeSearchText(query);
+  if (!normalized) return [];
+  return normalized.split(/\s+/).filter(Boolean);
+}
+
+function scoreTokenInText(
+  text: string,
+  token: string,
+  startsWithScore: number,
+  wordStartsWithScore: number,
+  includesScore: number
+) {
+  if (!text) return 0;
+  if (text === token) return startsWithScore + 15;
+  if (text.startsWith(token)) return startsWithScore;
+  const words = text.split(/\s+/);
+  if (words.some((w) => w.startsWith(token))) return wordStartsWithScore;
+  if (text.includes(token)) return includesScore;
+  return 0;
+}
+
 function isVideoUrl(src: string) {
   return /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(src);
 }
@@ -461,9 +492,10 @@ export default function AdminPage() {
   }
 
   const filtered = useMemo(() => {
-    const query = q.trim().toLowerCase();
+    const queryTokens = tokenizeSearchQuery(q);
+    const normalizedQuery = normalizeSearchText(q);
 
-    return items.filter((i) => {
+    const base = items.filter((i) => {
       if (macroFilter !== "Todos" && i.macroType !== macroFilter) return false;
       if (onlyNoImage && i.thumbnailUrl) return false;
       if (onlyBrokenImages && !brokenThumbs[i.id]) return false;
@@ -476,24 +508,49 @@ export default function AdminPage() {
         if ((duplicateMap.get(k) ?? 0) < 2) return false;
       }
 
-      if (!query) return true;
-
-      const hay = [
-        i.name,
-        i.url,
-        i.macroType,
-        i.areaPrimary ?? "",
-        (i.areasSecondary ?? []).join(" "),
-        i.country ?? "",
-        i.city ?? "",
-        i.reviewedAt ? "revisado" : "nao revisado",
-        hasActiveReviewFlags(i) ? "revisar" : "",
-      ]
-        .join(" ")
-        .toLowerCase();
-
-      return hay.includes(query);
+      return true;
     });
+
+    if (!queryTokens.length) return base;
+
+    const ranked = base
+      .map((i) => {
+        const name = normalizeSearchText(i.name || "");
+        const url = normalizeSearchText(i.url || "");
+        const macro = normalizeSearchText(i.macroType || "");
+        const area = normalizeSearchText(
+          [i.areaPrimary || "", ...(i.areasSecondary || [])].join(" ")
+        );
+        const country = normalizeSearchText(i.country || "");
+        const city = normalizeSearchText(i.city || "");
+        const status = normalizeSearchText(
+          `${i.reviewedAt ? "revisado" : "nao revisado"} ${hasActiveReviewFlags(i) ? "revisar" : ""}`
+        );
+
+        let score = 0;
+        for (const token of queryTokens) {
+          const tokenScore = Math.max(
+            scoreTokenInText(name, token, 140, 120, 95),
+            scoreTokenInText(url, token, 110, 95, 70),
+            scoreTokenInText(area, token, 40, 34, 28),
+            scoreTokenInText(country, token, 36, 30, 24),
+            scoreTokenInText(city, token, 36, 30, 24),
+            scoreTokenInText(macro, token, 34, 28, 22),
+            scoreTokenInText(status, token, 20, 16, 12)
+          );
+          if (!tokenScore) return null;
+          score += tokenScore;
+        }
+
+        if (normalizedQuery && name.includes(normalizedQuery)) score += 90;
+        if (normalizedQuery && url.includes(normalizedQuery)) score += 45;
+
+        return { i, score };
+      })
+      .filter((entry): entry is { i: RefItem; score: number } => Boolean(entry))
+      .sort((a, b) => b.score - a.score || (a.i.name || "").localeCompare(b.i.name || ""));
+
+    return ranked.map((entry) => entry.i);
   }, [
     items,
     q,
