@@ -256,14 +256,14 @@
       "macroType": "Studios",
       "areaPrimary": "Branding",
       "areasSecondary": [
-        "Design gráfico",
+        "Design Gráfico",
         "Sinalização",
         "Editorial",
         "Embalagem"
       ],
       "tags": [
         "Branding",
-        "Design gráfico",
+        "Design Gráfico",
         "Sinalização",
         "Editorial",
         "Embalagem"
@@ -416,14 +416,14 @@
       "name": "Estúdio Daó",
       "url": "https://estudiodao.com/",
       "macroType": "Studios",
-      "areaPrimary": "Expografia",
+      "areaPrimary": "Exposições",
       "areasSecondary": [
         "Design Gráfico",
         "Branding",
         "Experimental"
       ],
       "tags": [
-        "Expografia",
+        "Exposições",
         "Design Gráfico",
         "Branding",
         "Experimental"
@@ -444,14 +444,14 @@
       "areasSecondary": [
         "Editorial",
         "Branding",
-        "Expografia",
+        "Exposições",
         "Direção de Arte"
       ],
       "tags": [
         "Design Gráfico",
         "Editorial",
         "Branding",
-        "Expografia",
+        "Exposições",
         "Direção de Arte"
       ],
       "country": "Brasil",
@@ -520,14 +520,14 @@
       "macroType": "Studios",
       "areaPrimary": "Design Gráfico",
       "areasSecondary": [
-        "Expografia",
+        "Exposições",
         "Direção de Arte",
         "Cenografia",
         "Motion"
       ],
       "tags": [
         "Design Gráfico",
-        "Expografia",
+        "Exposições",
         "Direção de Arte",
         "Cenografia",
         "Motion"
@@ -641,13 +641,13 @@
       "areaPrimary": "Branding",
       "areasSecondary": [
         "Design Gráfico",
-        "Expografia",
+        "Exposições",
         "Embalagem"
       ],
       "tags": [
         "Branding",
         "Design Gráfico",
-        "Expografia",
+        "Exposições",
         "Embalagem"
       ],
       "country": "Brasil",
@@ -1178,12 +1178,12 @@
       "areaPrimary": "Branding",
       "areasSecondary": [
         "Motion",
-        "Creative Coding"
+        "Programação Criativa"
       ],
       "tags": [
         "Branding",
         "Motion",
-        "Creative Coding"
+        "Programação Criativa"
       ],
       "country": "Estados Unidos",
       "city": "New York City",
@@ -1532,13 +1532,13 @@
       "areaPrimary": "Design Gráfico",
       "areasSecondary": [
         "Branding",
-        "Ui/ux",
+        "Digital",
         "Tipografia"
       ],
       "tags": [
         "Design Gráfico",
         "Branding",
-        "Ui/ux",
+        "Digital",
         "Tipografia"
       ],
       "country": "Alemanha",
@@ -2246,16 +2246,14 @@
       "macroType": "Studios",
       "areaPrimary": "Branding",
       "areasSecondary": [
-        "Packaging",
-        "UI",
-        "UX",
+        "Embalagem",
+        "Digital",
         "3D"
       ],
       "tags": [
         "Branding",
-        "Packaging",
-        "UI",
-        "UX",
+        "Embalagem",
+        "Digital",
         "3D"
       ],
       "country": "Emirados Árabes",
@@ -2378,13 +2376,13 @@
       "areaPrimary": "Branding",
       "areasSecondary": [
         "Motion",
-        "Ui/ux",
+        "Digital",
         "3D"
       ],
       "tags": [
         "Branding",
         "Motion",
-        "Ui/ux",
+        "Digital",
         "3D"
       ],
       "country": "Dinamarca",
@@ -2459,13 +2457,13 @@
       "areaPrimary": "Branding",
       "areasSecondary": [
         "Impressão",
-        "Ui/ux",
+        "Digital",
         "Espacial"
       ],
       "tags": [
         "Branding",
         "Impressão",
-        "Ui/ux",
+        "Digital",
         "Espacial"
       ],
       "country": "Reino Unido",
@@ -2516,13 +2514,13 @@
       "areasSecondary": [
         "Motion",
         "Programação Criativa",
-        "Ui/ux"
+        "Digital"
       ],
       "tags": [
         "Branding",
         "Motion",
         "Programação Criativa",
-        "Ui/ux"
+        "Digital"
       ],
       "country": "Finlândia",
       "city": "Helsinki",
@@ -2676,11 +2674,11 @@
       "macroType": "Studios",
       "areaPrimary": "Branding",
       "areasSecondary": [
-        "Packaging"
+        "Embalagem"
       ],
       "tags": [
         "Branding",
-        "Packaging"
+        "Embalagem"
       ],
       "country": "Estados Unidos",
       "city": "New York City",
@@ -3273,12 +3271,12 @@
       "macroType": "Studios",
       "areaPrimary": "Branding",
       "areasSecondary": [
-        "Packaging",
+        "Embalagem",
         "Ilustração"
       ],
       "tags": [
         "Branding",
-        "Packaging",
+        "Embalagem",
         "Ilustração"
       ],
       "country": "Austrália",
@@ -4980,13 +4978,13 @@
       "areaPrimary": "Produto",
       "areasSecondary": [
         "Espacial",
-        "Exibições",
+        "Exposições",
         "Pesquisa"
       ],
       "tags": [
         "Produto",
         "Espacial",
-        "Exibições",
+        "Exposições",
         "Pesquisa"
       ],
       "country": "Itália",
@@ -7357,13 +7355,13 @@
       "areaPrimary": "Arquitetura",
       "areasSecondary": [
         "Editorial",
-        "Documentary",
+        "Documental",
         "Lifestyle"
       ],
       "tags": [
         "Arquitetura",
         "Editorial",
-        "Documentary",
+        "Documental",
         "Lifestyle"
       ],
       "country": "Portugal",
@@ -7435,15 +7433,15 @@
       "macroType": "Photographers",
       "areaPrimary": "Lifestyle",
       "areasSecondary": [
-        "Fashion",
+        "Moda",
         "Comercial",
-        "Documentary"
+        "Documental"
       ],
       "tags": [
         "Lifestyle",
-        "Fashion",
+        "Moda",
         "Comercial",
-        "Documentary"
+        "Documental"
       ],
       "country": "Alemanha",
       "city": "Berlim",
@@ -7490,12 +7488,12 @@
       "areaPrimary": "Lifestyle",
       "areasSecondary": [
         "Editorial",
-        "Travel"
+        "Viagem"
       ],
       "tags": [
         "Lifestyle",
         "Editorial",
-        "Travel"
+        "Viagem"
       ],
       "country": "Espanha",
       "city": "Barcelona",
@@ -9594,13 +9592,13 @@
       "url": "https://roblawson.com/drinks-portfolio/",
       "type": "Fotógrafo",
       "macroType": "Photographers",
-      "areaPrimary": "Drinks",
+      "areaPrimary": "Bebidas",
       "areasSecondary": [
         "Still",
         "Campanhas"
       ],
       "tags": [
-        "Drinks",
+        "Bebidas",
         "Still",
         "Campanhas"
       ],
@@ -9623,13 +9621,13 @@
       "macroType": "Photographers",
       "areaPrimary": "Comercial",
       "areasSecondary": [
-        "Drinks",
+        "Bebidas",
         "Campanhas",
         "Editorial"
       ],
       "tags": [
         "Comercial",
-        "Drinks",
+        "Bebidas",
         "Campanhas",
         "Editorial"
       ],
@@ -9680,13 +9678,13 @@
       "areaPrimary": "Gastronomia",
       "areasSecondary": [
         "Still",
-        "Drinks",
+        "Bebidas",
         "Produto"
       ],
       "tags": [
         "Gastronomia",
         "Still",
-        "Drinks",
+        "Bebidas",
         "Produto"
       ],
       "country": "França",
@@ -9797,13 +9795,13 @@
       "url": "https://www.warrenryley.co.uk/",
       "type": "Fotógrafo",
       "macroType": "Photographers",
-      "areaPrimary": "Drinks",
+      "areaPrimary": "Bebidas",
       "areasSecondary": [
         "Still",
         "Campanhas"
       ],
       "tags": [
-        "Drinks",
+        "Bebidas",
         "Still",
         "Campanhas"
       ],
@@ -9969,14 +9967,14 @@
       "url": "https://www.gentlandhyers.com/NEW-WORK/DRINKS/thumbs",
       "type": "Fotógrafo",
       "macroType": "Photographers",
-      "areaPrimary": "Drinks",
+      "areaPrimary": "Bebidas",
       "areasSecondary": [
         "Still",
         "Estilo",
         "Campanhas"
       ],
       "tags": [
-        "Drinks",
+        "Bebidas",
         "Still",
         "Estilo",
         "Campanhas"
@@ -10000,13 +9998,13 @@
       "macroType": "Photographers",
       "areaPrimary": "Gastronomia",
       "areasSecondary": [
-        "Drinks",
+        "Bebidas",
         "Lifestyle",
         "Campanhas"
       ],
       "tags": [
         "Gastronomia",
-        "Drinks",
+        "Bebidas",
         "Lifestyle",
         "Campanhas"
       ],
@@ -10089,13 +10087,13 @@
       "areasSecondary": [
         "Campanhas",
         "Gastronomia",
-        "Drinks"
+        "Bebidas"
       ],
       "tags": [
         "Comercial",
         "Campanhas",
         "Gastronomia",
-        "Drinks"
+        "Bebidas"
       ],
       "country": "Estados Unidos",
       "city": "New York City",
@@ -10348,12 +10346,12 @@
       "macroType": "Photographers",
       "areaPrimary": "Gastronomia",
       "areasSecondary": [
-        "Drinks",
+        "Bebidas",
         "Still"
       ],
       "tags": [
         "Gastronomia",
-        "Drinks",
+        "Bebidas",
         "Still"
       ],
       "country": "Reino Unido",
@@ -10904,14 +10902,14 @@
       "url": "https://jknowles.com/home",
       "type": "Fotógrafo",
       "macroType": "Photographers",
-      "areaPrimary": "Drinks",
+      "areaPrimary": "Bebidas",
       "areasSecondary": [
         "Still",
         "Produto",
         "Filmes"
       ],
       "tags": [
-        "Drinks",
+        "Bebidas",
         "Still",
         "Produto",
         "Filmes"
@@ -12780,5 +12778,5 @@
       "reviewedAt": "2026-01-19T03:07:06.304Z"
     }
   ],
-  "updatedAt": "2026-01-20T03:14:30.736Z"
+  "updatedAt": "2026-02-16T02:29:11.278Z"
 }

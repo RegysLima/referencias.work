@@ -32,6 +32,28 @@ const MACROS = ["Studios", "Designers", "Photographers", "Illustrators", "Foundr
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
+const AREA_CANON_MAP: Record<string, string> = {
+  packaging: "Embalagem",
+  package: "Embalagem",
+  "package design": "Embalagem",
+  "pack design": "Embalagem",
+  embalagens: "Embalagem",
+  expografia: "Exposições",
+  exibicoes: "Exposições",
+  exibições: "Exposições",
+  documentary: "Documental",
+  "creative coding": "Programação Criativa",
+  "creative-coding": "Programação Criativa",
+  "design grafico": "Design Gráfico",
+  drinks: "Bebidas",
+  fashion: "Moda",
+  travel: "Viagem",
+  "ui/ux": "Digital",
+  "ui ux": "Digital",
+  ui: "Digital",
+  ux: "Digital",
+};
+
 function uniq(arr: string[]) {
   const out: string[] = [];
   const seen = new Set<string>();
@@ -46,18 +68,34 @@ function uniq(arr: string[]) {
   return out;
 }
 
+function canonAreaLabel(value: string) {
+  const raw = (value || "").trim();
+  if (!raw) return "";
+  const key = raw
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+  return AREA_CANON_MAP[key] || raw;
+}
+
 function parseSecondary(text: string) {
   const arr = (text ?? "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
 
-  return uniq(arr);
+  return uniq(arr.map(canonAreaLabel).filter(Boolean));
 }
 
 function normalizeSecondaryAreas(primary: string | null | undefined, secondary: string[] | undefined) {
-  const primaryCanon = (primary ?? "").trim().toLowerCase();
-  const base = (secondary ?? []).map((s) => s.trim()).filter(Boolean);
+  const primaryLabel = canonAreaLabel(primary ?? "");
+  const primaryCanon = primaryLabel.toLowerCase();
+  const base = (secondary ?? [])
+    .map((s) => canonAreaLabel(s))
+    .map((s) => s.trim())
+    .filter(Boolean);
   const filtered = uniq(base).filter((s) => s.toLowerCase() !== primaryCanon);
   return filtered.slice(0, 4);
 }
@@ -604,7 +642,8 @@ export default function AdminPage() {
         // normaliza macroType sempre que mexer (evita “Studio” solto)
         next.macroType = normalizeMacro(next.macroType);
 
-        const ap = (next.areaPrimary ?? "") as string;
+        const ap = canonAreaLabel((next.areaPrimary ?? "") as string);
+        next.areaPrimary = ap || "";
         const as = normalizeSecondaryAreas(ap, (next.areasSecondary ?? []) as string[]);
         next.areasSecondary = as;
         next.tags = deriveTags(ap, as);

@@ -198,11 +198,21 @@ function getAreaKeyFromLabel(label: string) {
   const aliases: Record<string, string> = {
     ui: "digital",
     "ui-ux": "digital",
+    "uiux": "digital",
     ux: "digital",
+    package: "embalagem",
+    packaging: "embalagem",
+    "package-design": "embalagem",
+    "pack-design": "embalagem",
+    embalagens: "embalagem",
+    "design-grafico": "design-grafico",
     exibicoes: "exposicoes",
     expografia: "exposicoes",
     documentary: "documental",
     "creative-coding": "programacao-criativa",
+    drinks: "bebidas",
+    fashion: "moda",
+    travel: "viagem",
   };
   return aliases[key] || key;
 }
