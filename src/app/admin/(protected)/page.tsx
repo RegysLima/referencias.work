@@ -345,7 +345,8 @@ function normalizeLocations(
       }>
     | undefined,
   country: string | null | undefined,
-  city: string | null | undefined
+  city: string | null | undefined,
+  preserveEmptyRows = false
 ) {
   const rows = [
     { country, city },
@@ -360,7 +361,10 @@ function normalizeLocations(
   for (const row of rows) {
     const c = normalizeCountryValue(row.country ?? null);
     const ct = normalizeCityValue(row.city ?? null);
-    if (!c && !ct) continue;
+    if (!c && !ct) {
+      if (preserveEmptyRows) out.push({ country: null, city: null });
+      continue;
+    }
     const key = `${(c || "").toLowerCase()}::${(ct || "").toLowerCase()}`;
     if (seen.has(key)) continue;
     seen.add(key);
@@ -780,10 +784,13 @@ export default function AdminPage() {
         const as = normalizeSecondaryAreas(ap, (next.areasSecondary ?? []) as string[]);
         next.areasSecondary = as;
         next.tags = deriveTags(ap, as);
-        const locations = normalizeLocations(next.locations, next.country, next.city);
+        const locations = normalizeLocations(next.locations, next.country, next.city, true);
         next.locations = locations;
-        next.country = locations[0]?.country ? normalizeCountryValue(locations[0].country ?? null) : null;
-        next.city = locations[0]?.city ? normalizeCityValue(locations[0].city ?? null) : null;
+        const firstResolved =
+          locations.find((row) => Boolean(normalizeCountryValue(row?.country ?? null) || normalizeCityValue(row?.city ?? null))) ||
+          null;
+        next.country = firstResolved?.country ? normalizeCountryValue(firstResolved.country ?? null) : null;
+        next.city = firstResolved?.city ? normalizeCityValue(firstResolved.city ?? null) : null;
 
         // se estava "Salvo ✓", volta para idle quando muda algo
         setSaveState((s) => (s === "saved" ? "idle" : s));
@@ -2228,45 +2235,6 @@ export default function AdminPage() {
                           <div className="mb-2 text-[11px] text-zinc-500">
                             Dica: use Tab/Setas/Enter para autocompletar país e cidade.
                           </div>
-                          <button
-                            onClick={async () => {
-                              const u = (i.url || "").trim();
-                              if (!u) return showToast("Preencha a URL primeiro.");
-                              showToast("Buscando localização…");
-                              try {
-                                const res = await fetch(`/api/admin/location?url=${encodeURIComponent(u)}`);
-                                const data = await res.json();
-                                if (data?.country || data?.city) {
-                                  const nextCountry = normalizeCountryValue(data.country ?? i.country ?? null);
-                                  const nextCity = normalizeCityValue(data.city ?? i.city ?? null);
-                                  const rows = i.locations ? [...i.locations] : [];
-                                  const first = rows[0] || { country: null, city: null };
-                                  rows[0] = { ...first, country: nextCountry, city: nextCity };
-                                  updateItem(i.id, {
-                                    country: nextCountry,
-                                    city: nextCity,
-                                    locations: rows,
-                                  });
-                                  setCountryDraft((prev) => ({
-                                    ...prev,
-                                    [i.id]: nextCountry || "",
-                                  }));
-                                  setCityDraft((prev) => ({
-                                    ...prev,
-                                    [i.id]: nextCity || "",
-                                  }));
-                                  showToast("Localização sugerida");
-                                } else {
-                                  showToast("Não encontrei localização no site");
-                                }
-                              } catch {
-                                showToast("Falha ao buscar localização");
-                              }
-                            }}
-                            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
-                          >
-                            Sugerir país/cidade
-                          </button>
                         </div>
                       </div>
 
