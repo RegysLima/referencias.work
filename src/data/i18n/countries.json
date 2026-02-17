@@ -56,13 +56,13 @@
   },
   "china": {
     "pt": "China",
-    "en": "People's Republic of China,China",
+    "en": "China",
     "es": "China"
   },
   "coreia-do-sul": {
     "pt": "Coreia do Sul",
-    "en": "South Korea,Korea, Republic of,Republic of Korea",
-    "es": "República de Corea"
+    "en": "South Korea",
+    "es": "Corea del Sur"
   },
   "croacia": {
     "pt": "Croácia",
@@ -86,8 +86,8 @@
   },
   "estados-unidos": {
     "pt": "Estados Unidos",
-    "en": "",
-    "es": ""
+    "en": "United States",
+    "es": "Estados Unidos"
   },
   "finlandia": {
     "pt": "Finlândia",
@@ -155,9 +155,9 @@
     "es": ""
   },
   "netherlands": {
-    "pt": "Netherlands",
-    "en": "",
-    "es": ""
+    "pt": "Países Baixos",
+    "en": "Netherlands",
+    "es": "Países Bajos"
   },
   "noruega": {
     "pt": "Noruega",
@@ -171,7 +171,7 @@
   },
   "paises-baixos": {
     "pt": "Países Baixos",
-    "en": "Netherlands,The Netherlands,Netherlands (Kingdom of the)",
+    "en": "Netherlands",
     "es": "Países Bajos"
   },
   "paris": {
@@ -191,7 +191,7 @@
   },
   "reino-unido": {
     "pt": "Reino Unido",
-    "en": "United Kingdom,UK,Great Britain",
+    "en": "United Kingdom",
     "es": "Reino Unido"
   },
   "republica-tcheca": {
@@ -201,7 +201,7 @@
   },
   "russia": {
     "pt": "Rússia",
-    "en": "Russian Federation,Russia",
+    "en": "Russia",
     "es": "Rusia"
   },
   "servia": {

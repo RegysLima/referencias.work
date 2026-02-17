@@ -13,6 +13,7 @@ import {
   slugify,
   type Lang,
 } from "@/lib/i18n";
+import { canonicalCity, canonicalCountry, cityKey, countryKey } from "@/lib/location";
 import { sendAnalyticsEvent } from "@/lib/analyticsClient";
 
 type AnyItem = Record<string, unknown>;
@@ -63,12 +64,12 @@ function getUrl(it: AnyItem) {
 
 function getCountry(it: AnyItem) {
   const raw = pickFirstString(it, ["country", "pais", "país"]);
-  return raw.replace(/<[^>]+>/g, "").trim();
+  return canonicalCountry(raw);
 }
 
 function getCity(it: AnyItem) {
   const raw = pickFirstString(it, ["city", "cidade"]);
-  return raw.replace(/<[^>]+>/g, "").trim();
+  return canonicalCity(raw);
 }
 
 function getThumb(it: AnyItem) {
@@ -186,11 +187,11 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
 }
 
 function getCountryKey(it: AnyItem) {
-  return slugify(getCountry(it));
+  return countryKey(getCountry(it));
 }
 
 function getCityKey(it: AnyItem) {
-  return slugify(getCity(it));
+  return cityKey(getCity(it));
 }
 
 function getAreaKeyFromLabel(label: string) {
@@ -218,13 +219,13 @@ function getAreaKeyFromLabel(label: string) {
 }
 
 function getCountryLabel(it: AnyItem, lang: Lang) {
-  const raw = getCountry(it);
+  const raw = canonicalCountry(getCountry(it));
   const key = getCountryKey(it);
   return key ? getLabel(COUNTRY_LABELS, key, lang, raw) : raw;
 }
 
 function getCityLabel(it: AnyItem, lang: Lang) {
-  const raw = getCity(it);
+  const raw = canonicalCity(getCity(it));
   const key = getCityKey(it);
   return key ? getLabel(CITY_LABELS, key, lang, raw) : raw;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { canonicalCity, canonicalCountry } from "@/lib/location";
 
 type RefItem = {
   id: string;
@@ -312,6 +313,16 @@ function normalizeReviewFlags(it: RefItem) {
   };
 }
 
+function normalizeCountryValue(value: string | null | undefined) {
+  const next = canonicalCountry(value ?? "");
+  return next || null;
+}
+
+function normalizeCityValue(value: string | null | undefined) {
+  const next = canonicalCity(value ?? "");
+  return next || null;
+}
+
 type ThumbModalState = {
   open: boolean;
   itemId: string | null;
@@ -386,6 +397,8 @@ export default function AdminPage() {
           macroType,
           areasSecondary: as,
           tags: deriveTags(ap, as),
+          country: normalizeCountryValue(it.country ?? null),
+          city: normalizeCityValue(it.city ?? null),
         };
       });
 
@@ -558,8 +571,8 @@ export default function AdminPage() {
         const area = normalizeSearchText(
           [i.areaPrimary || "", ...(i.areasSecondary || [])].join(" ")
         );
-        const country = normalizeSearchText(i.country || "");
-        const city = normalizeSearchText(i.city || "");
+        const country = normalizeSearchText(normalizeCountryValue(i.country || "") || "");
+        const city = normalizeSearchText(normalizeCityValue(i.city || "") || "");
         const status = normalizeSearchText(
           `${i.reviewedAt ? "revisado" : "nao revisado"} ${hasActiveReviewFlags(i) ? "revisar" : ""}`
         );
@@ -639,6 +652,8 @@ export default function AdminPage() {
         const as = normalizeSecondaryAreas(ap, (next.areasSecondary ?? []) as string[]);
         next.areasSecondary = as;
         next.tags = deriveTags(ap, as);
+        next.country = normalizeCountryValue(next.country);
+        next.city = normalizeCityValue(next.city);
 
         // se estava "Salvo ✓", volta para idle quando muda algo
         setSaveState((s) => (s === "saved" ? "idle" : s));
@@ -1610,6 +1625,11 @@ export default function AdminPage() {
                           <input
                             value={i.country ?? ""}
                             onChange={(e) => updateItem(i.id, { country: e.target.value || null })}
+                            onBlur={(e) =>
+                              updateItem(i.id, {
+                                country: normalizeCountryValue(e.target.value || null),
+                              })
+                            }
                             className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                           />
                         </div>
@@ -1619,6 +1639,11 @@ export default function AdminPage() {
                           <input
                             value={i.city ?? ""}
                             onChange={(e) => updateItem(i.id, { city: e.target.value || null })}
+                            onBlur={(e) =>
+                              updateItem(i.id, {
+                                city: normalizeCityValue(e.target.value || null),
+                              })
+                            }
                             className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                           />
                         </div>

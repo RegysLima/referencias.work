@@ -5,7 +5,7 @@
     "es": "A Coruña"
   },
   "a-coruna-spain": {
-    "pt": "A Coruña (spain)",
+    "pt": "A Coruña",
     "en": "A Coruña",
     "es": "A Coruña"
   },
@@ -80,9 +80,9 @@
     "es": "Berlín"
   },
   "berlin": {
-    "pt": "Berlin",
+    "pt": "Berlim",
     "en": "Berlin",
-    "es": "Berlin"
+    "es": "Berlín"
   },
   "berna": {
     "pt": "Berna",
@@ -405,14 +405,14 @@
     "es": "Nashville"
   },
   "new-york": {
-    "pt": "New York",
+    "pt": "Nova York",
     "en": "New York",
-    "es": "New York"
+    "es": "Nueva York"
   },
   "new-york-city": {
-    "pt": "New York City",
-    "en": "New York City",
-    "es": "Ciudad de Nueva York"
+    "pt": "Nova York",
+    "en": "New York",
+    "es": "Nueva York"
   },
   "north-melbourne": {
     "pt": "North Melbourne",
@@ -607,11 +607,11 @@
   "viena": {
     "pt": "Viena",
     "en": "Vienna",
-    "es": "Vienna"
+    "es": "Viena"
   },
   "vienna": {
-    "pt": "Vienna",
-    "en": "Vienna.",
+    "pt": "Viena",
+    "en": "Vienna",
     "es": "Viena"
   },
   "vilnius": {
