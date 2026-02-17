@@ -330,11 +330,19 @@ export default function AdminAnalyticsPage() {
     [filteredSearchQueries]
   );
   const interactionRows = useMemo(
-    () =>
-      toRows(filteredTypes)
-        .filter(([type]) => type !== "page")
-        .slice(0, 10),
-    [filteredTypes]
+    () => {
+      const base = Object.entries(filteredTypes).filter(([type]) => type !== "page" && type !== "ref");
+
+      const refCountFromRanking = Object.values(filteredRefs).reduce((acc, count) => acc + count, 0);
+      const refCount = range === "all" ? Math.max(summary.refTotal || 0, refCountFromRanking) : refCountFromRanking;
+
+      if (refCount > 0) {
+        base.push(["ref", refCount]);
+      }
+
+      return base.sort((a, b) => b[1] - a[1]).slice(0, 10);
+    },
+    [filteredTypes, filteredRefs, range, summary.refTotal]
   );
   const donationViews = filteredTypes["donation_card_view"] || 0;
   const pixClicks = filteredTypes["donation_pix_click"] || 0;
