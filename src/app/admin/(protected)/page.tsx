@@ -596,10 +596,21 @@ export default function AdminPage() {
         );
 
         let score = 0;
+        let strictScore = 0;
+        let strictMatchedAll = true;
         for (const token of queryTokens) {
+          const nameScore = scoreTokenInText(name, token, 140, 120, 95);
+          const urlScore = scoreTokenInText(url, token, 110, 95, 70);
+          const strictTokenScore = Math.max(nameScore, urlScore);
+          if (!strictTokenScore) {
+            strictMatchedAll = false;
+          } else {
+            strictScore += strictTokenScore;
+          }
+
           const tokenScore = Math.max(
-            scoreTokenInText(name, token, 140, 120, 95),
-            scoreTokenInText(url, token, 110, 95, 70),
+            nameScore,
+            urlScore,
             scoreTokenInText(area, token, 40, 34, 28),
             scoreTokenInText(country, token, 36, 30, 24),
             scoreTokenInText(city, token, 36, 30, 24),
@@ -612,11 +623,22 @@ export default function AdminPage() {
 
         if (normalizedQuery && name.includes(normalizedQuery)) score += 90;
         if (normalizedQuery && url.includes(normalizedQuery)) score += 45;
+        if (strictMatchedAll && normalizedQuery && name.includes(normalizedQuery)) strictScore += 90;
+        if (strictMatchedAll && normalizedQuery && url.includes(normalizedQuery)) strictScore += 45;
+        if (!strictMatchedAll) strictScore = 0;
 
-        return { i, score };
+        return { i, score, strictScore };
       })
-      .filter((entry): entry is { i: RefItem; score: number } => Boolean(entry))
+      .filter((entry): entry is { i: RefItem; score: number; strictScore: number } => Boolean(entry))
       .sort((a, b) => b.score - a.score || (a.i.name || "").localeCompare(b.i.name || ""));
+
+    const strictRanked = ranked.filter((entry) => entry.strictScore > 0);
+    if (strictRanked.length) {
+      strictRanked.sort(
+        (a, b) => b.strictScore - a.strictScore || (a.i.name || "").localeCompare(b.i.name || "")
+      );
+      return strictRanked.map((entry) => entry.i);
+    }
 
     return ranked.map((entry) => entry.i);
   }, [
@@ -1622,7 +1644,17 @@ export default function AdminPage() {
                                   );
                                   return;
                                 }
-                                if (e.key === "Tab" || e.key === "Enter") {
+                                if (e.key === "Tab") {
+                                  if (!suggestions.length) return;
+                                  const pick =
+                                    suggestions[Math.min(primaryAreaSuggestIndex, suggestions.length - 1)];
+                                  setPrimaryAreaDraft((prev) => ({ ...prev, [i.id]: pick }));
+                                  commitPrimaryAreaDraft(i.id, pick);
+                                  setPrimaryAreaSuggestOpenId(null);
+                                  setPrimaryAreaSuggestIndex(0);
+                                  return;
+                                }
+                                if (e.key === "Enter") {
                                   if (!suggestions.length) return;
                                   e.preventDefault();
                                   const pick =
@@ -1719,7 +1751,6 @@ export default function AdminPage() {
                               }
                               if (e.key === "Tab") {
                                 if (!suggestions.length) return;
-                                e.preventDefault();
                                 const pick =
                                   suggestions[Math.min(secondarySuggestIndex, suggestions.length - 1)];
                                 const current = secondaryDraft[i.id] ?? "";
@@ -1731,6 +1762,8 @@ export default function AdminPage() {
                                   )
                                 );
                                 setSecondaryDraft((prev) => ({ ...prev, [i.id]: next }));
+                                applySecondaryAreas(i.id, i.areaPrimary, next);
+                                setSecondarySuggestOpenId(null);
                                 setSecondarySuggestIndex(0);
                                 return;
                               }
@@ -1851,7 +1884,17 @@ export default function AdminPage() {
                                   );
                                   return;
                                 }
-                                if (e.key === "Tab" || e.key === "Enter") {
+                                if (e.key === "Tab") {
+                                  if (!suggestions.length) return;
+                                  const pick =
+                                    suggestions[Math.min(countrySuggestIndex, suggestions.length - 1)];
+                                  setCountryDraft((prev) => ({ ...prev, [i.id]: pick }));
+                                  commitCountryDraft(i.id, pick);
+                                  setCountrySuggestOpenId(null);
+                                  setCountrySuggestIndex(0);
+                                  return;
+                                }
+                                if (e.key === "Enter") {
                                   if (!suggestions.length) return;
                                   e.preventDefault();
                                   const pick =
@@ -1954,7 +1997,17 @@ export default function AdminPage() {
                                   );
                                   return;
                                 }
-                                if (e.key === "Tab" || e.key === "Enter") {
+                                if (e.key === "Tab") {
+                                  if (!suggestions.length) return;
+                                  const pick =
+                                    suggestions[Math.min(citySuggestIndex, suggestions.length - 1)];
+                                  setCityDraft((prev) => ({ ...prev, [i.id]: pick }));
+                                  commitCityDraft(i.id, pick);
+                                  setCitySuggestOpenId(null);
+                                  setCitySuggestIndex(0);
+                                  return;
+                                }
+                                if (e.key === "Enter") {
                                   if (!suggestions.length) return;
                                   e.preventDefault();
                                   const pick =
