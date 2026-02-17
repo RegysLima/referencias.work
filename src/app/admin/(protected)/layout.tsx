@@ -37,6 +37,10 @@ export default async function AdminProtectedLayout({
             <Link href="/admin/analytics" className="hover:text-zinc-200">
               Analytics
             </Link>
+            <span className="text-zinc-700">/</span>
+            <Link href="/admin/prospects" className="hover:text-zinc-200">
+              Prospects
+            </Link>
           </nav>
         </div>
       </div>

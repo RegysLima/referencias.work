@@ -1,0 +1,230 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import type { ProspectsDB, ProspectStatus } from "@/lib/types";
+
+const EMPTY: ProspectsDB = {
+  count: 0,
+  items: [],
+  updatedAt: null,
+  lastRun: null,
+};
+
+function labelStatus(value: ProspectStatus) {
+  if (value === "new") return "Novo";
+  if (value === "approved") return "Aprovado";
+  return "Descartado";
+}
+
+function formatDate(value: string | null | undefined) {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleString("pt-BR");
+}
+
+export default function AdminProspectsPage() {
+  const [data, setData] = useState<ProspectsDB>(EMPTY);
+  const [loading, setLoading] = useState(false);
+  const [collecting, setCollecting] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<"all" | ProspectStatus>("new");
+  const [error, setError] = useState<string>("");
+
+  async function loadData() {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/prospects", { cache: "no-store" });
+      if (!res.ok) throw new Error("Falha ao carregar prospects");
+      const json = (await res.json()) as ProspectsDB;
+      setData({ ...EMPTY, ...json });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Erro inesperado";
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function runCollect() {
+    setCollecting(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/prospects/collect", { method: "POST" });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Falha na coleta");
+      }
+      await loadData();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Erro inesperado";
+      setError(msg);
+    } finally {
+      setCollecting(false);
+    }
+  }
+
+  async function patchItem(id: string, payload: { status?: ProspectStatus; notes?: string | null }) {
+    try {
+      setError("");
+      const res = await fetch("/api/admin/prospects", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id, ...payload }),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Falha ao atualizar prospect");
+      }
+      await loadData();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Erro inesperado";
+      setError(msg);
+    }
+  }
+
+  useEffect(() => {
+    void loadData();
+  }, []);
+
+  const filteredItems = useMemo(() => {
+    if (statusFilter === "all") return data.items;
+    return data.items.filter((item) => item.status === statusFilter);
+  }, [data.items, statusFilter]);
+
+  return (
+    <main className="mx-auto w-full max-w-7xl px-6 pb-12 pt-8 sm:px-10 lg:px-12">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-semibold text-zinc-100">Prospects de Referências</h1>
+          <p className="text-sm text-zinc-400">
+            Coleta automática de autores (visualjournal.it + visuelle.co.uk) e comparação com domínios já cadastrados.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={loadData}
+            disabled={loading}
+            className="h-10 rounded-none border border-zinc-800 px-4 text-sm text-zinc-200 hover:border-zinc-600 disabled:opacity-50"
+          >
+            {loading ? "Atualizando..." : "Atualizar"}
+          </button>
+          <button
+            onClick={runCollect}
+            disabled={collecting}
+            className="h-10 rounded-none border border-zinc-200 bg-zinc-100 px-4 text-sm text-zinc-950 hover:bg-zinc-200 disabled:opacity-50"
+          >
+            {collecting ? "Coletando..." : "Executar coleta"}
+          </button>
+        </div>
+      </div>
+
+      <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-4">
+        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Total</div>
+          <div className="mt-1 text-2xl text-zinc-100">{data.count}</div>
+        </div>
+        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Novos</div>
+          <div className="mt-1 text-2xl text-zinc-100">
+            {data.items.filter((item) => item.status === "new").length}
+          </div>
+        </div>
+        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Última coleta</div>
+          <div className="mt-1 text-sm text-zinc-200">{formatDate(data.lastRun?.ranAt)}</div>
+        </div>
+        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Páginas rastreadas</div>
+          <div className="mt-1 text-2xl text-zinc-100">{data.lastRun?.crawledPages || 0}</div>
+        </div>
+      </div>
+
+      <div className="mb-4 flex items-center gap-3">
+        <label className="text-sm text-zinc-400">Status:</label>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as "all" | ProspectStatus)}
+          className="h-10 rounded-none border border-zinc-800 bg-zinc-950 px-3 text-sm text-zinc-100"
+        >
+          <option value="new">Novos</option>
+          <option value="all">Todos</option>
+          <option value="approved">Aprovados</option>
+          <option value="rejected">Descartados</option>
+        </select>
+      </div>
+
+      {error ? (
+        <div className="mb-4 rounded-none border border-red-900/70 bg-red-950/40 p-3 text-sm text-red-300">
+          {error}
+        </div>
+      ) : null}
+
+      <div className="rounded-none border border-zinc-900">
+        <div className="grid grid-cols-12 border-b border-zinc-900 bg-zinc-950/80 px-3 py-2 text-xs uppercase tracking-[0.16em] text-zinc-500">
+          <div className="col-span-3">Domínio</div>
+          <div className="col-span-2">Origens</div>
+          <div className="col-span-2">Última coleta</div>
+          <div className="col-span-2">Status</div>
+          <div className="col-span-3">Ações</div>
+        </div>
+
+        {filteredItems.length === 0 ? (
+          <div className="p-4 text-sm text-zinc-400">Nenhum prospect para o filtro atual.</div>
+        ) : (
+          filteredItems.map((item) => (
+            <div
+              key={item.id}
+              className="grid grid-cols-12 items-center gap-2 border-b border-zinc-900 px-3 py-3 text-sm text-zinc-200"
+            >
+              <div className="col-span-3">
+                <div className="font-medium text-zinc-100">{item.displayName || item.domain}</div>
+                <div className="text-xs text-zinc-500">{item.domain}</div>
+                {item.homepageUrl ? (
+                  <a
+                    href={item.homepageUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-zinc-400 underline hover:text-zinc-200"
+                  >
+                    abrir site
+                  </a>
+                ) : null}
+              </div>
+
+              <div className="col-span-2 text-xs text-zinc-400">
+                {item.sources.length} links<br />
+                {item.occurrences} ocorrências
+              </div>
+
+              <div className="col-span-2 text-xs text-zinc-400">{formatDate(item.lastSeenAt)}</div>
+
+              <div className="col-span-2 text-xs text-zinc-300">{labelStatus(item.status)}</div>
+
+              <div className="col-span-3 flex flex-wrap gap-2">
+                <button
+                  onClick={() => patchItem(item.id, { status: "approved" })}
+                  className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
+                >
+                  Aprovar
+                </button>
+                <button
+                  onClick={() => patchItem(item.id, { status: "rejected" })}
+                  className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
+                >
+                  Descartar
+                </button>
+                <button
+                  onClick={() => patchItem(item.id, { status: "new" })}
+                  className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
+                >
+                  Reabrir
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </main>
+  );
+}
