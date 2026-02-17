@@ -80,15 +80,6 @@ function canonAreaLabel(value: string) {
   return AREA_CANON_MAP[key] || raw;
 }
 
-function parseSecondary(text: string) {
-  const arr = (text ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-
-  return uniq(arr.map(canonAreaLabel).filter(Boolean));
-}
-
 function normalizeSecondaryAreas(primary: string | null | undefined, secondary: string[] | undefined) {
   const primaryLabel = canonAreaLabel(primary ?? "");
   const primaryCanon = primaryLabel.toLowerCase();
@@ -342,6 +333,8 @@ export default function AdminPage() {
 
   const [openId, setOpenId] = useState<string | null>(null);
   const [secondaryDraft, setSecondaryDraft] = useState<Record<string, string>>({});
+  const [secondarySuggestOpenId, setSecondarySuggestOpenId] = useState<string | null>(null);
+  const [secondarySuggestIndex, setSecondarySuggestIndex] = useState(0);
 
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [saveMessage, setSaveMessage] = useState<string>("");
@@ -662,10 +655,93 @@ export default function AdminPage() {
     return areaMap.get(key) || "";
   }
 
+  const areaOptionIndex = useMemo(() => {
+    const entries = areaOptions.map((label) => {
+      const norm = normalizeSearchText(label);
+      return {
+        label,
+        norm,
+        tokens: norm.split(/\s+/).filter(Boolean),
+      };
+    });
+    entries.sort((a, b) => b.tokens.length - a.tokens.length);
+    return entries;
+  }, [areaOptions]);
+
+  function parseSecondaryFromInput(text: string) {
+    const normalizedText = normalizeSearchText(
+      (text || "").replace(/[,;|]+/g, " ")
+    );
+    const words = normalizedText.split(/\s+/).filter(Boolean);
+    const found: string[] = [];
+    let invalidCount = 0;
+
+    let i = 0;
+    while (i < words.length) {
+      let matched: { label: string; tokensLen: number } | null = null;
+      for (const option of areaOptionIndex) {
+        const len = option.tokens.length;
+        if (!len || i + len > words.length) continue;
+        let ok = true;
+        for (let j = 0; j < len; j += 1) {
+          if (words[i + j] !== option.tokens[j]) {
+            ok = false;
+            break;
+          }
+        }
+        if (ok) {
+          matched = { label: option.label, tokensLen: len };
+          break;
+        }
+      }
+
+      if (matched) {
+        found.push(matched.label);
+        i += matched.tokensLen;
+        continue;
+      }
+
+      const single = words[i] || "";
+      const canon = canonAreaLabel(single);
+      const normalized = normalizeAreaValue(canon);
+      if (normalized) {
+        found.push(normalized);
+      } else {
+        invalidCount += 1;
+      }
+      i += 1;
+    }
+
+    return { values: uniq(found), invalidCount };
+  }
+
+  function getSecondarySuggestions(draft: string) {
+    const words = normalizeSearchText(draft).split(/\s+/).filter(Boolean);
+    const query = words[words.length - 1] || "";
+    if (!query) return areaOptions.slice(0, 8);
+    return areaOptions
+      .filter((option) => {
+        const n = normalizeSearchText(option);
+        return n.startsWith(query) || n.includes(` ${query}`);
+      })
+      .slice(0, 8);
+  }
+
+  function applySecondarySuggestion(draft: string, suggestion: string) {
+    const rawWords = (draft || "")
+      .replace(/[,;|]+/g, " ")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+    if (!rawWords.length) return `${suggestion} `;
+    rawWords[rawWords.length - 1] = suggestion;
+    return `${rawWords.join(" ")} `;
+  }
+
   function applySecondaryAreas(id: string, primaryArea: string | null | undefined, draftValue: string) {
-    const raw = parseSecondary(draftValue);
-    const normalized = raw.map((v) => normalizeAreaValue(v)).filter(Boolean);
-    if (normalized.length !== raw.length) {
+    const { values, invalidCount } = parseSecondaryFromInput(draftValue);
+    const normalized = values.map((v) => normalizeAreaValue(v)).filter(Boolean);
+    if (invalidCount > 0) {
       showToast("Algumas áreas secundárias não existem na lista.");
     }
     const parsed = normalizeSecondaryAreas(primaryArea ?? "", normalized);
@@ -1393,29 +1469,120 @@ export default function AdminPage() {
                       </div>
 
                       <div>
-                        <label className="text-xs text-zinc-400">
-                          Áreas secundárias (até 4, separadas por vírgula)
-                        </label>
-                        <input
-                          value={secondaryDraft[i.id] ?? ""}
-                          onChange={(e) =>
-                            setSecondaryDraft((prev) => ({ ...prev, [i.id]: e.target.value }))
-                          }
-                          onBlur={() =>
-                            applySecondaryAreas(i.id, i.areaPrimary, secondaryDraft[i.id] ?? "")
-                          }
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              applySecondaryAreas(i.id, i.areaPrimary, secondaryDraft[i.id] ?? "");
-                            }
-                          }}
-                          list="area-options"
-                          placeholder="Ex: Editorial, Digital, Tipografia, Identidade"
-                          className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-                        />
+                        <label className="text-xs text-zinc-400">Áreas secundárias (até 4)</label>
+                        <div className="relative mt-1">
+                          <input
+                            value={secondaryDraft[i.id] ?? ""}
+                            onChange={(e) => {
+                              setSecondaryDraft((prev) => ({ ...prev, [i.id]: e.target.value }));
+                              setSecondarySuggestOpenId(i.id);
+                              setSecondarySuggestIndex(0);
+                            }}
+                            onFocus={() => {
+                              setSecondarySuggestOpenId(i.id);
+                              setSecondarySuggestIndex(0);
+                            }}
+                            onBlur={() => {
+                              window.setTimeout(() => {
+                                applySecondaryAreas(i.id, i.areaPrimary, secondaryDraft[i.id] ?? "");
+                                setSecondarySuggestOpenId((prev) => (prev === i.id ? null : prev));
+                              }, 120);
+                            }}
+                            onKeyDown={(e) => {
+                              const suggestions = getSecondarySuggestions(secondaryDraft[i.id] ?? "");
+                              if (e.key === "ArrowDown") {
+                                e.preventDefault();
+                                if (!suggestions.length) return;
+                                setSecondarySuggestOpenId(i.id);
+                                setSecondarySuggestIndex((idx) =>
+                                  idx + 1 >= suggestions.length ? 0 : idx + 1
+                                );
+                                return;
+                              }
+                              if (e.key === "ArrowUp") {
+                                e.preventDefault();
+                                if (!suggestions.length) return;
+                                setSecondarySuggestOpenId(i.id);
+                                setSecondarySuggestIndex((idx) =>
+                                  idx - 1 < 0 ? suggestions.length - 1 : idx - 1
+                                );
+                                return;
+                              }
+                              if (e.key === "Tab") {
+                                if (!suggestions.length) return;
+                                e.preventDefault();
+                                const pick =
+                                  suggestions[Math.min(secondarySuggestIndex, suggestions.length - 1)];
+                                const next = applySecondarySuggestion(
+                                  secondaryDraft[i.id] ?? "",
+                                  pick
+                                );
+                                setSecondaryDraft((prev) => ({ ...prev, [i.id]: next }));
+                                setSecondarySuggestIndex(0);
+                                return;
+                              }
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                if (suggestions.length && secondarySuggestOpenId === i.id) {
+                                  const pick =
+                                    suggestions[Math.min(secondarySuggestIndex, suggestions.length - 1)];
+                                  const next = applySecondarySuggestion(
+                                    secondaryDraft[i.id] ?? "",
+                                    pick
+                                  );
+                                  setSecondaryDraft((prev) => ({ ...prev, [i.id]: next }));
+                                  setSecondarySuggestIndex(0);
+                                  return;
+                                }
+                                applySecondaryAreas(i.id, i.areaPrimary, secondaryDraft[i.id] ?? "");
+                                setSecondarySuggestOpenId(null);
+                                return;
+                              }
+                              if (e.key === "Escape") {
+                                setSecondarySuggestOpenId(null);
+                              }
+                            }}
+                            placeholder="Ex: Moda Beleza Tipografia"
+                            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                          />
+                          {secondarySuggestOpenId === i.id ? (
+                            <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                              {getSecondarySuggestions(secondaryDraft[i.id] ?? "").length ? (
+                                getSecondarySuggestions(secondaryDraft[i.id] ?? "").map(
+                                  (option, idx) => (
+                                    <button
+                                      key={`${i.id}-${option}`}
+                                      type="button"
+                                      onMouseDown={(e) => {
+                                        e.preventDefault();
+                                        const next = applySecondarySuggestion(
+                                          secondaryDraft[i.id] ?? "",
+                                          option
+                                        );
+                                        setSecondaryDraft((prev) => ({ ...prev, [i.id]: next }));
+                                        setSecondarySuggestIndex(0);
+                                      }}
+                                      className={[
+                                        "w-full px-3 py-2 text-left text-sm transition",
+                                        idx === secondarySuggestIndex
+                                          ? "bg-zinc-800 text-zinc-100"
+                                          : "text-zinc-300 hover:bg-zinc-900",
+                                      ].join(" ")}
+                                    >
+                                      {option}
+                                    </button>
+                                  )
+                                )
+                              ) : (
+                                <div className="px-3 py-2 text-sm text-zinc-500">
+                                  Nenhuma sugestão
+                                </div>
+                              )}
+                            </div>
+                          ) : null}
+                        </div>
                         <div className="mt-1 text-[11px] text-zinc-500">
-                          Dica: autocomplete disponível no próprio campo. Pressione Enter ou saia do campo para organizar.
+                          Dica: digite e use Tab/Setas/Enter para completar. Espaço separa categorias.
                         </div>
                       </div>
 
