@@ -1210,15 +1210,15 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <div className="border border-zinc-200">
               <div className="aspect-[16/9] w-full overflow-hidden bg-zinc-100 relative">
                 {getThumb(spotlight) ? (
-                    isVimeoUrl(getThumb(spotlight)) ? (
+                    isVideoUrl(getThumb(spotlight)) ? (
+                    <VideoThumb src={getThumb(spotlight)} className="h-full w-full object-cover" />
+                  ) : isVimeoUrl(getThumb(spotlight)) ? (
                     <iframe
                       src={getVimeoEmbedSrc(getThumb(spotlight))}
                       title=""
                       allow="autoplay; fullscreen; picture-in-picture"
                       className="h-full w-full pointer-events-none absolute inset-0"
                     />
-                  ) : isVideoUrl(getThumb(spotlight)) ? (
-                    <VideoThumb src={getThumb(spotlight)} className="h-full w-full object-cover" />
                   ) : (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={getThumb(spotlight)} alt="" className="h-full w-full object-cover" />
@@ -1346,7 +1346,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               >
                 <div className="aspect-[4/3] w-full overflow-hidden bg-zinc-100 relative">
                   {thumb ? (
-                    isVimeoUrl(thumb) ? (
+                    isVideoUrl(thumb) ? (
+                      <VideoThumb
+                        src={thumb}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                      />
+                    ) : isVimeoUrl(thumb) ? (
                       <iframe
                         src={getVimeoEmbedSrc(thumb)}
                         title=""
@@ -1358,11 +1363,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                           minWidth: "100%",
                           minHeight: "100%",
                         }}
-                      />
-                    ) : isVideoUrl(thumb) ? (
-                      <VideoThumb
-                        src={thumb}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                       />
                     ) : (
                       // eslint-disable-next-line @next/next/no-img-element

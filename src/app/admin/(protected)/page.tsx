@@ -1387,7 +1387,12 @@ export default function AdminPage() {
                   >
                     <div className="aspect-[16/10] w-full bg-zinc-950 relative overflow-hidden">
                       {i.thumbnailUrl ? (
-                        isVimeoUrl(i.thumbnailUrl) ? (
+                        isVideoUrl(i.thumbnailUrl) ? (
+                          <VideoThumb
+                            src={i.thumbnailUrl}
+                            className="h-full w-full object-cover transition group-hover:scale-[1.01]"
+                          />
+                        ) : isVimeoUrl(i.thumbnailUrl) ? (
                           <iframe
                             src={getVimeoEmbedSrc(i.thumbnailUrl)}
                             title=""
@@ -1399,11 +1404,6 @@ export default function AdminPage() {
                               minWidth: "100%",
                               minHeight: "100%",
                             }}
-                          />
-                        ) : isVideoUrl(i.thumbnailUrl) ? (
-                          <VideoThumb
-                            src={i.thumbnailUrl}
-                            className="h-full w-full object-cover transition group-hover:scale-[1.01]"
                           />
                         ) : (
                           // eslint-disable-next-line @next/next/no-img-element
