@@ -405,6 +405,9 @@ export default function AdminPage() {
   const [cityDraft, setCityDraft] = useState<Record<string, string>>({});
   const [citySuggestOpenId, setCitySuggestOpenId] = useState<string | null>(null);
   const [citySuggestIndex, setCitySuggestIndex] = useState(0);
+  const [locationDraft, setLocationDraft] = useState<Record<string, string>>({});
+  const [locationSuggestOpenKey, setLocationSuggestOpenKey] = useState<string | null>(null);
+  const [locationSuggestIndex, setLocationSuggestIndex] = useState(0);
 
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [saveMessage, setSaveMessage] = useState<string>("");
@@ -469,14 +472,23 @@ export default function AdminPage() {
       const draft: Record<string, string> = {};
       const countryDraftMap: Record<string, string> = {};
       const cityDraftMap: Record<string, string> = {};
+      const locationDraftMap: Record<string, string> = {};
       for (const it of normalized) primaryAreaDraftMap[it.id] = (it.areaPrimary ?? "").trim();
       for (const it of normalized) draft[it.id] = (it.areasSecondary ?? []).join(", ");
       for (const it of normalized) countryDraftMap[it.id] = (it.country ?? "").trim();
       for (const it of normalized) cityDraftMap[it.id] = (it.city ?? "").trim();
+      for (const it of normalized) {
+        for (let idx = 1; idx < (it.locations || []).length; idx += 1) {
+          const row = it.locations?.[idx];
+          locationDraftMap[`${it.id}:${idx}:country`] = (row?.country ?? "").trim();
+          locationDraftMap[`${it.id}:${idx}:city`] = (row?.city ?? "").trim();
+        }
+      }
       setPrimaryAreaDraft(primaryAreaDraftMap);
       setSecondaryDraft(draft);
       setCountryDraft(countryDraftMap);
       setCityDraft(cityDraftMap);
+      setLocationDraft(locationDraftMap);
     })();
   }, []);
 
@@ -988,10 +1000,37 @@ export default function AdminPage() {
     updateItem(id, { locations: rows });
   }
 
+  function commitLocationDraft(
+    id: string,
+    rowIndex: number,
+    field: "country" | "city",
+    value: string
+  ) {
+    const normalized =
+      field === "country"
+        ? normalizeCountryValue(value || null)
+        : normalizeCityValue(value || null);
+    setLocationDraft((prev) => ({
+      ...prev,
+      [`${id}:${rowIndex}:${field}`]: normalized || "",
+    }));
+    if (field === "country") {
+      updateLocationRow(id, rowIndex, { country: normalized });
+    } else {
+      updateLocationRow(id, rowIndex, { city: normalized });
+    }
+  }
+
   function addLocationRow(id: string) {
     const current = items.find((it) => it.id === id);
     const rows = current?.locations ? [...current.locations] : [];
+    const rowIndex = rows.length;
     rows.push({ country: null, city: null });
+    setLocationDraft((prev) => ({
+      ...prev,
+      [`${id}:${rowIndex}:country`]: "",
+      [`${id}:${rowIndex}:city`]: "",
+    }));
     updateItem(id, { locations: rows });
   }
 
@@ -1000,6 +1039,12 @@ export default function AdminPage() {
     const rows = current?.locations ? [...current.locations] : [];
     if (rowIndex <= 0 || rowIndex >= rows.length) return;
     rows.splice(rowIndex, 1);
+    setLocationDraft((prev) => {
+      const copy = { ...prev };
+      delete copy[`${id}:${rowIndex}:country`];
+      delete copy[`${id}:${rowIndex}:city`];
+      return copy;
+    });
     updateItem(id, { locations: rows });
   }
 
@@ -2189,21 +2234,137 @@ export default function AdminPage() {
 
                         {((i.locations || []).slice(1)).map((row, idx) => {
                           const rowIndex = idx + 1;
+                          const countryFieldKey = `${i.id}:${rowIndex}:country`;
+                          const cityFieldKey = `${i.id}:${rowIndex}:city`;
                           return (
                             <div key={`${i.id}-location-${rowIndex}`} className="contents">
                               <div>
-                                <label className="text-xs text-zinc-500">País adicional {rowIndex}</label>
-                                <input
-                                  value={row?.country ?? ""}
-                                  onChange={(e) =>
-                                    updateLocationRow(i.id, rowIndex, { country: e.target.value || null })
-                                  }
-                                  className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-                                />
+                                <div className="relative mt-1">
+                                  <input
+                                    value={locationDraft[countryFieldKey] ?? row?.country ?? ""}
+                                    placeholder="País adicional"
+                                    onChange={(e) => {
+                                      setLocationDraft((prev) => ({
+                                        ...prev,
+                                        [countryFieldKey]: e.target.value,
+                                      }));
+                                      setLocationSuggestOpenKey(countryFieldKey);
+                                      setLocationSuggestIndex(0);
+                                    }}
+                                    onFocus={() => {
+                                      setLocationSuggestOpenKey(countryFieldKey);
+                                      setLocationSuggestIndex(0);
+                                    }}
+                                    onBlur={() => {
+                                      window.setTimeout(() => {
+                                        commitLocationDraft(
+                                          i.id,
+                                          rowIndex,
+                                          "country",
+                                          locationDraft[countryFieldKey] ?? row?.country ?? ""
+                                        );
+                                        setLocationSuggestOpenKey((prev) =>
+                                          prev === countryFieldKey ? null : prev
+                                        );
+                                      }, 120);
+                                    }}
+                                    onKeyDown={(e) => {
+                                      const suggestions = getLocationSuggestions(
+                                        locationDraft[countryFieldKey] ?? row?.country ?? "",
+                                        countryOptions,
+                                        normalizeCountryValue
+                                      );
+                                      if (e.key === "ArrowDown") {
+                                        e.preventDefault();
+                                        if (!suggestions.length) return;
+                                        setLocationSuggestOpenKey(countryFieldKey);
+                                        setLocationSuggestIndex((s) =>
+                                          s + 1 >= suggestions.length ? 0 : s + 1
+                                        );
+                                        return;
+                                      }
+                                      if (e.key === "ArrowUp") {
+                                        e.preventDefault();
+                                        if (!suggestions.length) return;
+                                        setLocationSuggestOpenKey(countryFieldKey);
+                                        setLocationSuggestIndex((s) =>
+                                          s - 1 < 0 ? suggestions.length - 1 : s - 1
+                                        );
+                                        return;
+                                      }
+                                      if (e.key === "Tab") {
+                                        if (!suggestions.length) return;
+                                        const pick =
+                                          suggestions[Math.min(locationSuggestIndex, suggestions.length - 1)];
+                                        setLocationDraft((prev) => ({ ...prev, [countryFieldKey]: pick }));
+                                        commitLocationDraft(i.id, rowIndex, "country", pick);
+                                        setLocationSuggestOpenKey(null);
+                                        setLocationSuggestIndex(0);
+                                        return;
+                                      }
+                                      if (e.key === "Enter") {
+                                        if (!suggestions.length) return;
+                                        e.preventDefault();
+                                        const pick =
+                                          suggestions[Math.min(locationSuggestIndex, suggestions.length - 1)];
+                                        setLocationDraft((prev) => ({ ...prev, [countryFieldKey]: pick }));
+                                        commitLocationDraft(i.id, rowIndex, "country", pick);
+                                        setLocationSuggestOpenKey(null);
+                                        setLocationSuggestIndex(0);
+                                        return;
+                                      }
+                                      if (e.key === "Escape") {
+                                        setLocationSuggestOpenKey(null);
+                                      }
+                                    }}
+                                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                                  />
+                                  {locationSuggestOpenKey === countryFieldKey ? (
+                                    <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                                      {getLocationSuggestions(
+                                        locationDraft[countryFieldKey] ?? row?.country ?? "",
+                                        countryOptions,
+                                        normalizeCountryValue
+                                      ).length ? (
+                                        getLocationSuggestions(
+                                          locationDraft[countryFieldKey] ?? row?.country ?? "",
+                                          countryOptions,
+                                          normalizeCountryValue
+                                        ).map((option, optionIdx) => (
+                                          <button
+                                            key={`${countryFieldKey}-${option}`}
+                                            type="button"
+                                            onMouseDown={(e) => {
+                                              e.preventDefault();
+                                              setLocationDraft((prev) => ({
+                                                ...prev,
+                                                [countryFieldKey]: option,
+                                              }));
+                                              commitLocationDraft(i.id, rowIndex, "country", option);
+                                              setLocationSuggestOpenKey(null);
+                                              setLocationSuggestIndex(0);
+                                            }}
+                                            className={[
+                                              "w-full px-3 py-2 text-left text-sm transition",
+                                              optionIdx === locationSuggestIndex
+                                                ? "bg-zinc-800 text-zinc-100"
+                                                : "text-zinc-300 hover:bg-zinc-900",
+                                            ].join(" ")}
+                                          >
+                                            {option}
+                                          </button>
+                                        ))
+                                      ) : (
+                                        <div className="px-3 py-2 text-sm text-zinc-500">
+                                          Nenhuma sugestão
+                                        </div>
+                                      )}
+                                    </div>
+                                  ) : null}
+                                </div>
                               </div>
                               <div>
                                 <div className="flex items-center justify-between">
-                                  <label className="text-xs text-zinc-500">Cidade adicional {rowIndex}</label>
                                   <button
                                     type="button"
                                     onClick={() => removeLocationRow(i.id, rowIndex)}
@@ -2212,13 +2373,129 @@ export default function AdminPage() {
                                     remover
                                   </button>
                                 </div>
-                                <input
-                                  value={row?.city ?? ""}
-                                  onChange={(e) =>
-                                    updateLocationRow(i.id, rowIndex, { city: e.target.value || null })
-                                  }
-                                  className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-                                />
+                                <div className="relative mt-1">
+                                  <input
+                                    value={locationDraft[cityFieldKey] ?? row?.city ?? ""}
+                                    placeholder="Cidade adicional"
+                                    onChange={(e) => {
+                                      setLocationDraft((prev) => ({
+                                        ...prev,
+                                        [cityFieldKey]: e.target.value,
+                                      }));
+                                      setLocationSuggestOpenKey(cityFieldKey);
+                                      setLocationSuggestIndex(0);
+                                    }}
+                                    onFocus={() => {
+                                      setLocationSuggestOpenKey(cityFieldKey);
+                                      setLocationSuggestIndex(0);
+                                    }}
+                                    onBlur={() => {
+                                      window.setTimeout(() => {
+                                        commitLocationDraft(
+                                          i.id,
+                                          rowIndex,
+                                          "city",
+                                          locationDraft[cityFieldKey] ?? row?.city ?? ""
+                                        );
+                                        setLocationSuggestOpenKey((prev) =>
+                                          prev === cityFieldKey ? null : prev
+                                        );
+                                      }, 120);
+                                    }}
+                                    onKeyDown={(e) => {
+                                      const suggestions = getLocationSuggestions(
+                                        locationDraft[cityFieldKey] ?? row?.city ?? "",
+                                        cityOptions,
+                                        normalizeCityValue
+                                      );
+                                      if (e.key === "ArrowDown") {
+                                        e.preventDefault();
+                                        if (!suggestions.length) return;
+                                        setLocationSuggestOpenKey(cityFieldKey);
+                                        setLocationSuggestIndex((s) =>
+                                          s + 1 >= suggestions.length ? 0 : s + 1
+                                        );
+                                        return;
+                                      }
+                                      if (e.key === "ArrowUp") {
+                                        e.preventDefault();
+                                        if (!suggestions.length) return;
+                                        setLocationSuggestOpenKey(cityFieldKey);
+                                        setLocationSuggestIndex((s) =>
+                                          s - 1 < 0 ? suggestions.length - 1 : s - 1
+                                        );
+                                        return;
+                                      }
+                                      if (e.key === "Tab") {
+                                        if (!suggestions.length) return;
+                                        const pick =
+                                          suggestions[Math.min(locationSuggestIndex, suggestions.length - 1)];
+                                        setLocationDraft((prev) => ({ ...prev, [cityFieldKey]: pick }));
+                                        commitLocationDraft(i.id, rowIndex, "city", pick);
+                                        setLocationSuggestOpenKey(null);
+                                        setLocationSuggestIndex(0);
+                                        return;
+                                      }
+                                      if (e.key === "Enter") {
+                                        if (!suggestions.length) return;
+                                        e.preventDefault();
+                                        const pick =
+                                          suggestions[Math.min(locationSuggestIndex, suggestions.length - 1)];
+                                        setLocationDraft((prev) => ({ ...prev, [cityFieldKey]: pick }));
+                                        commitLocationDraft(i.id, rowIndex, "city", pick);
+                                        setLocationSuggestOpenKey(null);
+                                        setLocationSuggestIndex(0);
+                                        return;
+                                      }
+                                      if (e.key === "Escape") {
+                                        setLocationSuggestOpenKey(null);
+                                      }
+                                    }}
+                                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                                  />
+                                  {locationSuggestOpenKey === cityFieldKey ? (
+                                    <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                                      {getLocationSuggestions(
+                                        locationDraft[cityFieldKey] ?? row?.city ?? "",
+                                        cityOptions,
+                                        normalizeCityValue
+                                      ).length ? (
+                                        getLocationSuggestions(
+                                          locationDraft[cityFieldKey] ?? row?.city ?? "",
+                                          cityOptions,
+                                          normalizeCityValue
+                                        ).map((option, optionIdx) => (
+                                          <button
+                                            key={`${cityFieldKey}-${option}`}
+                                            type="button"
+                                            onMouseDown={(e) => {
+                                              e.preventDefault();
+                                              setLocationDraft((prev) => ({
+                                                ...prev,
+                                                [cityFieldKey]: option,
+                                              }));
+                                              commitLocationDraft(i.id, rowIndex, "city", option);
+                                              setLocationSuggestOpenKey(null);
+                                              setLocationSuggestIndex(0);
+                                            }}
+                                            className={[
+                                              "w-full px-3 py-2 text-left text-sm transition",
+                                              optionIdx === locationSuggestIndex
+                                                ? "bg-zinc-800 text-zinc-100"
+                                                : "text-zinc-300 hover:bg-zinc-900",
+                                            ].join(" ")}
+                                          >
+                                            {option}
+                                          </button>
+                                        ))
+                                      ) : (
+                                        <div className="px-3 py-2 text-sm text-zinc-500">
+                                          Nenhuma sugestão
+                                        </div>
+                                      )}
+                                    </div>
+                                  ) : null}
+                                </div>
                               </div>
                             </div>
                           );
