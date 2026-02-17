@@ -109,8 +109,13 @@ const BLOCKED_CANDIDATE_KEYWORDS = [
   "podcast",
   "podcasts",
   "spotify",
+  "open.spotify",
   "apple podcast",
+  "apple podcasts",
+  "podcasts.apple",
+  "itunes",
   "buy me a coffee",
+  "buymeacoffee",
   "donate",
   "donation",
   "newsletter",
@@ -211,6 +216,29 @@ function hasBlockedCandidateKeyword(text: string) {
   return BLOCKED_CANDIDATE_KEYWORDS.some(
     (token) => clean.includes(token) || clean.replace(/\s+/g, "").includes(token.replace(/\s+/g, ""))
   );
+}
+
+function isNoisyCandidate(input: {
+  domain?: string | null;
+  homepageUrl?: string | null;
+  displayName?: string | null;
+  sourcePageUrl?: string | null;
+  label?: string | null;
+}) {
+  const domain = (input.domain || "").toLowerCase().trim();
+  if (domain && isBlockedDomain(domain)) return true;
+
+  const bag = [
+    input.domain || "",
+    input.homepageUrl || "",
+    input.displayName || "",
+    input.sourcePageUrl || "",
+    input.label || "",
+  ]
+    .join(" ")
+    .trim();
+
+  return hasBlockedCandidateKeyword(bag);
 }
 
 function scoreCandidate(anchorText: string, contextText: string) {
@@ -504,7 +532,15 @@ async function finalizeCollection(db: ProspectsDB, state: CrawlState): Promise<C
   const referencesDb = await readReferencesDb();
   const refDomainSet = existingReferenceDomains(referencesDb.items.map((item) => item.url));
 
-  const incoming = dedupCandidatesFromState(state);
+  const incoming = dedupCandidatesFromState(state).filter((candidate) => {
+    return !isNoisyCandidate({
+      domain: candidate.domain,
+      homepageUrl: candidate.homepageUrl,
+      displayName: candidate.displayName,
+      sourcePageUrl: candidate.sourcePageUrl,
+      label: candidate.displayName,
+    });
+  });
   const now = new Date().toISOString();
 
   let skippedAlreadyKnownDomains = 0;
@@ -512,7 +548,17 @@ async function finalizeCollection(db: ProspectsDB, state: CrawlState): Promise<C
   let updatedCandidates = 0;
 
   const itemsByDomain = new Map(
-    db.items.map((item) => [item.domain.toLowerCase(), item] as const)
+    db.items
+      .filter((item) => {
+        return !isNoisyCandidate({
+          domain: item.domain,
+          homepageUrl: item.homepageUrl,
+          displayName: item.displayName,
+          sourcePageUrl: item.sources?.[0]?.sourcePageUrl || "",
+          label: item.sources?.[0]?.label || "",
+        });
+      })
+      .map((item) => [item.domain.toLowerCase(), item] as const)
   );
 
   for (const candidate of incoming) {
@@ -558,7 +604,7 @@ async function finalizeCollection(db: ProspectsDB, state: CrawlState): Promise<C
       ...existing,
       displayName: changedDisplayName ? candidate.displayName || null : existing.displayName,
       homepageUrl: changedHomepage ? candidate.homepageUrl : existing.homepageUrl,
-      occurrences: Math.max(1, existing.occurrences || 1) + 1,
+      occurrences: mergedSources.length,
       lastSeenAt: now,
       sources: mergedSources,
     });
@@ -568,7 +614,12 @@ async function finalizeCollection(db: ProspectsDB, state: CrawlState): Promise<C
     }
   }
 
-  const items = Array.from(itemsByDomain.values()).sort((a, b) => {
+  const items = Array.from(itemsByDomain.values())
+    .map((item) => ({
+      ...item,
+      occurrences: Math.max(1, (item.sources || []).length),
+    }))
+    .sort((a, b) => {
     const statusWeight = (value: ProspectItem["status"]) => {
       if (value === "new") return 0;
       if (value === "approved") return 1;
@@ -577,8 +628,8 @@ async function finalizeCollection(db: ProspectsDB, state: CrawlState): Promise<C
 
     const weightDiff = statusWeight(a.status) - statusWeight(b.status);
     if (weightDiff !== 0) return weightDiff;
-    return (b.lastSeenAt || "").localeCompare(a.lastSeenAt || "");
-  });
+      return (b.lastSeenAt || "").localeCompare(a.lastSeenAt || "");
+    });
 
   const nextDb: ProspectsDB = {
     ...db,

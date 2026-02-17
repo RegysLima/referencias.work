@@ -175,14 +175,16 @@ export default function AdminProspectsPage() {
 
       <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-4">
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Total</div>
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Total na base</div>
           <div className="mt-1 text-2xl text-zinc-100">{data.count}</div>
+          <div className="mt-1 text-xs text-zinc-500">candidatos após limpeza</div>
         </div>
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Novos</div>
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Novos pendentes</div>
           <div className="mt-1 text-2xl text-zinc-100">
             {data.items.filter((item) => item.status === "new").length}
           </div>
+          <div className="mt-1 text-xs text-zinc-500">status Novo</div>
         </div>
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
           <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Última coleta</div>
@@ -191,6 +193,25 @@ export default function AdminProspectsPage() {
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
           <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Páginas rastreadas</div>
           <div className="mt-1 text-2xl text-zinc-100">{data.lastRun?.crawledPages || 0}</div>
+          <div className="mt-1 text-xs text-zinc-500">na última coleta</div>
+        </div>
+      </div>
+
+      <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Descobertos</div>
+          <div className="mt-1 text-2xl text-zinc-100">{data.lastRun?.discoveredCandidates || 0}</div>
+          <div className="mt-1 text-xs text-zinc-500">domínios únicos vistos no crawl</div>
+        </div>
+        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Novos adicionados</div>
+          <div className="mt-1 text-2xl text-zinc-100">{data.lastRun?.newCandidates || 0}</div>
+          <div className="mt-1 text-xs text-zinc-500">entraram na sua base</div>
+        </div>
+        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Já existentes</div>
+          <div className="mt-1 text-2xl text-zinc-100">{data.lastRun?.skippedAlreadyKnownDomains || 0}</div>
+          <div className="mt-1 text-xs text-zinc-500">já estavam nas referências</div>
         </div>
       </div>
 
@@ -238,7 +259,7 @@ export default function AdminProspectsPage() {
 
               <div className="col-span-2 text-xs text-zinc-400">
                 {item.sources.length} links<br />
-                {item.occurrences} ocorrências
+                {Math.max(item.occurrences || 0, item.sources.length || 0)} ocorrências únicas
               </div>
 
               <div className="col-span-2 text-xs text-zinc-400">{formatDate(item.lastSeenAt)}</div>
