@@ -108,6 +108,10 @@ function getVimeoEmbedSrc(src: string) {
   try {
     const url = new URL(src);
     let pathname = url.pathname;
+    const playbackMatch = pathname.match(/\/playback\/(\d+)(?:\/|$)/);
+    if (playbackMatch) {
+      pathname = `/video/${playbackMatch[1]}`;
+    }
     if (url.hostname === "vimeo.com") {
       const idMatch = pathname.match(/\/(\d+)(?:$|\/)/);
       if (!idMatch) return src;
