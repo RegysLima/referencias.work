@@ -152,7 +152,7 @@ export default function AdminProspectsPage() {
         <div>
           <h1 className="text-xl font-semibold text-zinc-100">Prospects de Referências</h1>
           <p className="text-sm text-zinc-400">
-            Coleta automática de autores (visualjournal, visuelle, mindsparkle e the-brandidentity) e comparação com domínios já cadastrados.
+            Última coleta: {formatDate(data.lastRun?.ranAt)}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -173,7 +173,7 @@ export default function AdminProspectsPage() {
         </div>
       </div>
 
-      <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-4">
+      <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
           <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Total na base</div>
           <div className="mt-1 text-2xl text-zinc-100">{data.count}</div>
@@ -185,10 +185,6 @@ export default function AdminProspectsPage() {
             {data.items.filter((item) => item.status === "new").length}
           </div>
           <div className="mt-1 text-xs text-zinc-500">status Novo</div>
-        </div>
-        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Última coleta</div>
-          <div className="mt-1 text-sm text-zinc-200">{formatDate(data.lastRun?.ranAt)}</div>
         </div>
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
           <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Páginas rastreadas</div>
