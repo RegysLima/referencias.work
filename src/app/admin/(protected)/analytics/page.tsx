@@ -24,6 +24,14 @@ type Summary = {
     paypalClick: number;
     dismiss: number;
   };
+  normalizeFilters?: {
+    ranAt: string;
+    total: number;
+    changedItems: number;
+    normalized: boolean;
+    updatedAt: string | null;
+    source: "cron" | "manual";
+  } | null;
   lastUpdated?: string | null;
 };
 
@@ -48,6 +56,7 @@ const EMPTY: Summary = {
     paypalClick: 0,
     dismiss: 0,
   },
+  normalizeFilters: null,
   lastUpdated: null,
 };
 
@@ -442,7 +451,7 @@ export default function AdminAnalyticsPage() {
         </div>
       </div>
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
           <div className="text-xs text-zinc-500">Top página</div>
           <div className="mt-2 text-sm text-zinc-300">
@@ -465,6 +474,17 @@ export default function AdminAnalyticsPage() {
           <div className="text-xs text-zinc-500">Última atualização</div>
           <div className="mt-2 text-sm text-zinc-300">
             {formatDateBR(summary.lastUpdated, true)}
+          </div>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs text-zinc-500">Normalização diária</div>
+          <div className="mt-2 text-sm text-zinc-300">
+            {formatDateBR(summary.normalizeFilters?.ranAt, true)}
+          </div>
+          <div className="mt-1 text-xs text-zinc-500">
+            {summary.normalizeFilters
+              ? `${summary.normalizeFilters.changedItems} ajustados de ${summary.normalizeFilters.total}`
+              : "Sem execução registrada"}
           </div>
         </div>
       </div>

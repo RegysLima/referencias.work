@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import { kv } from "@vercel/kv";
+import {
+  NORMALIZE_FILTERS_STATUS_KEY,
+  type NormalizeFiltersStatus,
+} from "@/lib/maintenance";
 
 const KV_KEY = "analytics:summary";
 const KV_ENABLED = Boolean(
@@ -28,6 +32,7 @@ type Summary = {
     paypalClick: number;
     dismiss: number;
   };
+  normalizeFilters?: NormalizeFiltersStatus | null;
   lastUpdated?: string | null;
 };
 
@@ -125,9 +130,13 @@ export async function GET() {
         paypalClick: 0,
         dismiss: 0,
       },
+      normalizeFilters: null,
       lastUpdated: null,
     };
   const summary = normalizeSummaryLangs(summaryRaw);
+  const normalizeFilters =
+    (await kv.get<NormalizeFiltersStatus>(NORMALIZE_FILTERS_STATUS_KEY)) || null;
+  summary.normalizeFilters = normalizeFilters;
 
   if (JSON.stringify(summary) !== JSON.stringify(summaryRaw)) {
     await kv.set(KV_KEY, summary);
