@@ -322,7 +322,6 @@ export default function AdminAnalyticsPage() {
     [last30Days, summary.byDay]
   );
 
-  const topPath = useMemo(() => toRows(summary.byPath)[0], [summary.byPath]);
   const topRef = useMemo(() => toRows(summary.byRef || {})[0], [summary.byRef]);
 
   const filteredRefs = useMemo(() => {
@@ -405,13 +404,17 @@ export default function AdminAnalyticsPage() {
     )}`;
   }, [range, rangeDays]);
 
+  const metricCardClass = "rounded-xl border border-zinc-800 bg-zinc-950/30 p-5 min-h-[112px]";
+  const panelCardClass = "rounded-xl border border-zinc-800 bg-zinc-950/30 p-5";
+  const panelTitleClass = "text-xs uppercase tracking-[0.16em] text-zinc-500";
+
   return (
     <div className="mx-auto w-full max-w-7xl px-6 pb-16 pt-10 sm:px-10 lg:px-12">
       <div className="mb-6 text-sm uppercase tracking-[0.18em] text-zinc-400">Analytics</div>
 
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-4">
+      <div className={panelCardClass}>
         <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-300">
-          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Filtros</div>
+          <div className={panelTitleClass}>Filtros</div>
 
           <div className="relative">
             <select
@@ -480,51 +483,41 @@ export default function AdminAnalyticsPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-12">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Total visitas</div>
           <div className="mt-2 text-2xl text-zinc-100">{summary.total}</div>
         </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Últimos 7 dias</div>
           <div className="mt-2 text-2xl text-zinc-100">{last7Total}</div>
         </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Últimos 30 dias</div>
           <div className="mt-2 text-2xl text-zinc-100">{last30Total}</div>
         </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Visitas no filtro</div>
           <div className="mt-2 text-2xl text-zinc-100">{totalInRange}</div>
         </div>
-      </div>
-
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
-          <div className="text-xs text-zinc-500">Top página</div>
-          <div className="mt-2 text-sm text-zinc-300">
-            {topPath ? pickPathLabel(topPath[0]) : "—"}
-          </div>
-          <div className="mt-1 text-xs text-zinc-500">{topPath ? topPath[1] : "—"}</div>
-        </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Cliques em referências</div>
           <div className="mt-2 text-2xl text-zinc-100">{summary.refTotal || 0}</div>
         </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Top referência</div>
           <div className="mt-2 text-sm text-zinc-300">
             {topRef ? topRef[0] : "—"}
           </div>
           <div className="mt-1 text-xs text-zinc-500">{topRef ? topRef[1] : "—"}</div>
         </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Última atualização</div>
           <div className="mt-2 text-sm text-zinc-300">
             {formatDateBR(summary.lastUpdated, true)}
           </div>
         </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Normalização diária</div>
           <div className="mt-2 text-sm text-zinc-300">
             {formatDateBR(summary.normalizeFilters?.ranAt, true)}
@@ -535,34 +528,31 @@ export default function AdminAnalyticsPage() {
               : "Sem execução registrada"}
           </div>
         </div>
-      </div>
-
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Buscas no período</div>
           <div className="mt-2 text-2xl text-zinc-100">{searchTotalInRange}</div>
         </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Views do card de apoio</div>
           <div className="mt-2 text-2xl text-zinc-100">{donationViews}</div>
         </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Cliques Pix + PayPal</div>
           <div className="mt-2 text-2xl text-zinc-100">{pixClicks + paypalClicks}</div>
           <div className="mt-1 text-xs text-zinc-500">
             Pix: {pixClicks} · PayPal: {paypalClicks}
           </div>
         </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Taxa clique no apoio</div>
           <div className="mt-2 text-2xl text-zinc-100">{donationClickRate}%</div>
         </div>
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5 lg:col-span-2">
+      <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-12">
+        <div className={`${panelCardClass} xl:col-span-8`}>
           <div className="flex items-center justify-between gap-3">
-            <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Visitas por dia</div>
+            <div className={panelTitleClass}>Visitas por dia</div>
             <div className="text-[11px] text-zinc-500">
               {loading ? "Carregando…" : rangeLabel}
             </div>
@@ -581,8 +571,8 @@ export default function AdminAnalyticsPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
-          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Idiomas</div>
+        <div className={`${panelCardClass} xl:col-span-4`}>
+          <div className={panelTitleClass}>Idiomas</div>
           <div className="mt-4 space-y-2 text-sm text-zinc-300">
             {toRows(summary.byLang).length ? (
               toRows(summary.byLang).map(([lang, count]) => (
@@ -596,11 +586,8 @@ export default function AdminAnalyticsPage() {
             )}
           </div>
         </div>
-      </div>
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
-          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Páginas</div>
+        <div className={`${panelCardClass} xl:col-span-4`}>
+          <div className={panelTitleClass}>Páginas</div>
           <div className="mt-4 space-y-2 text-sm text-zinc-300">
             {toRows(summary.byPath).length ? (
               toRows(summary.byPath).map(([path, count]) => (
@@ -615,8 +602,8 @@ export default function AdminAnalyticsPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5 lg:col-span-2">
-          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Ranking de referências</div>
+        <div className={`${panelCardClass} xl:col-span-8`}>
+          <div className={panelTitleClass}>Ranking de referências</div>
           <div className="mt-4 space-y-2 text-sm text-zinc-300">
             {refRows.length ? (
               refRows.map(([ref, count], idx) => (
@@ -630,13 +617,8 @@ export default function AdminAnalyticsPage() {
             )}
           </div>
         </div>
-      </div>
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5 lg:col-span-2">
-          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
-            Top buscas
-          </div>
+        <div className={`${panelCardClass} xl:col-span-6`}>
+          <div className={panelTitleClass}>Top buscas</div>
           <div className="mt-4 space-y-2 text-sm text-zinc-300">
             {searchRows.length ? (
               searchRows.map(([query, count], idx) => (
@@ -651,10 +633,8 @@ export default function AdminAnalyticsPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
-          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
-            Buscas sem resultado
-          </div>
+        <div className={`${panelCardClass} xl:col-span-3`}>
+          <div className={panelTitleClass}>Buscas sem resultado</div>
           <div className="mt-4 space-y-2 text-sm text-zinc-300">
             {noResultSearchRows.length ? (
               noResultSearchRows.map(([query, count], idx) => (
@@ -668,13 +648,8 @@ export default function AdminAnalyticsPage() {
             )}
           </div>
         </div>
-      </div>
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
-          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
-            Eventos de interação
-          </div>
+        <div className={`${panelCardClass} xl:col-span-3`}>
+          <div className={panelTitleClass}>Eventos de interação</div>
           <div className="mt-4 space-y-2 text-sm text-zinc-300">
             {interactionRows.length ? (
               interactionRows.map(([type, count]) => (
