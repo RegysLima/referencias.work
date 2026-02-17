@@ -112,6 +112,14 @@ function getCities(it: AnyItem) {
   return uniqStrings([legacy, ...rows, ...extras]);
 }
 
+function getAdditionalCountryCount(it: AnyItem) {
+  return Math.max(0, getCountries(it).length - 1);
+}
+
+function getAdditionalCityCount(it: AnyItem) {
+  return Math.max(0, getCities(it).length - 1);
+}
+
 function getThumb(it: AnyItem) {
   return pickFirstString(it, ["thumbnailUrl", "thumb", "image", "cover", "thumbUrl", "thumbnail"]);
 }
@@ -1312,12 +1320,18 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   >
                     {getCountryLabel(spotlight, lang) || "—"}
                   </button>
+                  {getAdditionalCountryCount(spotlight) > 0 ? (
+                    <span className="text-[12px] text-zinc-500">+{getAdditionalCountryCount(spotlight)}</span>
+                  ) : null}
                   <button
                     onClick={() => handleCityClick(getCityKey(spotlight))}
                     className="cursor-pointer text-zinc-600 underline decoration-zinc-400/40 underline-offset-4 hover:decoration-zinc-500"
                   >
                     {getCityLabel(spotlight, lang) || "—"}
                   </button>
+                  {getAdditionalCityCount(spotlight) > 0 ? (
+                    <span className="text-[12px] text-zinc-500">+{getAdditionalCityCount(spotlight)}</span>
+                  ) : null}
                 </div>
               </div>
 
@@ -1461,6 +1475,9 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                     >
                       {getCountryLabel(it, lang) || "—"}
                     </button>
+                    {getAdditionalCountryCount(it) > 0 ? (
+                      <span className="ml-1 text-[12px] text-zinc-500">+{getAdditionalCountryCount(it)}</span>
+                    ) : null}
                     <span className="mx-2 text-zinc-300">•</span>
                     <button
                       onClick={(e) => {
@@ -1471,6 +1488,9 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                     >
                       {getCityLabel(it, lang) || "—"}
                     </button>
+                    {getAdditionalCityCount(it) > 0 ? (
+                      <span className="ml-1 text-[12px] text-zinc-500">+{getAdditionalCityCount(it)}</span>
+                    ) : null}
                   </div>
 
                   <div className="my-4 h-px w-full bg-zinc-200" />
