@@ -343,9 +343,18 @@ export default function AdminPage() {
   const [macroFilter, setMacroFilter] = useState<string>("Todos");
 
   const [openId, setOpenId] = useState<string | null>(null);
+  const [primaryAreaDraft, setPrimaryAreaDraft] = useState<Record<string, string>>({});
+  const [primaryAreaSuggestOpenId, setPrimaryAreaSuggestOpenId] = useState<string | null>(null);
+  const [primaryAreaSuggestIndex, setPrimaryAreaSuggestIndex] = useState(0);
   const [secondaryDraft, setSecondaryDraft] = useState<Record<string, string>>({});
   const [secondarySuggestOpenId, setSecondarySuggestOpenId] = useState<string | null>(null);
   const [secondarySuggestIndex, setSecondarySuggestIndex] = useState(0);
+  const [countryDraft, setCountryDraft] = useState<Record<string, string>>({});
+  const [countrySuggestOpenId, setCountrySuggestOpenId] = useState<string | null>(null);
+  const [countrySuggestIndex, setCountrySuggestIndex] = useState(0);
+  const [cityDraft, setCityDraft] = useState<Record<string, string>>({});
+  const [citySuggestOpenId, setCitySuggestOpenId] = useState<string | null>(null);
+  const [citySuggestIndex, setCitySuggestIndex] = useState(0);
 
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [saveMessage, setSaveMessage] = useState<string>("");
@@ -404,9 +413,18 @@ export default function AdminPage() {
 
       setItems(normalized.map(normalizeReviewFlags));
 
+      const primaryAreaDraftMap: Record<string, string> = {};
       const draft: Record<string, string> = {};
+      const countryDraftMap: Record<string, string> = {};
+      const cityDraftMap: Record<string, string> = {};
+      for (const it of normalized) primaryAreaDraftMap[it.id] = (it.areaPrimary ?? "").trim();
       for (const it of normalized) draft[it.id] = (it.areasSecondary ?? []).join(", ");
+      for (const it of normalized) countryDraftMap[it.id] = (it.country ?? "").trim();
+      for (const it of normalized) cityDraftMap[it.id] = (it.city ?? "").trim();
+      setPrimaryAreaDraft(primaryAreaDraftMap);
       setSecondaryDraft(draft);
+      setCountryDraft(countryDraftMap);
+      setCityDraft(cityDraftMap);
     })();
   }, []);
 
@@ -619,6 +637,22 @@ export default function AdminPage() {
     return Array.from(new Set(areaMap.values())).sort((a, b) => a.localeCompare(b));
   }, [areaMap]);
 
+  const countryOptions = useMemo(() => {
+    const values = items
+      .map((it) => normalizeCountryValue(it.country ?? null))
+      .filter((v): v is string => Boolean(v))
+      .map((v) => v.trim());
+    return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
+  }, [items]);
+
+  const cityOptions = useMemo(() => {
+    const values = items
+      .map((it) => normalizeCityValue(it.city ?? null))
+      .filter((v): v is string => Boolean(v))
+      .map((v) => v.trim());
+    return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
+  }, [items]);
+
   function updateItem(id: string, patch: Partial<RefItem>) {
     setItems((prev) =>
       prev.map((i) => {
@@ -668,6 +702,63 @@ export default function AdminPage() {
     const key = (value || "").trim().toLowerCase();
     if (!key) return "";
     return areaMap.get(key) || "";
+  }
+
+  function getLocationSuggestions(
+    draftValue: string,
+    options: string[],
+    normalizeLocation: (value: string | null | undefined) => string | null
+  ) {
+    const query = normalizeSearchText(draftValue);
+    if (!query) return options.slice(0, 8);
+
+    const normalizedCurrent = normalizeSearchText(normalizeLocation(draftValue || "") || "");
+
+    return options
+      .filter((option) => {
+        const normalizedOption = normalizeSearchText(option);
+        return (
+          normalizedOption.startsWith(query) ||
+          normalizedOption.includes(` ${query}`) ||
+          normalizedOption === normalizedCurrent
+        );
+      })
+      .slice(0, 8);
+  }
+
+  function commitCountryDraft(id: string, value: string) {
+    const normalized = normalizeCountryValue(value || null);
+    const nextValue = normalized || "";
+    setCountryDraft((prev) => ({ ...prev, [id]: nextValue }));
+    updateItem(id, { country: normalized });
+  }
+
+  function commitCityDraft(id: string, value: string) {
+    const normalized = normalizeCityValue(value || null);
+    const nextValue = normalized || "";
+    setCityDraft((prev) => ({ ...prev, [id]: nextValue }));
+    updateItem(id, { city: normalized });
+  }
+
+  function getPrimaryAreaSuggestions(draftValue: string) {
+    const query = normalizeSearchText(draftValue);
+    if (!query) return areaOptions.slice(0, 8);
+    return areaOptions
+      .filter((option) => {
+        const normalizedOption = normalizeSearchText(option);
+        return normalizedOption.startsWith(query) || normalizedOption.includes(` ${query}`);
+      })
+      .slice(0, 8);
+  }
+
+  function commitPrimaryAreaDraft(id: string, value: string) {
+    const normalized = normalizeAreaValue(value || "");
+    if (!normalized && value.trim()) {
+      showToast("Área não encontrada na lista. Escolha uma sugestão.");
+    }
+    const nextValue = normalized || "";
+    setPrimaryAreaDraft((prev) => ({ ...prev, [id]: nextValue }));
+    updateItem(id, { areaPrimary: nextValue });
   }
 
   const areaOptionIndex = useMemo(() => {
@@ -791,7 +882,10 @@ export default function AdminPage() {
     };
 
     setItems((prev) => [newItem, ...prev]);
+    setPrimaryAreaDraft((prev) => ({ ...prev, [id]: "" }));
     setSecondaryDraft((prev) => ({ ...prev, [id]: "" }));
+    setCountryDraft((prev) => ({ ...prev, [id]: "" }));
+    setCityDraft((prev) => ({ ...prev, [id]: "" }));
     setOpenId(id);
 
     setSaveState("idle");
@@ -802,7 +896,22 @@ export default function AdminPage() {
     setItems((prev) => prev.filter((i) => i.id !== id));
     setOpenId((prev) => (prev === id ? null : prev));
 
+    setPrimaryAreaDraft((prev) => {
+      const copy = { ...prev };
+      delete copy[id];
+      return copy;
+    });
     setSecondaryDraft((prev) => {
+      const copy = { ...prev };
+      delete copy[id];
+      return copy;
+    });
+    setCountryDraft((prev) => {
+      const copy = { ...prev };
+      delete copy[id];
+      return copy;
+    });
+    setCityDraft((prev) => {
       const copy = { ...prev };
       delete copy[id];
       return copy;
@@ -1473,19 +1582,97 @@ export default function AdminPage() {
 
                         <div>
                           <label className="text-xs text-zinc-400">Área principal</label>
-                          <input
-                            value={i.areaPrimary ?? ""}
-                            onChange={(e) => updateItem(i.id, { areaPrimary: e.target.value })}
-                            onBlur={(e) => {
-                              const next = normalizeAreaValue(e.target.value);
-                              if (!next && e.target.value.trim()) {
-                                showToast("Área não encontrada na lista. Escolha uma sugestão.");
-                              }
-                              updateItem(i.id, { areaPrimary: next || "" });
-                            }}
-                            list="area-options"
-                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-                          />
+                          <div className="relative mt-1">
+                            <input
+                              value={primaryAreaDraft[i.id] ?? i.areaPrimary ?? ""}
+                              onChange={(e) => {
+                                setPrimaryAreaDraft((prev) => ({ ...prev, [i.id]: e.target.value }));
+                                setPrimaryAreaSuggestOpenId(i.id);
+                                setPrimaryAreaSuggestIndex(0);
+                              }}
+                              onFocus={() => {
+                                setPrimaryAreaSuggestOpenId(i.id);
+                                setPrimaryAreaSuggestIndex(0);
+                              }}
+                              onBlur={() => {
+                                window.setTimeout(() => {
+                                  commitPrimaryAreaDraft(i.id, primaryAreaDraft[i.id] ?? i.areaPrimary ?? "");
+                                  setPrimaryAreaSuggestOpenId((prev) => (prev === i.id ? null : prev));
+                                }, 120);
+                              }}
+                              onKeyDown={(e) => {
+                                const suggestions = getPrimaryAreaSuggestions(
+                                  primaryAreaDraft[i.id] ?? i.areaPrimary ?? ""
+                                );
+                                if (e.key === "ArrowDown") {
+                                  e.preventDefault();
+                                  if (!suggestions.length) return;
+                                  setPrimaryAreaSuggestOpenId(i.id);
+                                  setPrimaryAreaSuggestIndex((idx) =>
+                                    idx + 1 >= suggestions.length ? 0 : idx + 1
+                                  );
+                                  return;
+                                }
+                                if (e.key === "ArrowUp") {
+                                  e.preventDefault();
+                                  if (!suggestions.length) return;
+                                  setPrimaryAreaSuggestOpenId(i.id);
+                                  setPrimaryAreaSuggestIndex((idx) =>
+                                    idx - 1 < 0 ? suggestions.length - 1 : idx - 1
+                                  );
+                                  return;
+                                }
+                                if (e.key === "Tab" || e.key === "Enter") {
+                                  if (!suggestions.length) return;
+                                  e.preventDefault();
+                                  const pick =
+                                    suggestions[Math.min(primaryAreaSuggestIndex, suggestions.length - 1)];
+                                  setPrimaryAreaDraft((prev) => ({ ...prev, [i.id]: pick }));
+                                  commitPrimaryAreaDraft(i.id, pick);
+                                  setPrimaryAreaSuggestOpenId(null);
+                                  setPrimaryAreaSuggestIndex(0);
+                                  return;
+                                }
+                                if (e.key === "Escape") {
+                                  setPrimaryAreaSuggestOpenId(null);
+                                }
+                              }}
+                              className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                            />
+                            {primaryAreaSuggestOpenId === i.id ? (
+                              <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                                {getPrimaryAreaSuggestions(primaryAreaDraft[i.id] ?? i.areaPrimary ?? "").length ? (
+                                  getPrimaryAreaSuggestions(
+                                    primaryAreaDraft[i.id] ?? i.areaPrimary ?? ""
+                                  ).map((option, idx) => (
+                                    <button
+                                      key={`${i.id}-primary-${option}`}
+                                      type="button"
+                                      onMouseDown={(e) => {
+                                        e.preventDefault();
+                                        setPrimaryAreaDraft((prev) => ({ ...prev, [i.id]: option }));
+                                        commitPrimaryAreaDraft(i.id, option);
+                                        setPrimaryAreaSuggestOpenId(null);
+                                        setPrimaryAreaSuggestIndex(0);
+                                      }}
+                                      className={[
+                                        "w-full px-3 py-2 text-left text-sm transition",
+                                        idx === primaryAreaSuggestIndex
+                                          ? "bg-zinc-800 text-zinc-100"
+                                          : "text-zinc-300 hover:bg-zinc-900",
+                                      ].join(" ")}
+                                    >
+                                      {option}
+                                    </button>
+                                  ))
+                                ) : (
+                                  <div className="px-3 py-2 text-sm text-zinc-500">
+                                    Nenhuma sugestão
+                                  </div>
+                                )}
+                              </div>
+                            ) : null}
+                          </div>
                         </div>
                       </div>
 
@@ -1622,33 +1809,214 @@ export default function AdminPage() {
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                           <label className="text-xs text-zinc-400">País</label>
-                          <input
-                            value={i.country ?? ""}
-                            onChange={(e) => updateItem(i.id, { country: e.target.value || null })}
-                            onBlur={(e) =>
-                              updateItem(i.id, {
-                                country: normalizeCountryValue(e.target.value || null),
-                              })
-                            }
-                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-                          />
+                          <div className="relative mt-1">
+                            <input
+                              value={countryDraft[i.id] ?? i.country ?? ""}
+                              onChange={(e) => {
+                                setCountryDraft((prev) => ({ ...prev, [i.id]: e.target.value }));
+                                setCountrySuggestOpenId(i.id);
+                                setCountrySuggestIndex(0);
+                              }}
+                              onFocus={() => {
+                                setCountrySuggestOpenId(i.id);
+                                setCountrySuggestIndex(0);
+                              }}
+                              onBlur={() => {
+                                window.setTimeout(() => {
+                                  commitCountryDraft(i.id, countryDraft[i.id] ?? i.country ?? "");
+                                  setCountrySuggestOpenId((prev) => (prev === i.id ? null : prev));
+                                }, 120);
+                              }}
+                              onKeyDown={(e) => {
+                                const suggestions = getLocationSuggestions(
+                                  countryDraft[i.id] ?? i.country ?? "",
+                                  countryOptions,
+                                  normalizeCountryValue
+                                );
+                                if (e.key === "ArrowDown") {
+                                  e.preventDefault();
+                                  if (!suggestions.length) return;
+                                  setCountrySuggestOpenId(i.id);
+                                  setCountrySuggestIndex((idx) =>
+                                    idx + 1 >= suggestions.length ? 0 : idx + 1
+                                  );
+                                  return;
+                                }
+                                if (e.key === "ArrowUp") {
+                                  e.preventDefault();
+                                  if (!suggestions.length) return;
+                                  setCountrySuggestOpenId(i.id);
+                                  setCountrySuggestIndex((idx) =>
+                                    idx - 1 < 0 ? suggestions.length - 1 : idx - 1
+                                  );
+                                  return;
+                                }
+                                if (e.key === "Tab" || e.key === "Enter") {
+                                  if (!suggestions.length) return;
+                                  e.preventDefault();
+                                  const pick =
+                                    suggestions[Math.min(countrySuggestIndex, suggestions.length - 1)];
+                                  setCountryDraft((prev) => ({ ...prev, [i.id]: pick }));
+                                  commitCountryDraft(i.id, pick);
+                                  setCountrySuggestOpenId(null);
+                                  setCountrySuggestIndex(0);
+                                  return;
+                                }
+                                if (e.key === "Escape") {
+                                  setCountrySuggestOpenId(null);
+                                }
+                              }}
+                              className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                            />
+                            {countrySuggestOpenId === i.id ? (
+                              <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                                {getLocationSuggestions(
+                                  countryDraft[i.id] ?? i.country ?? "",
+                                  countryOptions,
+                                  normalizeCountryValue
+                                ).length ? (
+                                  getLocationSuggestions(
+                                    countryDraft[i.id] ?? i.country ?? "",
+                                    countryOptions,
+                                    normalizeCountryValue
+                                  ).map((option, idx) => (
+                                    <button
+                                      key={`${i.id}-country-${option}`}
+                                      type="button"
+                                      onMouseDown={(e) => {
+                                        e.preventDefault();
+                                        setCountryDraft((prev) => ({ ...prev, [i.id]: option }));
+                                        commitCountryDraft(i.id, option);
+                                        setCountrySuggestOpenId(null);
+                                        setCountrySuggestIndex(0);
+                                      }}
+                                      className={[
+                                        "w-full px-3 py-2 text-left text-sm transition",
+                                        idx === countrySuggestIndex
+                                          ? "bg-zinc-800 text-zinc-100"
+                                          : "text-zinc-300 hover:bg-zinc-900",
+                                      ].join(" ")}
+                                    >
+                                      {option}
+                                    </button>
+                                  ))
+                                ) : (
+                                  <div className="px-3 py-2 text-sm text-zinc-500">
+                                    Nenhuma sugestão
+                                  </div>
+                                )}
+                              </div>
+                            ) : null}
+                          </div>
                         </div>
 
                         <div>
                           <label className="text-xs text-zinc-400">Cidade</label>
-                          <input
-                            value={i.city ?? ""}
-                            onChange={(e) => updateItem(i.id, { city: e.target.value || null })}
-                            onBlur={(e) =>
-                              updateItem(i.id, {
-                                city: normalizeCityValue(e.target.value || null),
-                              })
-                            }
-                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-                          />
+                          <div className="relative mt-1">
+                            <input
+                              value={cityDraft[i.id] ?? i.city ?? ""}
+                              onChange={(e) => {
+                                setCityDraft((prev) => ({ ...prev, [i.id]: e.target.value }));
+                                setCitySuggestOpenId(i.id);
+                                setCitySuggestIndex(0);
+                              }}
+                              onFocus={() => {
+                                setCitySuggestOpenId(i.id);
+                                setCitySuggestIndex(0);
+                              }}
+                              onBlur={() => {
+                                window.setTimeout(() => {
+                                  commitCityDraft(i.id, cityDraft[i.id] ?? i.city ?? "");
+                                  setCitySuggestOpenId((prev) => (prev === i.id ? null : prev));
+                                }, 120);
+                              }}
+                              onKeyDown={(e) => {
+                                const suggestions = getLocationSuggestions(
+                                  cityDraft[i.id] ?? i.city ?? "",
+                                  cityOptions,
+                                  normalizeCityValue
+                                );
+                                if (e.key === "ArrowDown") {
+                                  e.preventDefault();
+                                  if (!suggestions.length) return;
+                                  setCitySuggestOpenId(i.id);
+                                  setCitySuggestIndex((idx) =>
+                                    idx + 1 >= suggestions.length ? 0 : idx + 1
+                                  );
+                                  return;
+                                }
+                                if (e.key === "ArrowUp") {
+                                  e.preventDefault();
+                                  if (!suggestions.length) return;
+                                  setCitySuggestOpenId(i.id);
+                                  setCitySuggestIndex((idx) =>
+                                    idx - 1 < 0 ? suggestions.length - 1 : idx - 1
+                                  );
+                                  return;
+                                }
+                                if (e.key === "Tab" || e.key === "Enter") {
+                                  if (!suggestions.length) return;
+                                  e.preventDefault();
+                                  const pick =
+                                    suggestions[Math.min(citySuggestIndex, suggestions.length - 1)];
+                                  setCityDraft((prev) => ({ ...prev, [i.id]: pick }));
+                                  commitCityDraft(i.id, pick);
+                                  setCitySuggestOpenId(null);
+                                  setCitySuggestIndex(0);
+                                  return;
+                                }
+                                if (e.key === "Escape") {
+                                  setCitySuggestOpenId(null);
+                                }
+                              }}
+                              className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                            />
+                            {citySuggestOpenId === i.id ? (
+                              <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                                {getLocationSuggestions(
+                                  cityDraft[i.id] ?? i.city ?? "",
+                                  cityOptions,
+                                  normalizeCityValue
+                                ).length ? (
+                                  getLocationSuggestions(
+                                    cityDraft[i.id] ?? i.city ?? "",
+                                    cityOptions,
+                                    normalizeCityValue
+                                  ).map((option, idx) => (
+                                    <button
+                                      key={`${i.id}-city-${option}`}
+                                      type="button"
+                                      onMouseDown={(e) => {
+                                        e.preventDefault();
+                                        setCityDraft((prev) => ({ ...prev, [i.id]: option }));
+                                        commitCityDraft(i.id, option);
+                                        setCitySuggestOpenId(null);
+                                        setCitySuggestIndex(0);
+                                      }}
+                                      className={[
+                                        "w-full px-3 py-2 text-left text-sm transition",
+                                        idx === citySuggestIndex
+                                          ? "bg-zinc-800 text-zinc-100"
+                                          : "text-zinc-300 hover:bg-zinc-900",
+                                      ].join(" ")}
+                                    >
+                                      {option}
+                                    </button>
+                                  ))
+                                ) : (
+                                  <div className="px-3 py-2 text-sm text-zinc-500">
+                                    Nenhuma sugestão
+                                  </div>
+                                )}
+                              </div>
+                            ) : null}
+                          </div>
                         </div>
 
                         <div className="sm:col-span-2">
+                          <div className="mb-2 text-[11px] text-zinc-500">
+                            Dica: use Tab/Setas/Enter para autocompletar país e cidade.
+                          </div>
                           <button
                             onClick={async () => {
                               const u = (i.url || "").trim();
@@ -1658,10 +2026,20 @@ export default function AdminPage() {
                                 const res = await fetch(`/api/admin/location?url=${encodeURIComponent(u)}`);
                                 const data = await res.json();
                                 if (data?.country || data?.city) {
+                                  const nextCountry = normalizeCountryValue(data.country ?? i.country ?? null);
+                                  const nextCity = normalizeCityValue(data.city ?? i.city ?? null);
                                   updateItem(i.id, {
-                                    country: data.country ?? i.country ?? null,
-                                    city: data.city ?? i.city ?? null,
+                                    country: nextCountry,
+                                    city: nextCity,
                                   });
+                                  setCountryDraft((prev) => ({
+                                    ...prev,
+                                    [i.id]: nextCountry || "",
+                                  }));
+                                  setCityDraft((prev) => ({
+                                    ...prev,
+                                    [i.id]: nextCity || "",
+                                  }));
                                   showToast("Localização sugerida");
                                 } else {
                                   showToast("Não encontrei localização no site");
@@ -1738,12 +2116,6 @@ export default function AdminPage() {
         </div>
       </div>
       </div>
-
-      <datalist id="area-options">
-        {areaOptions.map((o) => (
-          <option key={o} value={o} />
-        ))}
-      </datalist>
     </div>
   );
 }
