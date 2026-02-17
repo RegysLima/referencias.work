@@ -738,6 +738,12 @@ export default function AdminPage() {
     return `${rawWords.join(" ")} `;
   }
 
+  function enforceSecondaryDraftLimit(draft: string) {
+    const { values } = parseSecondaryFromInput(draft);
+    if (values.length <= 4) return draft;
+    return `${values.slice(0, 4).join(" ")} `;
+  }
+
   function applySecondaryAreas(id: string, primaryArea: string | null | undefined, draftValue: string) {
     const { values, invalidCount } = parseSecondaryFromInput(draftValue);
     const normalized = values.map((v) => normalizeAreaValue(v)).filter(Boolean);
@@ -1474,7 +1480,8 @@ export default function AdminPage() {
                           <input
                             value={secondaryDraft[i.id] ?? ""}
                             onChange={(e) => {
-                              setSecondaryDraft((prev) => ({ ...prev, [i.id]: e.target.value }));
+                              const nextDraft = enforceSecondaryDraftLimit(e.target.value);
+                              setSecondaryDraft((prev) => ({ ...prev, [i.id]: nextDraft }));
                               setSecondarySuggestOpenId(i.id);
                               setSecondarySuggestIndex(0);
                             }}
@@ -1513,9 +1520,13 @@ export default function AdminPage() {
                                 e.preventDefault();
                                 const pick =
                                   suggestions[Math.min(secondarySuggestIndex, suggestions.length - 1)];
-                                const next = applySecondarySuggestion(
-                                  secondaryDraft[i.id] ?? "",
-                                  pick
+                                const current = secondaryDraft[i.id] ?? "";
+                                if (parseSecondaryFromInput(current).values.length >= 4) return;
+                                const next = enforceSecondaryDraftLimit(
+                                  applySecondarySuggestion(
+                                    current,
+                                    pick
+                                  )
                                 );
                                 setSecondaryDraft((prev) => ({ ...prev, [i.id]: next }));
                                 setSecondarySuggestIndex(0);
@@ -1526,9 +1537,13 @@ export default function AdminPage() {
                                 if (suggestions.length && secondarySuggestOpenId === i.id) {
                                   const pick =
                                     suggestions[Math.min(secondarySuggestIndex, suggestions.length - 1)];
-                                  const next = applySecondarySuggestion(
-                                    secondaryDraft[i.id] ?? "",
-                                    pick
+                                  const current = secondaryDraft[i.id] ?? "";
+                                  if (parseSecondaryFromInput(current).values.length >= 4) return;
+                                  const next = enforceSecondaryDraftLimit(
+                                    applySecondarySuggestion(
+                                      current,
+                                      pick
+                                    )
                                   );
                                   setSecondaryDraft((prev) => ({ ...prev, [i.id]: next }));
                                   setSecondarySuggestIndex(0);
@@ -1555,9 +1570,13 @@ export default function AdminPage() {
                                       type="button"
                                       onMouseDown={(e) => {
                                         e.preventDefault();
-                                        const next = applySecondarySuggestion(
-                                          secondaryDraft[i.id] ?? "",
-                                          option
+                                        const current = secondaryDraft[i.id] ?? "";
+                                        if (parseSecondaryFromInput(current).values.length >= 4) return;
+                                        const next = enforceSecondaryDraftLimit(
+                                          applySecondarySuggestion(
+                                            current,
+                                            option
+                                          )
                                         );
                                         setSecondaryDraft((prev) => ({ ...prev, [i.id]: next }));
                                         setSecondarySuggestIndex(0);
@@ -1585,7 +1604,6 @@ export default function AdminPage() {
                           Dica: digite e use Tab/Setas/Enter para completar. Espaço separa categorias.
                         </div>
                       </div>
-
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                           <label className="text-xs text-zinc-400">País</label>
