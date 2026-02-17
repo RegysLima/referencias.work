@@ -9,6 +9,10 @@ export type Reference = {
   tags: string[];
   country: string | null;
   city: string | null;
+  locations?: Array<{
+    country?: string | null;
+    city?: string | null;
+  }>;
   thumbnailUrl: string | null;
   hidden?: boolean;
   updatedAt: string;

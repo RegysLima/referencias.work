@@ -101,6 +101,38 @@ function normalizeCityValue(value: string | null | undefined) {
   return next || null;
 }
 
+function normalizeLocations(
+  input:
+    | Array<{
+        country?: string | null;
+        city?: string | null;
+      }>
+    | undefined,
+  country: string | null | undefined,
+  city: string | null | undefined
+) {
+  const rows = [
+    { country, city },
+    ...((input || []).map((row) => ({
+      country: row?.country ?? null,
+      city: row?.city ?? null,
+    })) || []),
+  ];
+
+  const out: Array<{ country?: string | null; city?: string | null }> = [];
+  const seen = new Set<string>();
+  for (const row of rows) {
+    const c = normalizeCountryValue(row.country ?? null);
+    const ct = normalizeCityValue(row.city ?? null);
+    if (!c && !ct) continue;
+    const key = `${(c || "").toLowerCase()}::${(ct || "").toLowerCase()}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ country: c, city: ct });
+  }
+  return out;
+}
+
 function normalizeReviewFlags(item: Reference) {
   if (!item.reviewFlags) return item.reviewFlags;
   const next = { ...item.reviewFlags };
@@ -114,8 +146,9 @@ export function normalizeReferenceItem(input: Reference): Reference {
   const macroType = normalizeMacro(input.macroType || input.type || "");
   const areaPrimary = canonAreaLabel(input.areaPrimary || "") || null;
   const areasSecondary = normalizeSecondaryAreas(areaPrimary, input.areasSecondary || []);
-  const country = normalizeCountryValue(input.country || null);
-  const city = normalizeCityValue(input.city || null);
+  const locations = normalizeLocations(input.locations, input.country || null, input.city || null);
+  const country = locations[0]?.country ? normalizeCountryValue(locations[0].country || null) : null;
+  const city = locations[0]?.city ? normalizeCityValue(locations[0].city || null) : null;
 
   const normalized: Reference = {
     ...input,
@@ -125,6 +158,7 @@ export function normalizeReferenceItem(input: Reference): Reference {
     tags: normalizeTags(areaPrimary, areasSecondary),
     country,
     city,
+    locations,
     updatedAt: input.updatedAt || new Date().toISOString(),
   };
 

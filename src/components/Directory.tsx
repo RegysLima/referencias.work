@@ -13,7 +13,7 @@ import {
   slugify,
   type Lang,
 } from "@/lib/i18n";
-import { canonicalCity, canonicalCountry, cityKey, countryKey } from "@/lib/location";
+import { canonicalCity, canonicalCountry, cityKey as citySlugKey, countryKey as countrySlugKey } from "@/lib/location";
 import { sendAnalyticsEvent } from "@/lib/analyticsClient";
 
 type AnyItem = Record<string, unknown>;
@@ -63,13 +63,53 @@ function getUrl(it: AnyItem) {
 }
 
 function getCountry(it: AnyItem) {
-  const raw = pickFirstString(it, ["country", "pais", "país"]);
-  return canonicalCountry(raw);
+  return getCountries(it)[0] || "";
 }
 
 function getCity(it: AnyItem) {
-  const raw = pickFirstString(it, ["city", "cidade"]);
-  return canonicalCity(raw);
+  return getCities(it)[0] || "";
+}
+
+function getLocationRows(it: AnyItem) {
+  const raw = it?.locations;
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((row) => {
+      const obj = row as Record<string, unknown>;
+      const country = canonicalCountry(asStr(obj?.country));
+      const city = canonicalCity(asStr(obj?.city));
+      if (!country && !city) return null;
+      return { country, city };
+    })
+    .filter((row): row is { country: string; city: string } => Boolean(row));
+}
+
+function uniqStrings(values: string[]) {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const value of values) {
+    const v = (value || "").trim();
+    if (!v) continue;
+    const key = v.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(v);
+  }
+  return out;
+}
+
+function getCountries(it: AnyItem) {
+  const rows = getLocationRows(it).map((row) => row.country).filter(Boolean);
+  const legacy = canonicalCountry(pickFirstString(it, ["country", "pais", "país"]));
+  const extras = pickFirstArray(it, ["countries", "paises", "países"]).map((v) => canonicalCountry(v));
+  return uniqStrings([legacy, ...rows, ...extras]);
+}
+
+function getCities(it: AnyItem) {
+  const rows = getLocationRows(it).map((row) => row.city).filter(Boolean);
+  const legacy = canonicalCity(pickFirstString(it, ["city", "cidade"]));
+  const extras = pickFirstArray(it, ["cities", "cidades"]).map((v) => canonicalCity(v));
+  return uniqStrings([legacy, ...rows, ...extras]);
 }
 
 function getThumb(it: AnyItem) {
@@ -191,11 +231,19 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
 }
 
 function getCountryKey(it: AnyItem) {
-  return countryKey(getCountry(it));
+  return countrySlugKey(getCountry(it));
 }
 
 function getCityKey(it: AnyItem) {
-  return cityKey(getCity(it));
+  return citySlugKey(getCity(it));
+}
+
+function getCountryKeys(it: AnyItem) {
+  return uniqStrings(getCountries(it).map((value) => countrySlugKey(value)).filter(Boolean));
+}
+
+function getCityKeys(it: AnyItem) {
+  return uniqStrings(getCities(it).map((value) => citySlugKey(value)).filter(Boolean));
 }
 
 function getAreaKeyFromLabel(label: string) {
@@ -652,10 +700,11 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     const samples = new Map<string, string>();
     for (const it of visibleItems) {
       if (macroKey !== ALL_KEY && getMacro(it) !== macroKey) continue;
-      const key = getCountryKey(it);
-      if (key) {
+      for (const country of getCountries(it)) {
+        const key = countrySlugKey(country);
+        if (!key) continue;
         keys.add(key);
-        if (!samples.has(key)) samples.set(key, getCountry(it));
+        if (!samples.has(key)) samples.set(key, country);
       }
     }
     const list = Array.from(keys).map((key) => ({
@@ -671,11 +720,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     const samples = new Map<string, string>();
     for (const it of visibleItems) {
       if (macroKey !== ALL_KEY && getMacro(it) !== macroKey) continue;
-      if (countryKey !== ALL_KEY && getCountryKey(it) !== countryKey) continue;
-      const key = getCityKey(it);
-      if (key) {
+      if (countryKey !== ALL_KEY && !getCountryKeys(it).includes(countryKey)) continue;
+      for (const city of getCities(it)) {
+        const key = citySlugKey(city);
+        if (!key) continue;
         keys.add(key);
-        if (!samples.has(key)) samples.set(key, getCity(it));
+        if (!samples.has(key)) samples.set(key, city);
       }
     }
     const list = Array.from(keys).map((key) => ({
@@ -691,8 +741,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     const samples = new Map<string, string>();
     for (const it of visibleItems) {
       if (macroKey !== ALL_KEY && getMacro(it) !== macroKey) continue;
-      if (countryKey !== ALL_KEY && getCountryKey(it) !== countryKey) continue;
-      if (cityKey !== ALL_KEY && getCityKey(it) !== cityKey) continue;
+      if (countryKey !== ALL_KEY && !getCountryKeys(it).includes(countryKey)) continue;
+      if (cityKey !== ALL_KEY && !getCityKeys(it).includes(cityKey)) continue;
       const raw = getPrimaryArea(it);
       const key = getAreaKeyFromLabel(raw);
       if (key) {
@@ -713,8 +763,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     const samples = new Map<string, string>();
     for (const it of visibleItems) {
       if (macroKey !== ALL_KEY && getMacro(it) !== macroKey) continue;
-      if (countryKey !== ALL_KEY && getCountryKey(it) !== countryKey) continue;
-      if (cityKey !== ALL_KEY && getCityKey(it) !== cityKey) continue;
+      if (countryKey !== ALL_KEY && !getCountryKeys(it).includes(countryKey)) continue;
+      if (cityKey !== ALL_KEY && !getCityKeys(it).includes(cityKey)) continue;
       for (const area of getSecondaryAreas(it)) {
         const key = getAreaKeyFromLabel(area);
         if (key) {
@@ -747,16 +797,16 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
     const base = visibleItems.filter((it) => {
       const m = getMacro(it);
-      const ctryKey = getCountryKey(it);
-      const ctyKey = getCityKey(it);
+      const ctryKeys = getCountryKeys(it);
+      const ctyKeys = getCityKeys(it);
       const pArea = getPrimaryArea(it);
       const sAreas = getSecondaryAreas(it);
       const pAreaKey = getAreaKeyFromLabel(pArea);
       const sAreaKeys = sAreas.map((s) => getAreaKeyFromLabel(s)).filter(Boolean);
 
       if (macroKey !== ALL_KEY && m !== macroKey) return false;
-      if (countryKey !== ALL_KEY && ctryKey !== countryKey) return false;
-      if (cityKey !== ALL_KEY && ctyKey !== cityKey) return false;
+      if (countryKey !== ALL_KEY && !ctryKeys.includes(countryKey)) return false;
+      if (cityKey !== ALL_KEY && !ctyKeys.includes(cityKey)) return false;
 
       if (
         areaPrimaryKey !== ALL_KEY &&
@@ -779,10 +829,18 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         const name = normalizeSearchText(getName(it));
         const url = normalizeSearchText(getUrl(it));
         const macro = normalizeSearchText(getMacro(it));
-        const country = normalizeSearchText(getCountry(it));
-        const city = normalizeSearchText(getCity(it));
-        const countryLabel = normalizeSearchText(getCountryLabel(it, lang));
-        const cityLabel = normalizeSearchText(getCityLabel(it, lang));
+        const country = normalizeSearchText(getCountries(it).join(" "));
+        const city = normalizeSearchText(getCities(it).join(" "));
+        const countryLabel = normalizeSearchText(
+          getCountries(it)
+            .map((value) => getLabel(COUNTRY_LABELS, countrySlugKey(value), lang, value))
+            .join(" ")
+        );
+        const cityLabel = normalizeSearchText(
+          getCities(it)
+            .map((value) => getLabel(CITY_LABELS, citySlugKey(value), lang, value))
+            .join(" ")
+        );
         const primaryAreaRaw = getPrimaryArea(it);
         const secondaryAreasRaw = getSecondaryAreas(it);
         const areaRaw = normalizeSearchText([primaryAreaRaw, ...secondaryAreasRaw].join(" "));

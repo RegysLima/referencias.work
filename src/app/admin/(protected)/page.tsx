@@ -15,6 +15,10 @@ type RefItem = {
 
   country?: string | null;
   city?: string | null;
+  locations?: Array<{
+    country?: string | null;
+    city?: string | null;
+  }>;
 
   thumbnailUrl?: string | null;
   thumbnailSource?: string | null;
@@ -298,18 +302,24 @@ function hasValue(value: string | null | undefined) {
   return Boolean((value ?? "").trim());
 }
 
+function hasLocationData(it: RefItem) {
+  if (hasValue(it.country) || hasValue(it.city)) return true;
+  const rows = it.locations || [];
+  return rows.some((row) => hasValue(row?.country ?? null) || hasValue(row?.city ?? null));
+}
+
 function hasActiveReviewFlags(it: RefItem) {
   if (!it.reviewFlags) return false;
-  const needsCountry = Boolean(it.reviewFlags.country) && !hasValue(it.country);
-  const needsCity = Boolean(it.reviewFlags.city) && !hasValue(it.city);
+  const needsCountry = Boolean(it.reviewFlags.country) && !hasLocationData(it);
+  const needsCity = Boolean(it.reviewFlags.city) && !hasLocationData(it);
   return needsCountry || needsCity;
 }
 
 function normalizeReviewFlags(it: RefItem) {
   if (!it.reviewFlags) return it;
   const nextFlags = { ...it.reviewFlags };
-  if (nextFlags.country && hasValue(it.country)) delete nextFlags.country;
-  if (nextFlags.city && hasValue(it.city)) delete nextFlags.city;
+  if (nextFlags.country && hasLocationData(it)) delete nextFlags.country;
+  if (nextFlags.city && hasLocationData(it)) delete nextFlags.city;
   const hasAny = Boolean(nextFlags.country || nextFlags.city);
   return {
     ...it,
@@ -325,6 +335,38 @@ function normalizeCountryValue(value: string | null | undefined) {
 function normalizeCityValue(value: string | null | undefined) {
   const next = canonicalCity(value ?? "");
   return next || null;
+}
+
+function normalizeLocations(
+  input:
+    | Array<{
+        country?: string | null;
+        city?: string | null;
+      }>
+    | undefined,
+  country: string | null | undefined,
+  city: string | null | undefined
+) {
+  const rows = [
+    { country, city },
+    ...((input || []).map((row) => ({
+      country: row?.country ?? null,
+      city: row?.city ?? null,
+    })) || []),
+  ];
+
+  const out: Array<{ country?: string | null; city?: string | null }> = [];
+  const seen = new Set<string>();
+  for (const row of rows) {
+    const c = normalizeCountryValue(row.country ?? null);
+    const ct = normalizeCityValue(row.city ?? null);
+    if (!c && !ct) continue;
+    const key = `${(c || "").toLowerCase()}::${(ct || "").toLowerCase()}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ country: c, city: ct });
+  }
+  return out;
 }
 
 type ThumbModalState = {
@@ -405,13 +447,15 @@ export default function AdminPage() {
         );
         const ap = (it.areaPrimary ?? "") as string;
         const as = normalizeSecondaryAreas(ap, (it.areasSecondary ?? []) as string[]);
+        const locations = normalizeLocations(it.locations, it.country ?? null, it.city ?? null);
         return {
           ...it,
           macroType,
           areasSecondary: as,
           tags: deriveTags(ap, as),
-          country: normalizeCountryValue(it.country ?? null),
-          city: normalizeCityValue(it.city ?? null),
+          country: locations[0]?.country ? normalizeCountryValue(locations[0].country ?? null) : null,
+          city: locations[0]?.city ? normalizeCityValue(locations[0].city ?? null) : null,
+          locations,
         };
       });
 
@@ -593,8 +637,22 @@ export default function AdminPage() {
         const area = normalizeSearchText(
           [i.areaPrimary || "", ...(i.areasSecondary || [])].join(" ")
         );
-        const country = normalizeSearchText(normalizeCountryValue(i.country || "") || "");
-        const city = normalizeSearchText(normalizeCityValue(i.city || "") || "");
+        const countries = normalizeSearchText(
+          [
+            normalizeCountryValue(i.country || "") || "",
+            ...((i.locations || [])
+              .map((row) => normalizeCountryValue(row?.country ?? null) || "")
+              .filter(Boolean)),
+          ].join(" ")
+        );
+        const cities = normalizeSearchText(
+          [
+            normalizeCityValue(i.city || "") || "",
+            ...((i.locations || [])
+              .map((row) => normalizeCityValue(row?.city ?? null) || "")
+              .filter(Boolean)),
+          ].join(" ")
+        );
         const status = normalizeSearchText(
           `${i.reviewedAt ? "revisado" : "nao revisado"} ${hasActiveReviewFlags(i) ? "revisar" : ""}`
         );
@@ -616,8 +674,8 @@ export default function AdminPage() {
             nameScore,
             urlScore,
             scoreTokenInText(area, token, 40, 34, 28),
-            scoreTokenInText(country, token, 36, 30, 24),
-            scoreTokenInText(city, token, 36, 30, 24),
+            scoreTokenInText(countries, token, 36, 30, 24),
+            scoreTokenInText(cities, token, 36, 30, 24),
             scoreTokenInText(macro, token, 34, 28, 22),
             scoreTokenInText(status, token, 20, 16, 12)
           );
@@ -664,18 +722,28 @@ export default function AdminPage() {
   }, [areaMap]);
 
   const countryOptions = useMemo(() => {
-    const values = items
-      .map((it) => normalizeCountryValue(it.country ?? null))
-      .filter((v): v is string => Boolean(v))
-      .map((v) => v.trim());
+    const values: string[] = [];
+    for (const it of items) {
+      const primary = normalizeCountryValue(it.country ?? null);
+      if (primary) values.push(primary.trim());
+      for (const row of it.locations || []) {
+        const c = normalizeCountryValue(row?.country ?? null);
+        if (c) values.push(c.trim());
+      }
+    }
     return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
   }, [items]);
 
   const cityOptions = useMemo(() => {
-    const values = items
-      .map((it) => normalizeCityValue(it.city ?? null))
-      .filter((v): v is string => Boolean(v))
-      .map((v) => v.trim());
+    const values: string[] = [];
+    for (const it of items) {
+      const primary = normalizeCityValue(it.city ?? null);
+      if (primary) values.push(primary.trim());
+      for (const row of it.locations || []) {
+        const c = normalizeCityValue(row?.city ?? null);
+        if (c) values.push(c.trim());
+      }
+    }
     return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
   }, [items]);
 
@@ -712,8 +780,10 @@ export default function AdminPage() {
         const as = normalizeSecondaryAreas(ap, (next.areasSecondary ?? []) as string[]);
         next.areasSecondary = as;
         next.tags = deriveTags(ap, as);
-        next.country = normalizeCountryValue(next.country);
-        next.city = normalizeCityValue(next.city);
+        const locations = normalizeLocations(next.locations, next.country, next.city);
+        next.locations = locations;
+        next.country = locations[0]?.country ? normalizeCountryValue(locations[0].country ?? null) : null;
+        next.city = locations[0]?.city ? normalizeCityValue(locations[0].city ?? null) : null;
 
         // se estava "Salvo ✓", volta para idle quando muda algo
         setSaveState((s) => (s === "saved" ? "idle" : s));
@@ -756,14 +826,22 @@ export default function AdminPage() {
     const normalized = normalizeCountryValue(value || null);
     const nextValue = normalized || "";
     setCountryDraft((prev) => ({ ...prev, [id]: nextValue }));
-    updateItem(id, { country: normalized });
+    const current = items.find((it) => it.id === id);
+    const rows = current?.locations ? [...current.locations] : [];
+    const first = rows[0] || { country: null, city: current?.city ?? null };
+    rows[0] = { ...first, country: normalized };
+    updateItem(id, { country: normalized, locations: rows });
   }
 
   function commitCityDraft(id: string, value: string) {
     const normalized = normalizeCityValue(value || null);
     const nextValue = normalized || "";
     setCityDraft((prev) => ({ ...prev, [id]: nextValue }));
-    updateItem(id, { city: normalized });
+    const current = items.find((it) => it.id === id);
+    const rows = current?.locations ? [...current.locations] : [];
+    const first = rows[0] || { country: current?.country ?? null, city: null };
+    rows[0] = { ...first, city: normalized };
+    updateItem(id, { city: normalized, locations: rows });
   }
 
   function getPrimaryAreaSuggestions(draftValue: string) {
@@ -887,6 +965,37 @@ export default function AdminPage() {
     updateItem(id, { areasSecondary: parsed });
   }
 
+  function updateLocationRow(
+    id: string,
+    rowIndex: number,
+    patch: { country?: string | null; city?: string | null }
+  ) {
+    const current = items.find((it) => it.id === id);
+    const rows = current?.locations ? [...current.locations] : [];
+    const base = rows[rowIndex] || { country: null, city: null };
+    rows[rowIndex] = {
+      ...base,
+      ...(patch.country !== undefined ? { country: normalizeCountryValue(patch.country ?? null) } : {}),
+      ...(patch.city !== undefined ? { city: normalizeCityValue(patch.city ?? null) } : {}),
+    };
+    updateItem(id, { locations: rows });
+  }
+
+  function addLocationRow(id: string) {
+    const current = items.find((it) => it.id === id);
+    const rows = current?.locations ? [...current.locations] : [];
+    rows.push({ country: null, city: null });
+    updateItem(id, { locations: rows });
+  }
+
+  function removeLocationRow(id: string, rowIndex: number) {
+    const current = items.find((it) => it.id === id);
+    const rows = current?.locations ? [...current.locations] : [];
+    if (rowIndex <= 0 || rowIndex >= rows.length) return;
+    rows.splice(rowIndex, 1);
+    updateItem(id, { locations: rows });
+  }
+
   function addNew() {
     const id = `manual-${Date.now()}`;
     const now = new Date().toISOString();
@@ -901,6 +1010,7 @@ export default function AdminPage() {
       tags: [],
       country: null,
       city: null,
+      locations: [],
       thumbnailUrl: null,
       thumbnailSource: "manual",
       updatedAt: now,
@@ -2070,7 +2180,51 @@ export default function AdminPage() {
                           </div>
                         </div>
 
+                        {((i.locations || []).slice(1)).map((row, idx) => {
+                          const rowIndex = idx + 1;
+                          return (
+                            <div key={`${i.id}-location-${rowIndex}`} className="contents">
+                              <div>
+                                <label className="text-xs text-zinc-500">País adicional {rowIndex}</label>
+                                <input
+                                  value={row?.country ?? ""}
+                                  onChange={(e) =>
+                                    updateLocationRow(i.id, rowIndex, { country: e.target.value || null })
+                                  }
+                                  className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                                />
+                              </div>
+                              <div>
+                                <div className="flex items-center justify-between">
+                                  <label className="text-xs text-zinc-500">Cidade adicional {rowIndex}</label>
+                                  <button
+                                    type="button"
+                                    onClick={() => removeLocationRow(i.id, rowIndex)}
+                                    className="text-[11px] text-zinc-500 underline hover:text-zinc-300"
+                                  >
+                                    remover
+                                  </button>
+                                </div>
+                                <input
+                                  value={row?.city ?? ""}
+                                  onChange={(e) =>
+                                    updateLocationRow(i.id, rowIndex, { city: e.target.value || null })
+                                  }
+                                  className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+
                         <div className="sm:col-span-2">
+                          <button
+                            type="button"
+                            onClick={() => addLocationRow(i.id)}
+                            className="mb-2 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                          >
+                            + Adicionar país e cidade
+                          </button>
                           <div className="mb-2 text-[11px] text-zinc-500">
                             Dica: use Tab/Setas/Enter para autocompletar país e cidade.
                           </div>
@@ -2085,9 +2239,13 @@ export default function AdminPage() {
                                 if (data?.country || data?.city) {
                                   const nextCountry = normalizeCountryValue(data.country ?? i.country ?? null);
                                   const nextCity = normalizeCityValue(data.city ?? i.city ?? null);
+                                  const rows = i.locations ? [...i.locations] : [];
+                                  const first = rows[0] || { country: null, city: null };
+                                  rows[0] = { ...first, country: nextCountry, city: nextCity };
                                   updateItem(i.id, {
                                     country: nextCountry,
                                     city: nextCity,
+                                    locations: rows,
                                   });
                                   setCountryDraft((prev) => ({
                                     ...prev,
