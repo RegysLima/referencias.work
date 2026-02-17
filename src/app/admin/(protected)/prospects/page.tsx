@@ -98,7 +98,7 @@ export default function AdminProspectsPage() {
         <div>
           <h1 className="text-xl font-semibold text-zinc-100">Prospects de Referências</h1>
           <p className="text-sm text-zinc-400">
-            Coleta automática de autores (visualjournal.it + visuelle.co.uk) e comparação com domínios já cadastrados.
+            Coleta automática de autores (visualjournal, visuelle, mindsparkle e the-brandidentity) e comparação com domínios já cadastrados.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -180,16 +180,6 @@ export default function AdminProspectsPage() {
               <div className="col-span-3">
                 <div className="font-medium text-zinc-100">{item.displayName || item.domain}</div>
                 <div className="text-xs text-zinc-500">{item.domain}</div>
-                {item.homepageUrl ? (
-                  <a
-                    href={item.homepageUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs text-zinc-400 underline hover:text-zinc-200"
-                  >
-                    abrir site
-                  </a>
-                ) : null}
               </div>
 
               <div className="col-span-2 text-xs text-zinc-400">
@@ -202,6 +192,20 @@ export default function AdminProspectsPage() {
               <div className="col-span-2 text-xs text-zinc-300">{labelStatus(item.status)}</div>
 
               <div className="col-span-3 flex flex-wrap gap-2">
+                {item.homepageUrl ? (
+                  <a
+                    href={item.homepageUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-8 items-center rounded-none border border-zinc-500 px-3 text-xs font-medium text-zinc-100 hover:border-zinc-300"
+                  >
+                    Abrir
+                  </a>
+                ) : (
+                  <span className="inline-flex h-8 items-center rounded-none border border-zinc-800 px-3 text-xs text-zinc-500">
+                    Sem URL
+                  </span>
+                )}
                 <button
                   onClick={() => patchItem(item.id, { status: "approved" })}
                   className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
@@ -213,12 +217,6 @@ export default function AdminProspectsPage() {
                   className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
                 >
                   Descartar
-                </button>
-                <button
-                  onClick={() => patchItem(item.id, { status: "new" })}
-                  className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
-                >
-                  Reabrir
                 </button>
               </div>
             </div>

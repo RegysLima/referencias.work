@@ -5,11 +5,43 @@ import { readReferencesDb } from "@/lib/referencesDb";
 import { readProspectsDb, writeProspectsDb } from "@/lib/prospectsDb";
 
 const SOURCE_SITES = [
-  { id: "visualjournal", url: "https://visualjournal.it/" },
-  { id: "visuelle", url: "https://visuelle.co.uk/" },
+  {
+    id: "visualjournal",
+    siteUrl: "https://visualjournal.it/",
+    seeds: [
+      "https://visualjournal.it/",
+      "https://visualjournal.it/tag/branding/",
+      "https://visualjournal.it/tag/graphic-design/",
+    ],
+  },
+  {
+    id: "visuelle",
+    siteUrl: "https://visuelle.co.uk/",
+    seeds: [
+      "https://visuelle.co.uk/",
+      "https://visuelle.co.uk/work/",
+      "https://visuelle.co.uk/studios/",
+    ],
+  },
+  {
+    id: "mindsparklemag",
+    siteUrl: "https://mindsparklemag.com/",
+    seeds: [
+      "https://mindsparklemag.com/inspiration",
+      "https://mindsparklemag.com/category/inspiration/",
+    ],
+  },
+  {
+    id: "the-brandidentity",
+    siteUrl: "https://the-brandidentity.com/",
+    seeds: [
+      "https://the-brandidentity.com/features",
+      "https://the-brandidentity.com/",
+    ],
+  },
 ] as const;
 
-const MAX_PAGES_PER_SITE = 60;
+const MAX_PAGES_PER_SITE = 140;
 const MAX_INTERNAL_LINKS_PER_PAGE = 120;
 const MAX_EXTERNAL_CANDIDATES_PER_PAGE = 60;
 
@@ -30,6 +62,11 @@ const BLOCKED_HOSTS = [
   "wa.me",
   "medium.com",
   "substack.com",
+  "buymeacoffee.com",
+  "ko-fi.com",
+  "patreon.com",
+  "spotify.com",
+  "apple.com",
   "mailto",
 ] as const;
 
@@ -44,6 +81,12 @@ const GENERIC_ANCHORS = [
   "site",
   "project",
   "case",
+  "podcast",
+  "podcasts",
+  "subscribe",
+  "newsletter",
+  "support",
+  "buy me a coffee",
 ] as const;
 
 const AUTHOR_HINTS = [
@@ -57,6 +100,21 @@ const AUTHOR_HINTS = [
   "credits",
   "team",
   "agency",
+] as const;
+
+const BLOCKED_CANDIDATE_KEYWORDS = [
+  "podcast",
+  "podcasts",
+  "spotify",
+  "apple podcast",
+  "buy me a coffee",
+  "donate",
+  "donation",
+  "newsletter",
+  "shop",
+  "store",
+  "episode",
+  "listen",
 ] as const;
 
 type CrawlContext = {
@@ -100,6 +158,10 @@ function normalizeAbsoluteUrl(value: string, base: string): string | null {
     const url = new URL(value, base);
     if (!/^https?:$/i.test(url.protocol)) return null;
     url.hash = "";
+    const removeParams = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+    for (const key of removeParams) {
+      url.searchParams.delete(key);
+    }
     return url.toString();
   } catch {
     return null;
@@ -115,6 +177,14 @@ function isGenericAnchor(text: string) {
   const clean = normalizeText(text);
   if (!clean) return true;
   return GENERIC_ANCHORS.some((generic) => clean === generic || clean.startsWith(`${generic} `));
+}
+
+function hasBlockedCandidateKeyword(text: string) {
+  const clean = normalizeText(text);
+  if (!clean) return false;
+  return BLOCKED_CANDIDATE_KEYWORDS.some(
+    (token) => clean.includes(token) || clean.replace(/\s+/g, "").includes(token.replace(/\s+/g, ""))
+  );
 }
 
 function scoreCandidate(anchorText: string, contextText: string) {
@@ -200,6 +270,10 @@ function extractFromPage(html: string, siteUrl: string, context: CrawlContext) {
 
     if (isBlockedDomain(domain)) return;
 
+    const urlForCheck = `${absolute} ${domain}`;
+    if (hasBlockedCandidateKeyword(urlForCheck)) return;
+    if (hasBlockedCandidateKeyword(contextText) || hasBlockedCandidateKeyword(anchorText)) return;
+
     const score = scoreCandidate(anchorText, contextText);
     if (score < 3) return;
     if (candidates.length >= MAX_EXTERNAL_CANDIDATES_PER_PAGE) return;
@@ -239,8 +313,8 @@ function mergeSources(
   return out.slice(0, 25);
 }
 
-async function crawlSourceSite(siteId: string, siteUrl: string) {
-  const queue: string[] = [siteUrl];
+async function crawlSourceSite(siteId: string, siteUrl: string, seeds: readonly string[]) {
+  const queue: string[] = Array.from(new Set([siteUrl, ...seeds]));
   const visited = new Set<string>();
   const candidateMap = new Map<string, ProspectCandidate>();
 
@@ -297,7 +371,9 @@ export async function collectProspectsMvp(): Promise<CollectResult> {
     const refDomainSet = existingReferenceDomains(referencesDb.items.map((item) => item.url));
 
     const crawlResults = await Promise.all(
-      SOURCE_SITES.map((source) => crawlSourceSite(source.id, source.url))
+      SOURCE_SITES.map((source) =>
+        crawlSourceSite(source.id, source.siteUrl, source.seeds)
+      )
     );
 
     const crawledPages = crawlResults.reduce((acc, row) => acc + row.crawledPages, 0);
