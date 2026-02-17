@@ -2011,6 +2011,9 @@ export default function AdminPage() {
                           <div className="relative mt-1">
                             <input
                               value={countryDraft[i.id] ?? i.country ?? ""}
+                              autoComplete="new-password"
+                              autoCorrect="off"
+                              spellCheck={false}
                               onChange={(e) => {
                                 setCountryDraft((prev) => ({ ...prev, [i.id]: e.target.value }));
                                 setCountrySuggestOpenId(i.id);
@@ -2124,6 +2127,9 @@ export default function AdminPage() {
                           <div className="relative mt-1">
                             <input
                               value={cityDraft[i.id] ?? i.city ?? ""}
+                              autoComplete="new-password"
+                              autoCorrect="off"
+                              spellCheck={false}
                               onChange={(e) => {
                                 setCityDraft((prev) => ({ ...prev, [i.id]: e.target.value }));
                                 setCitySuggestOpenId(i.id);
@@ -2237,12 +2243,18 @@ export default function AdminPage() {
                           const countryFieldKey = `${i.id}:${rowIndex}:country`;
                           const cityFieldKey = `${i.id}:${rowIndex}:city`;
                           return (
-                            <div key={`${i.id}-location-${rowIndex}`} className="contents">
+                            <div
+                              key={`${i.id}-location-${rowIndex}`}
+                              className="sm:col-span-2 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start"
+                            >
                               <div>
-                                <div className="relative mt-1">
+                                <div className="relative">
                                   <input
                                     value={locationDraft[countryFieldKey] ?? row?.country ?? ""}
                                     placeholder="País adicional"
+                                    autoComplete="new-password"
+                                    autoCorrect="off"
+                                    spellCheck={false}
                                     onChange={(e) => {
                                       setLocationDraft((prev) => ({
                                         ...prev,
@@ -2364,19 +2376,13 @@ export default function AdminPage() {
                                 </div>
                               </div>
                               <div>
-                                <div className="flex items-center justify-between">
-                                  <button
-                                    type="button"
-                                    onClick={() => removeLocationRow(i.id, rowIndex)}
-                                    className="text-[11px] text-zinc-500 underline hover:text-zinc-300"
-                                  >
-                                    remover
-                                  </button>
-                                </div>
-                                <div className="relative mt-1">
+                                <div className="relative">
                                   <input
                                     value={locationDraft[cityFieldKey] ?? row?.city ?? ""}
                                     placeholder="Cidade adicional"
+                                    autoComplete="new-password"
+                                    autoCorrect="off"
+                                    spellCheck={false}
                                     onChange={(e) => {
                                       setLocationDraft((prev) => ({
                                         ...prev,
@@ -2496,6 +2502,15 @@ export default function AdminPage() {
                                     </div>
                                   ) : null}
                                 </div>
+                              </div>
+                              <div className="pt-2 sm:pt-2">
+                                <button
+                                  type="button"
+                                  onClick={() => removeLocationRow(i.id, rowIndex)}
+                                  className="text-[11px] text-zinc-500 underline hover:text-zinc-300"
+                                >
+                                  remover
+                                </button>
                               </div>
                             </div>
                           );
