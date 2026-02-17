@@ -140,7 +140,7 @@ function scoreTokenInText(
 }
 
 function isVideoUrl(src: string) {
-  return /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(src);
+  return /\.(mp4|webm|mov|m4v|ogv|m3u8)(\?|#|$)/i.test(src);
 }
 
 function isVimeoUrl(src: string) {
