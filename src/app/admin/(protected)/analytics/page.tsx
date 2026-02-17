@@ -221,6 +221,22 @@ function LineChart({
   );
 }
 
+function getInteractionLabel(type: string) {
+  const map: Record<string, string> = {
+    load_more_click: "Carregar mais",
+    filter_apply: "Aplicar filtro",
+    donation_card_view: "Card de apoio (view)",
+    donation_card_dismiss: "Card de apoio (fechar)",
+    donation_pix_click: "Apoio via Pix",
+    donation_paypal_click: "Apoio via PayPal",
+    search: "Busca",
+    search_no_results: "Busca sem resultado",
+    ref: "Clique em referência",
+  };
+  if (map[type]) return map[type];
+  return type.replace(/_/g, " ");
+}
+
 export default function AdminAnalyticsPage() {
   const [summary, setSummary] = useState<Summary>(EMPTY);
   const [loading, setLoading] = useState(true);
@@ -611,7 +627,7 @@ export default function AdminAnalyticsPage() {
             {interactionRows.length ? (
               interactionRows.map(([type, count]) => (
                 <div key={type} className="flex items-center justify-between">
-                  <span className="truncate">{type}</span>
+                  <span className="truncate">{getInteractionLabel(type)}</span>
                   <span className="text-zinc-500">{count}</span>
                 </div>
               ))
