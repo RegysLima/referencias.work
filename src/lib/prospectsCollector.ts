@@ -44,6 +44,9 @@ const SOURCE_SITES = [
 const MAX_PAGES_PER_SITE = 140;
 const MAX_INTERNAL_LINKS_PER_PAGE = 120;
 const MAX_EXTERNAL_CANDIDATES_PER_PAGE = 60;
+const STEP_PAGE_BUDGET = 10;
+const STEP_TIME_BUDGET_MS = 6500;
+const FETCH_TIMEOUT_MS = 2800;
 
 const BLOCKED_HOSTS = [
   "instagram.com",
@@ -122,8 +125,31 @@ type CrawlContext = {
   siteId: string;
 };
 
-type CollectResult = {
+type CrawlSiteState = {
+  siteId: string;
+  siteUrl: string;
+  queue: string[];
+  queuedSet: Set<string>;
+  visitedSet: Set<string>;
+  candidates: Record<string, ProspectCandidate>;
+};
+
+type CrawlState = {
+  active: boolean;
+  startedAt: string;
+  updatedAt: string;
+  processedPages: number;
+  totalPlannedPages: number;
+  siteIndex: number;
+  sites: CrawlSiteState[];
+};
+
+export type CollectionStepResult = {
   ok: boolean;
+  done: boolean;
+  active: boolean;
+  progressPct: number;
+  progressLabel: string;
   crawledPages: number;
   discoveredCandidates: number;
   skippedAlreadyKnownDomains: number;
@@ -213,6 +239,9 @@ function toCandidateId(domain: string) {
 }
 
 async function fetchHtml(url: string): Promise<string | null> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
   try {
     const response = await fetch(url, {
       redirect: "follow",
@@ -220,6 +249,7 @@ async function fetchHtml(url: string): Promise<string | null> {
         "user-agent": "referencias.work-bot/1.0 (+https://referencias.work)",
       },
       cache: "no-store",
+      signal: controller.signal,
     });
 
     if (!response.ok) return null;
@@ -230,6 +260,8 @@ async function fetchHtml(url: string): Promise<string | null> {
     return await response.text();
   } catch {
     return null;
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -296,6 +328,16 @@ function extractFromPage(html: string, siteUrl: string, context: CrawlContext) {
   };
 }
 
+function existingReferenceDomains(urls: string[]) {
+  const set = new Set<string>();
+  for (const url of urls) {
+    const domain = normalizeDomainFromUrl(url);
+    if (!domain) continue;
+    set.add(domain);
+  }
+  return set;
+}
+
 function mergeSources(
   current: ProspectItem["sources"],
   incoming: ProspectItem["sources"]
@@ -313,198 +355,401 @@ function mergeSources(
   return out.slice(0, 25);
 }
 
-async function crawlSourceSite(siteId: string, siteUrl: string, seeds: readonly string[]) {
-  const queue: string[] = Array.from(new Set([siteUrl, ...seeds]));
-  const visited = new Set<string>();
-  const candidateMap = new Map<string, ProspectCandidate>();
+function createInitialCrawlState(): CrawlState {
+  const startedAt = new Date().toISOString();
+  return {
+    active: true,
+    startedAt,
+    updatedAt: startedAt,
+    processedPages: 0,
+    totalPlannedPages: SOURCE_SITES.length * MAX_PAGES_PER_SITE,
+    siteIndex: 0,
+    sites: SOURCE_SITES.map((source) => {
+      const queue = Array.from(new Set([source.siteUrl, ...source.seeds]));
+      return {
+        siteId: source.id,
+        siteUrl: source.siteUrl,
+        queue,
+        queuedSet: new Set(queue),
+        visitedSet: new Set<string>(),
+        candidates: {},
+      };
+    }),
+  };
+}
 
-  while (queue.length && visited.size < MAX_PAGES_PER_SITE) {
-    const pageUrl = queue.shift();
+function serializeCrawlState(state: CrawlState): NonNullable<ProspectsDB["crawlState"]> {
+  return {
+    active: state.active,
+    startedAt: state.startedAt,
+    updatedAt: state.updatedAt,
+    processedPages: state.processedPages,
+    totalPlannedPages: state.totalPlannedPages,
+    siteIndex: state.siteIndex,
+    sites: state.sites.map((site) => ({
+      siteId: site.siteId,
+      siteUrl: site.siteUrl,
+      queue: site.queue,
+      queuedSet: Array.from(site.queuedSet),
+      visitedSet: Array.from(site.visitedSet),
+      candidates: site.candidates,
+    })),
+  };
+}
+
+function hydrateCrawlState(input: ProspectsDB["crawlState"]): CrawlState | null {
+  if (!input || !input.active || !Array.isArray(input.sites)) return null;
+  return {
+    active: true,
+    startedAt: input.startedAt,
+    updatedAt: input.updatedAt,
+    processedPages: input.processedPages || 0,
+    totalPlannedPages: input.totalPlannedPages || SOURCE_SITES.length * MAX_PAGES_PER_SITE,
+    siteIndex: input.siteIndex || 0,
+    sites: input.sites.map((site) => ({
+      siteId: site.siteId,
+      siteUrl: site.siteUrl,
+      queue: Array.isArray(site.queue) ? [...site.queue] : [],
+      queuedSet: new Set(Array.isArray(site.queuedSet) ? site.queuedSet : []),
+      visitedSet: new Set(Array.isArray(site.visitedSet) ? site.visitedSet : []),
+      candidates: site.candidates || {},
+    })),
+  };
+}
+
+function findNextSiteIndex(state: CrawlState) {
+  for (let i = state.siteIndex; i < state.sites.length; i += 1) {
+    const site = state.sites[i];
+    if (!site) continue;
+    if (site.visitedSet.size >= MAX_PAGES_PER_SITE) continue;
+    if (!site.queue.length) continue;
+    return i;
+  }
+
+  for (let i = 0; i < state.siteIndex; i += 1) {
+    const site = state.sites[i];
+    if (!site) continue;
+    if (site.visitedSet.size >= MAX_PAGES_PER_SITE) continue;
+    if (!site.queue.length) continue;
+    return i;
+  }
+
+  return -1;
+}
+
+async function executeCrawlStep(state: CrawlState) {
+  const startedAt = Date.now();
+  let processedThisStep = 0;
+
+  while (processedThisStep < STEP_PAGE_BUDGET && Date.now() - startedAt < STEP_TIME_BUDGET_MS) {
+    const nextSiteIndex = findNextSiteIndex(state);
+    if (nextSiteIndex < 0) {
+      state.active = false;
+      break;
+    }
+
+    state.siteIndex = nextSiteIndex;
+    const site = state.sites[nextSiteIndex];
+    if (!site) {
+      state.active = false;
+      break;
+    }
+
+    const pageUrl = site.queue.shift();
     if (!pageUrl) continue;
-    if (visited.has(pageUrl)) continue;
-    visited.add(pageUrl);
+    site.queuedSet.delete(pageUrl);
+
+    if (site.visitedSet.has(pageUrl)) continue;
+    site.visitedSet.add(pageUrl);
+    processedThisStep += 1;
+    state.processedPages += 1;
 
     const html = await fetchHtml(pageUrl);
     if (!html) continue;
 
-    const extracted = extractFromPage(html, siteUrl, { pageUrl, siteId });
+    const extracted = extractFromPage(html, site.siteUrl, { pageUrl, siteId: site.siteId });
 
     for (const link of extracted.internalLinks) {
-      if (visited.has(link)) continue;
-      if (queue.includes(link)) continue;
-      queue.push(link);
+      if (site.visitedSet.has(link)) continue;
+      if (site.queuedSet.has(link)) continue;
+      site.queue.push(link);
+      site.queuedSet.add(link);
     }
 
     for (const candidate of extracted.candidates) {
-      const existing = candidateMap.get(candidate.domain);
+      const existing = site.candidates[candidate.domain];
       if (!existing || candidate.score > existing.score) {
-        candidateMap.set(candidate.domain, candidate);
+        site.candidates[candidate.domain] = candidate;
       }
     }
   }
 
-  return {
-    crawledPages: visited.size,
-    candidates: Array.from(candidateMap.values()),
-  };
+  state.updatedAt = new Date().toISOString();
 }
 
-function existingReferenceDomains(urls: string[]) {
-  const set = new Set<string>();
-  for (const url of urls) {
-    const domain = normalizeDomainFromUrl(url);
-    if (!domain) continue;
-    set.add(domain);
-  }
-  return set;
-}
-
-export async function collectProspectsMvp(): Promise<CollectResult> {
-  const startedAt = new Date().toISOString();
-
-  try {
-    const [referencesDb, prospectsDb] = await Promise.all([
-      readReferencesDb(),
-      readProspectsDb(),
-    ]);
-
-    const refDomainSet = existingReferenceDomains(referencesDb.items.map((item) => item.url));
-
-    const crawlResults = await Promise.all(
-      SOURCE_SITES.map((source) =>
-        crawlSourceSite(source.id, source.siteUrl, source.seeds)
-      )
-    );
-
-    const crawledPages = crawlResults.reduce((acc, row) => acc + row.crawledPages, 0);
-    const discoveredRaw = crawlResults.flatMap((row) => row.candidates);
-
-    const deduped = new Map<string, ProspectCandidate>();
-    for (const candidate of discoveredRaw) {
+function dedupCandidatesFromState(state: CrawlState) {
+  const deduped = new Map<string, ProspectCandidate>();
+  for (const site of state.sites) {
+    for (const candidate of Object.values(site.candidates || {})) {
       const existing = deduped.get(candidate.domain);
       if (!existing || candidate.score > existing.score) {
         deduped.set(candidate.domain, candidate);
       }
     }
+  }
+  return Array.from(deduped.values());
+}
 
-    const now = new Date().toISOString();
-    const incoming = Array.from(deduped.values());
+async function finalizeCollection(db: ProspectsDB, state: CrawlState): Promise<CollectionStepResult> {
+  const referencesDb = await readReferencesDb();
+  const refDomainSet = existingReferenceDomains(referencesDb.items.map((item) => item.url));
 
-    let skippedAlreadyKnownDomains = 0;
-    let newCandidates = 0;
-    let updatedCandidates = 0;
+  const incoming = dedupCandidatesFromState(state);
+  const now = new Date().toISOString();
 
-    const itemsByDomain = new Map(
-      prospectsDb.items.map((item) => [item.domain.toLowerCase(), item] as const)
-    );
+  let skippedAlreadyKnownDomains = 0;
+  let newCandidates = 0;
+  let updatedCandidates = 0;
 
-    for (const candidate of incoming) {
-      if (refDomainSet.has(candidate.domain)) {
-        skippedAlreadyKnownDomains += 1;
-        continue;
-      }
+  const itemsByDomain = new Map(
+    db.items.map((item) => [item.domain.toLowerCase(), item] as const)
+  );
 
-      const key = candidate.domain.toLowerCase();
-      const existing = itemsByDomain.get(key);
-
-      const sourceRow = {
-        siteId: candidate.sourceSite,
-        sourcePageUrl: candidate.sourcePageUrl,
-        homepageUrl: candidate.homepageUrl,
-        label: candidate.displayName || null,
-      };
-
-      if (!existing) {
-        const created: ProspectItem = {
-          id: toCandidateId(candidate.domain),
-          domain: candidate.domain,
-          displayName: candidate.displayName || null,
-          homepageUrl: candidate.homepageUrl,
-          status: "new",
-          notes: null,
-          occurrences: 1,
-          firstSeenAt: now,
-          lastSeenAt: now,
-          sources: [sourceRow],
-        };
-        itemsByDomain.set(key, created);
-        newCandidates += 1;
-        continue;
-      }
-
-      const mergedSources = mergeSources(existing.sources || [], [sourceRow]);
-      const changedSources = mergedSources.length !== (existing.sources || []).length;
-      const changedDisplayName = !existing.displayName && candidate.displayName;
-      const changedHomepage = !existing.homepageUrl && candidate.homepageUrl;
-
-      itemsByDomain.set(key, {
-        ...existing,
-        displayName: changedDisplayName ? candidate.displayName || null : existing.displayName,
-        homepageUrl: changedHomepage ? candidate.homepageUrl : existing.homepageUrl,
-        occurrences: Math.max(1, existing.occurrences || 1) + 1,
-        lastSeenAt: now,
-        sources: mergedSources,
-      });
-
-      if (changedSources || changedDisplayName || changedHomepage) {
-        updatedCandidates += 1;
-      }
+  for (const candidate of incoming) {
+    if (refDomainSet.has(candidate.domain)) {
+      skippedAlreadyKnownDomains += 1;
+      continue;
     }
 
-    const items = Array.from(itemsByDomain.values()).sort((a, b) => {
-      const statusWeight = (value: ProspectItem["status"]) => {
-        if (value === "new") return 0;
-        if (value === "approved") return 1;
-        return 2;
-      };
+    const key = candidate.domain.toLowerCase();
+    const existing = itemsByDomain.get(key);
 
-      const weightDiff = statusWeight(a.status) - statusWeight(b.status);
-      if (weightDiff !== 0) return weightDiff;
-      return (b.lastSeenAt || "").localeCompare(a.lastSeenAt || "");
-    });
-
-    const nextDb: ProspectsDB = {
-      ...prospectsDb,
-      items,
-      count: items.length,
-      updatedAt: now,
-      lastRun: {
-        ranAt: now,
-        startedAt,
-        ok: true,
-        crawledPages,
-        discoveredCandidates: incoming.length,
-        skippedAlreadyKnownDomains,
-        newCandidates,
-        updatedCandidates,
-        error: null,
-      },
+    const sourceRow = {
+      siteId: candidate.sourceSite,
+      sourcePageUrl: candidate.sourcePageUrl,
+      homepageUrl: candidate.homepageUrl,
+      label: candidate.displayName || null,
     };
 
-    await writeProspectsDb(nextDb);
+    if (!existing) {
+      const created: ProspectItem = {
+        id: toCandidateId(candidate.domain),
+        domain: candidate.domain,
+        displayName: candidate.displayName || null,
+        homepageUrl: candidate.homepageUrl,
+        status: "new",
+        notes: null,
+        occurrences: 1,
+        firstSeenAt: now,
+        lastSeenAt: now,
+        sources: [sourceRow],
+      };
+      itemsByDomain.set(key, created);
+      newCandidates += 1;
+      continue;
+    }
 
-    return {
+    const mergedSources = mergeSources(existing.sources || [], [sourceRow]);
+    const changedSources = mergedSources.length !== (existing.sources || []).length;
+    const changedDisplayName = !existing.displayName && candidate.displayName;
+    const changedHomepage = !existing.homepageUrl && candidate.homepageUrl;
+
+    itemsByDomain.set(key, {
+      ...existing,
+      displayName: changedDisplayName ? candidate.displayName || null : existing.displayName,
+      homepageUrl: changedHomepage ? candidate.homepageUrl : existing.homepageUrl,
+      occurrences: Math.max(1, existing.occurrences || 1) + 1,
+      lastSeenAt: now,
+      sources: mergedSources,
+    });
+
+    if (changedSources || changedDisplayName || changedHomepage) {
+      updatedCandidates += 1;
+    }
+  }
+
+  const items = Array.from(itemsByDomain.values()).sort((a, b) => {
+    const statusWeight = (value: ProspectItem["status"]) => {
+      if (value === "new") return 0;
+      if (value === "approved") return 1;
+      return 2;
+    };
+
+    const weightDiff = statusWeight(a.status) - statusWeight(b.status);
+    if (weightDiff !== 0) return weightDiff;
+    return (b.lastSeenAt || "").localeCompare(a.lastSeenAt || "");
+  });
+
+  const nextDb: ProspectsDB = {
+    ...db,
+    items,
+    count: items.length,
+    updatedAt: now,
+    crawlState: null,
+    lastRun: {
+      ranAt: now,
+      startedAt: state.startedAt,
       ok: true,
-      crawledPages,
+      crawledPages: state.processedPages,
       discoveredCandidates: incoming.length,
       skippedAlreadyKnownDomains,
       newCandidates,
       updatedCandidates,
-      totalActiveCandidates: items.length,
+      error: null,
+    },
+  };
+
+  await writeProspectsDb(nextDb);
+
+  return {
+    ok: true,
+    done: true,
+    active: false,
+    progressPct: 100,
+    progressLabel: "100%",
+    crawledPages: state.processedPages,
+    discoveredCandidates: incoming.length,
+    skippedAlreadyKnownDomains,
+    newCandidates,
+    updatedCandidates,
+    totalActiveCandidates: items.length,
+  };
+}
+
+function progressPct(state: CrawlState) {
+  if (!state.totalPlannedPages) return 0;
+  const raw = Math.floor((state.processedPages / state.totalPlannedPages) * 100);
+  return Math.max(0, Math.min(99, raw));
+}
+
+export async function getProspectsCollectionStatus(): Promise<CollectionStepResult> {
+  const db = await readProspectsDb();
+  const state = hydrateCrawlState(db.crawlState);
+
+  if (!state || !state.active) {
+    const crawled = db.lastRun?.crawledPages || 0;
+    return {
+      ok: true,
+      done: true,
+      active: false,
+      progressPct: 100,
+      progressLabel: "100%",
+      crawledPages: crawled,
+      discoveredCandidates: db.lastRun?.discoveredCandidates || 0,
+      skippedAlreadyKnownDomains: db.lastRun?.skippedAlreadyKnownDomains || 0,
+      newCandidates: db.lastRun?.newCandidates || 0,
+      updatedCandidates: db.lastRun?.updatedCandidates || 0,
+      totalActiveCandidates: db.items.length,
+    };
+  }
+
+  const pct = progressPct(state);
+  return {
+    ok: true,
+    done: false,
+    active: true,
+    progressPct: pct,
+    progressLabel: `${pct}%`,
+    crawledPages: state.processedPages,
+    discoveredCandidates: dedupCandidatesFromState(state).length,
+    skippedAlreadyKnownDomains: 0,
+    newCandidates: 0,
+    updatedCandidates: 0,
+    totalActiveCandidates: db.items.length,
+  };
+}
+
+export async function startProspectsCollection(): Promise<CollectionStepResult> {
+  const db = await readProspectsDb();
+  const current = hydrateCrawlState(db.crawlState);
+
+  if (current?.active) {
+    const pct = progressPct(current);
+    return {
+      ok: true,
+      done: false,
+      active: true,
+      progressPct: pct,
+      progressLabel: `${pct}%`,
+      crawledPages: current.processedPages,
+      discoveredCandidates: dedupCandidatesFromState(current).length,
+      skippedAlreadyKnownDomains: 0,
+      newCandidates: 0,
+      updatedCandidates: 0,
+      totalActiveCandidates: db.items.length,
+    };
+  }
+
+  const state = createInitialCrawlState();
+  await writeProspectsDb({
+    ...db,
+    crawlState: serializeCrawlState(state),
+  });
+
+  return {
+    ok: true,
+    done: false,
+    active: true,
+    progressPct: 0,
+    progressLabel: "0%",
+    crawledPages: 0,
+    discoveredCandidates: 0,
+    skippedAlreadyKnownDomains: 0,
+    newCandidates: 0,
+    updatedCandidates: 0,
+    totalActiveCandidates: db.items.length,
+  };
+}
+
+export async function runProspectsCollectionStep(): Promise<CollectionStepResult> {
+  const db = await readProspectsDb();
+  const state = hydrateCrawlState(db.crawlState);
+
+  if (!state || !state.active) {
+    return await startProspectsCollection();
+  }
+
+  try {
+    await executeCrawlStep(state);
+
+    if (!state.active) {
+      return await finalizeCollection(db, state);
+    }
+
+    const serialized = serializeCrawlState(state);
+    await writeProspectsDb({
+      ...db,
+      crawlState: serialized,
+      updatedAt: new Date().toISOString(),
+    });
+
+    const pct = progressPct(state);
+    return {
+      ok: true,
+      done: false,
+      active: true,
+      progressPct: pct,
+      progressLabel: `${pct}%`,
+      crawledPages: state.processedPages,
+      discoveredCandidates: dedupCandidatesFromState(state).length,
+      skippedAlreadyKnownDomains: 0,
+      newCandidates: 0,
+      updatedCandidates: 0,
+      totalActiveCandidates: db.items.length,
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : "unknown_error";
-
-    const db = await readProspectsDb();
     const now = new Date().toISOString();
+
     await writeProspectsDb({
       ...db,
+      crawlState: null,
       lastRun: {
         ranAt: now,
-        startedAt,
+        startedAt: state.startedAt,
         ok: false,
-        crawledPages: 0,
-        discoveredCandidates: 0,
+        crawledPages: state.processedPages,
+        discoveredCandidates: dedupCandidatesFromState(state).length,
         skippedAlreadyKnownDomains: 0,
         newCandidates: 0,
         updatedCandidates: 0,
@@ -514,7 +759,11 @@ export async function collectProspectsMvp(): Promise<CollectResult> {
 
     return {
       ok: false,
-      crawledPages: 0,
+      done: true,
+      active: false,
+      progressPct: 100,
+      progressLabel: "erro",
+      crawledPages: state.processedPages,
       discoveredCandidates: 0,
       skippedAlreadyKnownDomains: 0,
       newCandidates: 0,

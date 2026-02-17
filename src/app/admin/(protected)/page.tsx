@@ -112,6 +112,20 @@ function normalizeUrl(u: string) {
   }
 }
 
+function deriveNameFromUrl(u: string) {
+  try {
+    const host = new URL(u).hostname.replace(/^www\./, "");
+    const base = host.split(".")[0] || host;
+    if (!base) return "Nova referência";
+    return base
+      .split("-")
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+  } catch {
+    return "Nova referência";
+  }
+}
+
 function normalizeSearchText(value: string) {
   return (value || "")
     .toLowerCase()
@@ -384,6 +398,7 @@ type ThumbModalState = {
 
 export default function AdminPage() {
   const [items, setItems] = useState<RefItem[]>([]);
+  const [loaded, setLoaded] = useState(false);
   const [q, setQ] = useState("");
   const [onlyNoImage, setOnlyNoImage] = useState(false);
   const [onlyUnreviewed, setOnlyUnreviewed] = useState(false);
@@ -489,8 +504,55 @@ export default function AdminPage() {
       setCountryDraft(countryDraftMap);
       setCityDraft(cityDraftMap);
       setLocationDraft(locationDraftMap);
+      setLoaded(true);
     })();
   }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
+    const params = new URLSearchParams(window.location.search);
+    const prefillUrl = (params.get("prefillUrl") || "").trim();
+    if (!prefillUrl) return;
+
+    const normalizedPrefillUrl = normalizeUrl(prefillUrl);
+    const alreadyExists = items.some((it) => normalizeUrl(it.url) === normalizedPrefillUrl);
+    if (alreadyExists) {
+      showToast("URL já existe nas referências.");
+      window.history.replaceState({}, "", "/admin");
+      return;
+    }
+
+    const id = `prospect-${Date.now()}`;
+    const now = new Date().toISOString();
+    const prefillName = (params.get("prefillName") || "").trim();
+    const prefillMacroType = normalizeMacro((params.get("prefillMacroType") || "Studios").trim());
+
+    const newItem: RefItem = {
+      id,
+      name: prefillName || deriveNameFromUrl(prefillUrl),
+      url: prefillUrl,
+      macroType: prefillMacroType,
+      areaPrimary: "",
+      areasSecondary: [],
+      tags: [],
+      country: null,
+      city: null,
+      locations: [],
+      thumbnailUrl: null,
+      thumbnailSource: "manual",
+      updatedAt: now,
+      reviewedAt: null,
+    };
+
+    setItems((prev) => [newItem, ...prev]);
+    setPrimaryAreaDraft((prev) => ({ ...prev, [id]: "" }));
+    setSecondaryDraft((prev) => ({ ...prev, [id]: "" }));
+    setCountryDraft((prev) => ({ ...prev, [id]: "" }));
+    setCityDraft((prev) => ({ ...prev, [id]: "" }));
+    setOpenId(id);
+    showToast("Referência pré-preenchida adicionada.");
+    window.history.replaceState({}, "", "/admin");
+  }, [loaded, items]);
 
   const duplicateMap = useMemo(() => {
     const map = new Map<string, number>();

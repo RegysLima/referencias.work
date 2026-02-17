@@ -27,6 +27,7 @@ export default function AdminProspectsPage() {
   const [data, setData] = useState<ProspectsDB>(EMPTY);
   const [loading, setLoading] = useState(false);
   const [collecting, setCollecting] = useState(false);
+  const [collectProgress, setCollectProgress] = useState(0);
   const [statusFilter, setStatusFilter] = useState<"all" | ProspectStatus>("new");
   const [error, setError] = useState<string>("");
 
@@ -50,17 +51,45 @@ export default function AdminProspectsPage() {
     setCollecting(true);
     setError("");
     try {
-      const res = await fetch("/api/admin/prospects/collect", { method: "POST" });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Falha na coleta");
+      const start = await fetch("/api/admin/prospects/collect", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ action: "start" }),
+      });
+      if (!start.ok) {
+        const text = await start.text();
+        throw new Error(text || "Falha ao iniciar coleta");
       }
+
+      let done = false;
+      let safety = 0;
+      while (!done && safety < 250) {
+        safety += 1;
+        const step = await fetch("/api/admin/prospects/collect", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ action: "step" }),
+        });
+        if (!step.ok) {
+          const text = await step.text();
+          throw new Error(text || "Falha na coleta");
+        }
+        const result = (await step.json()) as {
+          done?: boolean;
+          progressPct?: number;
+        };
+        setCollectProgress(Math.max(0, Math.min(100, Number(result.progressPct || 0))));
+        done = Boolean(result.done);
+      }
+
+      setCollectProgress(100);
       await loadData();
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro inesperado";
       setError(msg);
     } finally {
       setCollecting(false);
+      setTimeout(() => setCollectProgress(0), 1200);
     }
   }
 
@@ -86,6 +115,31 @@ export default function AdminProspectsPage() {
   useEffect(() => {
     void loadData();
   }, []);
+
+  async function approveAndOpen(item: ProspectsDB["items"][number]) {
+    try {
+      setError("");
+      const res = await fetch("/api/admin/prospects", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id: item.id, status: "approved" }),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Falha ao aprovar prospect");
+      }
+
+      const params = new URLSearchParams();
+      params.set("prefillName", item.displayName || item.domain);
+      params.set("prefillUrl", item.homepageUrl || `https://${item.domain}`);
+      params.set("prefillMacroType", "Studios");
+      params.set("prospectId", item.id);
+      window.location.href = `/admin?${params.toString()}`;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Erro inesperado";
+      setError(msg);
+    }
+  }
 
   const filteredItems = useMemo(() => {
     if (statusFilter === "all") return data.items;
@@ -114,7 +168,7 @@ export default function AdminProspectsPage() {
             disabled={collecting}
             className="h-10 rounded-none border border-zinc-200 bg-zinc-100 px-4 text-sm text-zinc-950 hover:bg-zinc-200 disabled:opacity-50"
           >
-            {collecting ? "Coletando..." : "Executar coleta"}
+            {collecting ? `Coletando ${collectProgress}%` : "Executar coleta"}
           </button>
         </div>
       </div>
@@ -207,7 +261,7 @@ export default function AdminProspectsPage() {
                   </span>
                 )}
                 <button
-                  onClick={() => patchItem(item.id, { status: "approved" })}
+                  onClick={() => approveAndOpen(item)}
                   className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
                 >
                   Aprovar

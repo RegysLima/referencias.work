@@ -76,4 +76,20 @@ export type ProspectsDB = {
   items: ProspectItem[];
   updatedAt: string | null;
   lastRun: ProspectsLastRun | null;
+  crawlState?: {
+    active: boolean;
+    startedAt: string;
+    updatedAt: string;
+    processedPages: number;
+    totalPlannedPages: number;
+    siteIndex: number;
+    sites: Array<{
+      siteId: string;
+      siteUrl: string;
+      queue: string[];
+      queuedSet: string[];
+      visitedSet: string[];
+      candidates: Record<string, ProspectCandidate>;
+    }>;
+  } | null;
 };

@@ -2,5 +2,6 @@
   "count": 0,
   "items": [],
   "updatedAt": null,
-  "lastRun": null
+  "lastRun": null,
+  "crawlState": null
 }

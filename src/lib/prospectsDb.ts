@@ -12,6 +12,7 @@ const EMPTY_DB: ProspectsDB = {
   items: [],
   updatedAt: null,
   lastRun: null,
+  crawlState: null,
 };
 
 function ensureLocalDbFile() {
@@ -33,6 +34,7 @@ export async function readProspectsDb(): Promise<ProspectsDB> {
         items: Array.isArray(db.items) ? db.items : [],
         updatedAt: db.updatedAt || null,
         lastRun: db.lastRun || null,
+        crawlState: db.crawlState || null,
       };
     }
   }
@@ -46,6 +48,7 @@ export async function readProspectsDb(): Promise<ProspectsDB> {
     items: Array.isArray(parsed.items) ? parsed.items : [],
     updatedAt: parsed.updatedAt || null,
     lastRun: parsed.lastRun || null,
+    crawlState: parsed.crawlState || null,
   };
 
   if (KV_ENABLED) {
@@ -62,6 +65,7 @@ export async function writeProspectsDb(db: ProspectsDB) {
     items: Array.isArray(db.items) ? db.items : [],
     updatedAt: db.updatedAt || null,
     lastRun: db.lastRun || null,
+    crawlState: db.crawlState || null,
   };
 
   if (KV_ENABLED) {
