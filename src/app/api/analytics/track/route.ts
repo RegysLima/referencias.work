@@ -22,6 +22,8 @@ type Summary = {
   byDayRef?: Record<string, Record<string, number>>;
   bySearchQuery?: Record<string, number>;
   byDaySearchQuery?: Record<string, Record<string, number>>;
+  byNoResultQuery?: Record<string, number>;
+  byDayNoResultQuery?: Record<string, Record<string, number>>;
   donation?: {
     cardView: number;
     pixClick: number;
@@ -155,6 +157,8 @@ export async function POST(req: Request) {
     byDayRef: {},
     bySearchQuery: {},
     byDaySearchQuery: {},
+    byNoResultQuery: {},
+    byDayNoResultQuery: {},
     donation: {
       cardView: 0,
       pixClick: 0,
@@ -167,6 +171,8 @@ export async function POST(req: Request) {
   current.byDayType = current.byDayType || {};
   current.bySearchQuery = current.bySearchQuery || {};
   current.byDaySearchQuery = current.byDaySearchQuery || {};
+  current.byNoResultQuery = current.byNoResultQuery || {};
+  current.byDayNoResultQuery = current.byDayNoResultQuery || {};
   current.donation = current.donation || { cardView: 0, pixClick: 0, paypalClick: 0, dismiss: 0 };
 
   const day = todayKey();
@@ -186,6 +192,12 @@ export async function POST(req: Request) {
       const key = "search_no_results";
       current.byType[key] = (current.byType[key] || 0) + 1;
       current.byDayType[day][key] = (current.byDayType[day][key] || 0) + 1;
+      if (query) {
+        current.byNoResultQuery[query] = (current.byNoResultQuery[query] || 0) + 1;
+        current.byDayNoResultQuery[day] = current.byDayNoResultQuery[day] || {};
+        current.byDayNoResultQuery[day][query] =
+          (current.byDayNoResultQuery[day][query] || 0) + 1;
+      }
     }
   }
 

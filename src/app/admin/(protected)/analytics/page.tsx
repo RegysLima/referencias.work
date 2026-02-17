@@ -18,6 +18,8 @@ type Summary = {
   byDayRef?: Record<string, Record<string, number>>;
   bySearchQuery?: Record<string, number>;
   byDaySearchQuery?: Record<string, Record<string, number>>;
+  byNoResultQuery?: Record<string, number>;
+  byDayNoResultQuery?: Record<string, Record<string, number>>;
   donation?: {
     cardView: number;
     pixClick: number;
@@ -50,6 +52,8 @@ const EMPTY: Summary = {
   byDayRef: {},
   bySearchQuery: {},
   byDaySearchQuery: {},
+  byNoResultQuery: {},
+  byDayNoResultQuery: {},
   donation: {
     cardView: 0,
     pixClick: 0,
@@ -165,6 +169,18 @@ function sumByDaySearchQuery(summary: Summary, days: string[]) {
   const result: Record<string, number> = {};
   for (const day of days) {
     const row = summary.byDaySearchQuery?.[day];
+    if (!row) continue;
+    for (const [key, count] of Object.entries(row)) {
+      result[key] = (result[key] || 0) + count;
+    }
+  }
+  return result;
+}
+
+function sumByDayNoResultQuery(summary: Summary, days: string[]) {
+  const result: Record<string, number> = {};
+  for (const day of days) {
+    const row = summary.byDayNoResultQuery?.[day];
     if (!row) continue;
     for (const [key, count] of Object.entries(row)) {
       result[key] = (result[key] || 0) + count;
@@ -328,6 +344,14 @@ export default function AdminAnalyticsPage() {
   const searchRows = useMemo(
     () => toRows(filteredSearchQueries).slice(0, 10),
     [filteredSearchQueries]
+  );
+  const filteredNoResultSearchQueries = useMemo(() => {
+    if (range === "all") return summary.byNoResultQuery || {};
+    return sumByDayNoResultQuery(summary, rangeDays);
+  }, [summary, range, rangeDays]);
+  const noResultSearchRows = useMemo(
+    () => toRows(filteredNoResultSearchQueries).slice(0, 10),
+    [filteredNoResultSearchQueries]
   );
   const interactionRows = useMemo(
     () => {
@@ -627,6 +651,26 @@ export default function AdminAnalyticsPage() {
           </div>
         </div>
 
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+          <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
+            Buscas sem resultado
+          </div>
+          <div className="mt-4 space-y-2 text-sm text-zinc-300">
+            {noResultSearchRows.length ? (
+              noResultSearchRows.map(([query, count], idx) => (
+                <div key={`${query}-${idx}`} className="flex items-center justify-between">
+                  <span className="truncate">{query}</span>
+                  <span className="text-zinc-500">{count}</span>
+                </div>
+              ))
+            ) : (
+              <div className="text-zinc-500">—</div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
           <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">
             Eventos de interação
