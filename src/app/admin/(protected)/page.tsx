@@ -342,7 +342,6 @@ export default function AdminPage() {
 
   const [openId, setOpenId] = useState<string | null>(null);
   const [secondaryDraft, setSecondaryDraft] = useState<Record<string, string>>({});
-  const [secondaryInput, setSecondaryInput] = useState<Record<string, string>>({});
 
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [saveMessage, setSaveMessage] = useState<string>("");
@@ -663,19 +662,15 @@ export default function AdminPage() {
     return areaMap.get(key) || "";
   }
 
-  function addSecondaryArea(id: string) {
-    const rawInput = secondaryInput[id] ?? "";
-    const next = normalizeAreaValue(rawInput);
-    if (!next) {
-      if (rawInput.trim()) showToast("Área não encontrada na lista. Escolha uma sugestão.");
-      return;
+  function applySecondaryAreas(id: string, primaryArea: string | null | undefined, draftValue: string) {
+    const raw = parseSecondary(draftValue);
+    const normalized = raw.map((v) => normalizeAreaValue(v)).filter(Boolean);
+    if (normalized.length !== raw.length) {
+      showToast("Algumas áreas secundárias não existem na lista.");
     }
-
-    const current = parseSecondary(secondaryDraft[id] ?? "");
-    const normalized = normalizeSecondaryAreas("", [...current, next]);
-    setSecondaryDraft((prev) => ({ ...prev, [id]: normalized.join(", ") }));
-    updateItem(id, { areasSecondary: normalized });
-    setSecondaryInput((prev) => ({ ...prev, [id]: "" }));
+    const parsed = normalizeSecondaryAreas(primaryArea ?? "", normalized);
+    setSecondaryDraft((prev) => ({ ...prev, [id]: parsed.join(", ") }));
+    updateItem(id, { areasSecondary: parsed });
   }
 
   function addNew() {
@@ -1406,45 +1401,21 @@ export default function AdminPage() {
                           onChange={(e) =>
                             setSecondaryDraft((prev) => ({ ...prev, [i.id]: e.target.value }))
                           }
-                          onBlur={() => {
-                            const raw = parseSecondary(secondaryDraft[i.id] ?? "");
-                            const normalized = raw.map((v) => normalizeAreaValue(v)).filter(Boolean);
-                            if (normalized.length !== raw.length) {
-                              showToast("Algumas áreas secundárias não existem na lista.");
+                          onBlur={() =>
+                            applySecondaryAreas(i.id, i.areaPrimary, secondaryDraft[i.id] ?? "")
+                          }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              applySecondaryAreas(i.id, i.areaPrimary, secondaryDraft[i.id] ?? "");
                             }
-                            const parsed = normalizeSecondaryAreas(i.areaPrimary ?? "", normalized);
-                            setSecondaryDraft((prev) => ({ ...prev, [i.id]: parsed.join(", ") }));
-                            updateItem(i.id, { areasSecondary: parsed });
                           }}
+                          list="area-options"
                           placeholder="Ex: Editorial, Digital, Tipografia, Identidade"
                           className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                         />
                         <div className="mt-1 text-[11px] text-zinc-500">
-                          Dica: digite livremente e ele organiza quando você sair do campo.
-                        </div>
-                        <div className="mt-2 flex items-center gap-2">
-                          <input
-                            value={secondaryInput[i.id] ?? ""}
-                            onChange={(e) =>
-                              setSecondaryInput((prev) => ({ ...prev, [i.id]: e.target.value }))
-                            }
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                e.preventDefault();
-                                addSecondaryArea(i.id);
-                              }
-                            }}
-                            list="area-options"
-                            placeholder="Adicionar área secundária"
-                            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => addSecondaryArea(i.id)}
-                            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
-                          >
-                            Adicionar
-                          </button>
+                          Dica: autocomplete disponível no próprio campo. Pressione Enter ou saia do campo para organizar.
                         </div>
                       </div>
 
