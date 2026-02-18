@@ -119,6 +119,11 @@ export default function AdminProspectsPage() {
   async function approveAndOpen(item: ProspectsDB["items"][number]) {
     try {
       setError("");
+      const candidateUrl = (item.homepageUrl || `https://${item.domain || ""}`).trim();
+      if (!candidateUrl || candidateUrl === "https://") {
+        throw new Error("Prospect sem URL válida para pré-preenchimento.");
+      }
+
       const res = await fetch("/api/admin/prospects", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
@@ -131,9 +136,10 @@ export default function AdminProspectsPage() {
 
       const params = new URLSearchParams();
       params.set("prefillName", item.displayName || item.domain);
-      params.set("prefillUrl", item.homepageUrl || `https://${item.domain}`);
+      params.set("prefillUrl", candidateUrl);
       params.set("prefillMacroType", "Studios");
       params.set("prospectId", item.id);
+      params.set("prefillSource", "prospects");
       window.location.href = `/admin?${params.toString()}`;
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro inesperado";

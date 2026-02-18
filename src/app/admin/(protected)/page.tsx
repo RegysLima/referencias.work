@@ -399,6 +399,7 @@ type ThumbModalState = {
 export default function AdminPage() {
   const [items, setItems] = useState<RefItem[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const prefillHandledRef = useRef(false);
   const [q, setQ] = useState("");
   const [onlyNoImage, setOnlyNoImage] = useState(false);
   const [onlyUnreviewed, setOnlyUnreviewed] = useState(false);
@@ -479,6 +480,12 @@ export default function AdminPage() {
           city: locations[0]?.city ? normalizeCityValue(locations[0].city ?? null) : null,
           locations,
         };
+      }).filter((it) => {
+        const isProspectGhost =
+          (it.id || "").startsWith("prospect-") &&
+          !(it.url || "").trim() &&
+          (!(it.name || "").trim() || (it.name || "").trim() === "Nova referência");
+        return !isProspectGhost;
       });
 
       setItems(normalized.map(normalizeReviewFlags));
@@ -509,12 +516,20 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    if (!loaded) return;
-    const params = new URLSearchParams(window.location.search);
-    const prefillUrl = (params.get("prefillUrl") || "").trim();
-    if (!prefillUrl) return;
+    if (!loaded || prefillHandledRef.current) return;
+    prefillHandledRef.current = true;
 
+    const params = new URLSearchParams(window.location.search);
+    const prefillSource = (params.get("prefillSource") || "").trim().toLowerCase();
+    if (prefillSource !== "prospects") return;
+
+    const prefillUrl = (params.get("prefillUrl") || "").trim();
     const normalizedPrefillUrl = normalizeUrl(prefillUrl);
+    if (!prefillUrl || !normalizedPrefillUrl || normalizedPrefillUrl === "https://") {
+      window.history.replaceState({}, "", "/admin");
+      return;
+    }
+
     const alreadyExists = items.some((it) => normalizeUrl(it.url) === normalizedPrefillUrl);
     if (alreadyExists) {
       showToast("URL já existe nas referências.");
