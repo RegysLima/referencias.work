@@ -273,27 +273,16 @@ export default function AdminProspectsPage() {
         </button>
       </div>
 
-      <div className="mb-4 inline-flex border border-zinc-800">
-        <button
-          onClick={() => setSortBy("recent")}
-          className={`h-10 px-4 text-sm transition ${
-            sortBy === "recent"
-              ? "bg-zinc-100 text-zinc-950"
-              : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
-          }`}
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div />
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as "recent" | "alpha")}
+          className="h-10 rounded-none border border-zinc-800 bg-zinc-950 px-3 text-sm text-zinc-100"
         >
-          Data de adição
-        </button>
-        <button
-          onClick={() => setSortBy("alpha")}
-          className={`h-10 border-l border-zinc-800 px-4 text-sm transition ${
-            sortBy === "alpha"
-              ? "bg-zinc-100 text-zinc-950"
-              : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
-          }`}
-        >
-          Ordem alfabética
-        </button>
+          <option value="recent">Organizar: Data de adição</option>
+          <option value="alpha">Organizar: Ordem alfabética</option>
+        </select>
       </div>
 
       {error ? (
@@ -306,7 +295,7 @@ export default function AdminProspectsPage() {
         <div className="grid grid-cols-12 border-b border-zinc-900 bg-zinc-950/80 px-3 py-2 text-xs uppercase tracking-[0.16em] text-zinc-500">
           <div className="col-span-3">Domínio</div>
           <div className="col-span-2">Origens</div>
-          <div className="col-span-2">Última coleta</div>
+          <div className="col-span-2">Data de adição</div>
           <div className="col-span-2">Status</div>
           <div className="col-span-3">Ações</div>
         </div>
@@ -329,7 +318,7 @@ export default function AdminProspectsPage() {
                 {Math.max(item.occurrences || 0, item.sources.length || 0)} ocorrências únicas
               </div>
 
-              <div className="col-span-2 text-xs text-zinc-400">{formatDate(item.lastSeenAt)}</div>
+              <div className="col-span-2 text-xs text-zinc-400">{formatDate(item.firstSeenAt || item.lastSeenAt)}</div>
 
               <div className="col-span-2 text-xs text-zinc-300">{labelStatus(item.status)}</div>
 
