@@ -39,7 +39,7 @@ function toPrefillReference(prospect: ProspectItem) {
     locations: [],
     thumbnailUrl: null,
     thumbnailSource: "manual",
-    hidden: false,
+    hidden: true,
     updatedAt: now,
     reviewedAt: null,
   };

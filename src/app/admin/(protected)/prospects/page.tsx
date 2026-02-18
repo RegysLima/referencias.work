@@ -145,10 +145,7 @@ export default function AdminProspectsPage() {
   async function approveAndOpen(item: ProspectsDB["items"][number]) {
     try {
       setError("");
-      await transitionAndPatch(item.id, { status: "approved" }, () => {
-        setStatusFilter("approved");
-        setPage(1);
-      });
+      await transitionAndPatch(item.id, { status: "approved" });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro inesperado";
       setError(msg);
@@ -213,10 +210,18 @@ export default function AdminProspectsPage() {
 
       node.style.transition = "none";
       node.style.transform = `translateY(${deltaY}px)`;
-      requestAnimationFrame(() => {
-        node.style.transition = "transform 240ms ease, opacity 200ms ease";
-        node.style.transform = "";
-      });
+      node.animate(
+        [
+          { transform: `translateY(${deltaY}px)` },
+          { transform: "translateY(0px)" },
+        ],
+        {
+          duration: 260,
+          easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+          fill: "both",
+        }
+      );
+      node.style.transform = "";
     }
 
     prevTopsRef.current = nextTops;

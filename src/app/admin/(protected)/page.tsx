@@ -1235,7 +1235,7 @@ export default function AdminPage() {
   }
 
   function markReviewed(id: string) {
-    updateItem(id, { reviewedAt: new Date().toISOString() });
+    updateItem(id, { reviewedAt: new Date().toISOString(), hidden: false });
     setAutoSavePending(true);
   }
 
