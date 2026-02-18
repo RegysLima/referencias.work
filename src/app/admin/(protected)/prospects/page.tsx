@@ -209,16 +209,11 @@ export default function AdminProspectsPage() {
         </div>
       </div>
 
-      <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-4">
+      <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
           <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Total na lista</div>
           <div className="mt-1 text-2xl text-zinc-100">{data.count}</div>
           <div className="mt-1 text-xs text-zinc-500">pendentes + aprovados</div>
-        </div>
-        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Para curadoria</div>
-          <div className="mt-1 text-2xl text-zinc-100">{pendingCount}</div>
-          <div className="mt-1 text-xs text-zinc-500">links pendentes de revisão</div>
         </div>
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
           <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Adicionados na última coleta</div>
