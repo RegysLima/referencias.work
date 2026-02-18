@@ -101,7 +101,7 @@ export default function AdminProspectsPage() {
     }
   }
 
-  async function patchItem(id: string, payload: { status?: ProspectStatus; notes?: string | null }) {
+  async function patchItemServer(id: string, payload: { status?: ProspectStatus; notes?: string | null }) {
     try {
       setError("");
       const res = await fetch("/api/admin/prospects", {
@@ -113,7 +113,6 @@ export default function AdminProspectsPage() {
         const text = await res.text();
         throw new Error(text || "Falha ao atualizar prospect");
       }
-      await loadData();
       return true;
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro inesperado";
@@ -122,20 +121,53 @@ export default function AdminProspectsPage() {
     }
   }
 
+  function applyLocalPatch(id: string, payload: { status?: ProspectStatus; notes?: string | null }) {
+    setData((prev) => {
+      const nextItems =
+        payload.status === "rejected"
+          ? prev.items.filter((item) => item.id !== id)
+          : prev.items.map((item) => {
+              if (item.id !== id) return item;
+              return {
+                ...item,
+                status: payload.status ?? item.status,
+                notes:
+                  payload.notes !== undefined
+                    ? payload.notes || null
+                    : item.notes,
+              };
+            });
+
+      return {
+        ...prev,
+        items: nextItems,
+        count: nextItems.length,
+        updatedAt: new Date().toISOString(),
+      };
+    });
+  }
+
   async function transitionAndPatch(
     id: string,
     payload: { status?: ProspectStatus; notes?: string | null },
     after?: () => void
   ) {
     setExitingIds((prev) => ({ ...prev, [id]: true }));
-    await new Promise((resolve) => setTimeout(resolve, 180));
-    const ok = await patchItem(id, payload);
+    await new Promise((resolve) => setTimeout(resolve, 140));
+    applyLocalPatch(id, payload);
     setExitingIds((prev) => {
       const copy = { ...prev };
       delete copy[id];
       return copy;
     });
-    if (ok) after?.();
+    after?.();
+    const ok = await patchItemServer(id, payload);
+    if (!ok) {
+      await loadData();
+      return;
+    }
+    // reconcilia dados do backend sem bloquear a micro-interação local
+    void loadData();
   }
 
   useEffect(() => {
