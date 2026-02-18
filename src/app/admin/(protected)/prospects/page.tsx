@@ -30,7 +30,7 @@ export default function AdminProspectsPage() {
   const [loading, setLoading] = useState(false);
   const [collecting, setCollecting] = useState(false);
   const [collectProgress, setCollectProgress] = useState(0);
-  const [statusFilter, setStatusFilter] = useState<"all" | "new" | "approved">("new");
+  const [statusFilter, setStatusFilter] = useState<"new" | "approved">("new");
   const [sortBy, setSortBy] = useState<"recent" | "alpha">("alpha");
   const [page, setPage] = useState(1);
   const [error, setError] = useState<string>("");
@@ -144,9 +144,7 @@ export default function AdminProspectsPage() {
 
   const filteredItems = useMemo(() => {
     const base =
-      statusFilter === "all"
-        ? data.items
-        : statusFilter === "approved"
+      statusFilter === "approved"
         ? data.items.filter((item) => item.status === "approved")
         : data.items.filter((item) => item.status === "new");
 
@@ -211,7 +209,12 @@ export default function AdminProspectsPage() {
         </div>
       </div>
 
-      <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+      <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-4">
+        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Total na lista</div>
+          <div className="mt-1 text-2xl text-zinc-100">{data.count}</div>
+          <div className="mt-1 text-xs text-zinc-500">pendentes + aprovados</div>
+        </div>
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
           <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Para curadoria</div>
           <div className="mt-1 text-2xl text-zinc-100">{pendingCount}</div>
@@ -232,24 +235,14 @@ export default function AdminProspectsPage() {
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="inline-flex border border-zinc-800">
           <button
-            onClick={() => setStatusFilter("all")}
-            className={`h-10 px-4 text-sm transition ${
-              statusFilter === "all"
-                ? "bg-zinc-100 text-zinc-950"
-                : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
-            }`}
-          >
-            Todos ({data.count})
-          </button>
-          <button
             onClick={() => setStatusFilter("new")}
-            className={`h-10 border-l border-zinc-800 px-4 text-sm transition ${
+            className={`h-10 px-4 text-sm transition ${
               statusFilter === "new"
                 ? "bg-zinc-100 text-zinc-950"
                 : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
             }`}
           >
-            Novos ({pendingCount})
+            Pendentes ({pendingCount})
           </button>
           <button
             onClick={() => setStatusFilter("approved")}
