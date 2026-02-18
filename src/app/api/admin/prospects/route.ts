@@ -20,9 +20,13 @@ function toPrefillReference(prospect: ProspectItem) {
   const fallbackUrl = prospect.domain ? `https://${prospect.domain}` : "";
   const url = (prospect.homepageUrl || fallbackUrl).trim();
   const name = (prospect.displayName || prospect.domain || "Nova referência").trim();
+  const uid =
+    typeof globalThis.crypto?.randomUUID === "function"
+      ? globalThis.crypto.randomUUID().slice(0, 8)
+      : `${Date.now()}-${Math.floor(Math.random() * 1_000_000)}`;
 
   return {
-    id: `prospect-${Date.now()}`,
+    id: `prospect-${prospect.id}-${uid}`,
     name,
     url,
     type: "Studios",

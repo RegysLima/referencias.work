@@ -496,19 +496,35 @@ export default function AdminPage() {
       });
 
       const cleaned = normalized.filter((it) => !isEmptyPlaceholderReference(it));
+      let hadDuplicateIds = false;
+      const seenIds = new Set<string>();
+      const uniqued = cleaned.map((it, idx) => {
+        let nextId = (it.id || "").trim();
+        if (!nextId) {
+          hadDuplicateIds = true;
+          nextId = `ref-${Date.now()}-${idx}`;
+        }
+        if (seenIds.has(nextId)) {
+          hadDuplicateIds = true;
+          nextId = `${nextId}-${Date.now()}-${idx}`;
+        }
+        seenIds.add(nextId);
+        if (nextId === it.id) return it;
+        return { ...it, id: nextId };
+      });
 
-      setItems(cleaned.map(normalizeReviewFlags));
+      setItems(uniqued.map(normalizeReviewFlags));
 
       const primaryAreaDraftMap: Record<string, string> = {};
       const draft: Record<string, string> = {};
       const countryDraftMap: Record<string, string> = {};
       const cityDraftMap: Record<string, string> = {};
       const locationDraftMap: Record<string, string> = {};
-      for (const it of cleaned) primaryAreaDraftMap[it.id] = (it.areaPrimary ?? "").trim();
-      for (const it of cleaned) draft[it.id] = (it.areasSecondary ?? []).join(", ");
-      for (const it of cleaned) countryDraftMap[it.id] = (it.country ?? "").trim();
-      for (const it of cleaned) cityDraftMap[it.id] = (it.city ?? "").trim();
-      for (const it of cleaned) {
+      for (const it of uniqued) primaryAreaDraftMap[it.id] = (it.areaPrimary ?? "").trim();
+      for (const it of uniqued) draft[it.id] = (it.areasSecondary ?? []).join(", ");
+      for (const it of uniqued) countryDraftMap[it.id] = (it.country ?? "").trim();
+      for (const it of uniqued) cityDraftMap[it.id] = (it.city ?? "").trim();
+      for (const it of uniqued) {
         for (let idx = 1; idx < (it.locations || []).length; idx += 1) {
           const row = it.locations?.[idx];
           locationDraftMap[`${it.id}:${idx}:country`] = (row?.country ?? "").trim();
@@ -520,9 +536,9 @@ export default function AdminPage() {
       setCountryDraft(countryDraftMap);
       setCityDraft(cityDraftMap);
       setLocationDraft(locationDraftMap);
-      if (cleaned.length < normalized.length) {
+      if (cleaned.length < normalized.length || hadDuplicateIds) {
         setAutoSavePending(true);
-        showToast("Card vazio removido.");
+        showToast("Cards inválidos corrigidos.");
       }
     })();
   }, []);
