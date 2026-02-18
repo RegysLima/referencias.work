@@ -302,6 +302,25 @@ function hasValue(value: string | null | undefined) {
   return Boolean((value ?? "").trim());
 }
 
+function isEmptyPlaceholderReference(it: RefItem) {
+  const name = (it.name || "").trim().toLowerCase();
+  const hasUrl = hasValue(it.url);
+  const hasPrimary = hasValue(it.areaPrimary ?? null);
+  const hasSecondary = (it.areasSecondary || []).some((v) => hasValue(v));
+  const hasCountry = hasValue(it.country ?? null);
+  const hasCity = hasValue(it.city ?? null);
+  const hasLocations = (it.locations || []).some(
+    (row) => hasValue(row?.country ?? null) || hasValue(row?.city ?? null)
+  );
+  const hasThumb = hasValue(it.thumbnailUrl ?? null);
+
+  if (hasUrl || hasPrimary || hasSecondary || hasCountry || hasCity || hasLocations || hasThumb) {
+    return false;
+  }
+
+  return name === "nova referência" || name === "nova referencia";
+}
+
 function hasLocationData(it: RefItem) {
   if (hasValue(it.country) || hasValue(it.city)) return true;
   const rows = it.locations || [];
@@ -476,10 +495,7 @@ export default function AdminPage() {
         };
       });
 
-      const cleaned = normalized.filter((it) => {
-        const isProspectGhost = (it.id || "").startsWith("prospect-") && !(it.url || "").trim();
-        return !isProspectGhost;
-      });
+      const cleaned = normalized.filter((it) => !isEmptyPlaceholderReference(it));
 
       setItems(cleaned.map(normalizeReviewFlags));
 
