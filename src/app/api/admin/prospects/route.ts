@@ -41,8 +41,33 @@ function toPrefillReference(prospect: ProspectItem) {
   };
 }
 
+async function syncApprovedProspectsToReferences(prospects: ProspectItem[]) {
+  const approved = prospects.filter((item) => item.status === "approved");
+  if (!approved.length) return;
+
+  const refDb = await readReferencesDb();
+  const existingUrlKeys = new Set(refDb.items.map((item) => normalizeUrlKey(item.url)));
+  let changed = false;
+
+  for (const item of approved) {
+    const candidate = toPrefillReference(item);
+    const key = normalizeUrlKey(candidate.url);
+    if (!key || key === "https://") continue;
+    if (existingUrlKeys.has(key)) continue;
+    existingUrlKeys.add(key);
+    refDb.items = [candidate, ...refDb.items];
+    changed = true;
+  }
+
+  if (!changed) return;
+  refDb.count = refDb.items.length;
+  refDb.updatedAt = new Date().toISOString();
+  await writeReferencesDb(refDb);
+}
+
 export async function GET() {
   const db = await readProspectsDb();
+  await syncApprovedProspectsToReferences(db.items);
   return NextResponse.json(db);
 }
 
@@ -108,18 +133,7 @@ export async function PATCH(req: Request) {
   await writeProspectsDb(db);
 
   if (status === "approved" && approvedItem) {
-    const candidate = toPrefillReference(approvedItem);
-    const candidateKey = normalizeUrlKey(candidate.url);
-    if (candidateKey && candidateKey !== "https://") {
-      const refDb = await readReferencesDb();
-      const exists = refDb.items.some((item) => normalizeUrlKey(item.url) === candidateKey);
-      if (!exists) {
-        refDb.items = [candidate, ...refDb.items];
-        refDb.count = refDb.items.length;
-        refDb.updatedAt = new Date().toISOString();
-        await writeReferencesDb(refDb);
-      }
-    }
+    await syncApprovedProspectsToReferences([approvedItem]);
   }
 
   return NextResponse.json({ ok: true });

@@ -306,12 +306,14 @@ export default function AdminProspectsPage() {
                     Sem URL
                   </span>
                 )}
-                <button
-                  onClick={() => approveAndOpen(item)}
-                  className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
-                >
-                  Aprovar
-                </button>
+                {item.status !== "approved" ? (
+                  <button
+                    onClick={() => approveAndOpen(item)}
+                    className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
+                  >
+                    Aprovar
+                  </button>
+                ) : null}
                 <button
                   onClick={() => patchItem(item.id, { status: "rejected" })}
                   className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
