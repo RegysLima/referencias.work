@@ -14,6 +14,7 @@ const PAGE_SIZE = 20;
 
 function labelStatus(value: ProspectStatus) {
   if (value === "new") return "Novo";
+  if (value === "waiting") return "Espera";
   if (value === "approved") return "Aprovado";
   return "Novo";
 }
@@ -30,9 +31,10 @@ export default function AdminProspectsPage() {
   const [loading, setLoading] = useState(false);
   const [collecting, setCollecting] = useState(false);
   const [collectProgress, setCollectProgress] = useState(0);
-  const [statusFilter, setStatusFilter] = useState<"new" | "approved">("new");
+  const [statusFilter, setStatusFilter] = useState<"new" | "waiting" | "approved">("new");
   const [sortBy, setSortBy] = useState<"recent" | "alpha">("alpha");
   const [page, setPage] = useState(1);
+  const [exitingIds, setExitingIds] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string>("");
 
   async function loadData() {
@@ -110,10 +112,28 @@ export default function AdminProspectsPage() {
         throw new Error(text || "Falha ao atualizar prospect");
       }
       await loadData();
+      return true;
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro inesperado";
       setError(msg);
+      return false;
     }
+  }
+
+  async function transitionAndPatch(
+    id: string,
+    payload: { status?: ProspectStatus; notes?: string | null },
+    after?: () => void
+  ) {
+    setExitingIds((prev) => ({ ...prev, [id]: true }));
+    await new Promise((resolve) => setTimeout(resolve, 180));
+    const ok = await patchItem(id, payload);
+    setExitingIds((prev) => {
+      const copy = { ...prev };
+      delete copy[id];
+      return copy;
+    });
+    if (ok) after?.();
   }
 
   useEffect(() => {
@@ -123,19 +143,10 @@ export default function AdminProspectsPage() {
   async function approveAndOpen(item: ProspectsDB["items"][number]) {
     try {
       setError("");
-      const res = await fetch("/api/admin/prospects", {
-        method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ id: item.id, status: "approved" }),
+      await transitionAndPatch(item.id, { status: "approved" }, () => {
+        setStatusFilter("approved");
+        setPage(1);
       });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Falha ao aprovar prospect");
-      }
-
-      await loadData();
-      setStatusFilter("approved");
-      setPage(1);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro inesperado";
       setError(msg);
@@ -146,6 +157,8 @@ export default function AdminProspectsPage() {
     const base =
       statusFilter === "approved"
         ? data.items.filter((item) => item.status === "approved")
+        : statusFilter === "waiting"
+        ? data.items.filter((item) => item.status === "waiting")
         : data.items.filter((item) => item.status === "new");
 
     const sorted = [...base];
@@ -170,6 +183,10 @@ export default function AdminProspectsPage() {
   );
   const approvedCount = useMemo(
     () => data.items.filter((item) => item.status === "approved").length,
+    [data.items]
+  );
+  const waitingCount = useMemo(
+    () => data.items.filter((item) => item.status === "waiting").length,
     [data.items]
   );
 
@@ -213,7 +230,7 @@ export default function AdminProspectsPage() {
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
           <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Total na lista</div>
           <div className="mt-1 text-2xl text-zinc-100">{data.count}</div>
-          <div className="mt-1 text-xs text-zinc-500">pendentes + aprovados</div>
+          <div className="mt-1 text-xs text-zinc-500">pendentes + espera + aprovados</div>
         </div>
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
           <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Adicionados na última coleta</div>
@@ -238,6 +255,16 @@ export default function AdminProspectsPage() {
             }`}
           >
             Pendentes ({pendingCount})
+          </button>
+          <button
+            onClick={() => setStatusFilter("waiting")}
+            className={`h-10 border-l border-zinc-800 px-4 text-sm transition ${
+              statusFilter === "waiting"
+                ? "bg-zinc-100 text-zinc-950"
+                : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
+            }`}
+          >
+            Espera ({waitingCount})
           </button>
           <button
             onClick={() => setStatusFilter("approved")}
@@ -286,7 +313,11 @@ export default function AdminProspectsPage() {
           pagedItems.map((item) => (
             <div
               key={item.id}
-              className="grid grid-cols-12 items-center gap-2 border-b border-zinc-900 px-3 py-3 text-sm text-zinc-200"
+              className={[
+                "grid grid-cols-12 items-center gap-2 border-b border-zinc-900 px-3 py-3 text-sm text-zinc-200",
+                "transition-all duration-200 ease-out",
+                exitingIds[item.id] ? "translate-x-2 scale-[0.99] opacity-0" : "translate-x-0 opacity-100",
+              ].join(" ")}
             >
               <div className="col-span-3">
                 <div className="font-medium text-zinc-100">{item.displayName || item.domain}</div>
@@ -325,8 +356,23 @@ export default function AdminProspectsPage() {
                     Aprovar
                   </button>
                 ) : null}
+                {item.status !== "waiting" ? (
+                  <button
+                    onClick={() => transitionAndPatch(item.id, { status: "waiting" })}
+                    className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
+                  >
+                    Espera
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => transitionAndPatch(item.id, { status: "new" })}
+                    className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
+                  >
+                    Pendente
+                  </button>
+                )}
                 <button
-                  onClick={() => patchItem(item.id, { status: "rejected" })}
+                  onClick={() => transitionAndPatch(item.id, { status: "rejected" })}
                   className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
                 >
                   Descartar

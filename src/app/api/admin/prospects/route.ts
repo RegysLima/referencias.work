@@ -97,7 +97,8 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ ok: false, error: "no_changes" }, { status: 400 });
   }
 
-  const isValidStatus = status === "new" || status === "approved" || status === "rejected";
+  const isValidStatus =
+    status === "new" || status === "waiting" || status === "approved" || status === "rejected";
   if (hasStatus && !isValidStatus) {
     return NextResponse.json({ ok: false, error: "invalid_status" }, { status: 400 });
   }

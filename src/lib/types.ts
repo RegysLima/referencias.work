@@ -30,7 +30,7 @@ export type ReferenceDB = {
   updatedAt?: string;
 };
 
-export type ProspectStatus = "new" | "approved" | "rejected";
+export type ProspectStatus = "new" | "waiting" | "approved" | "rejected";
 
 export type ProspectSource = {
   siteId: string;
