@@ -31,7 +31,7 @@ export default function AdminProspectsPage() {
   const [collecting, setCollecting] = useState(false);
   const [collectProgress, setCollectProgress] = useState(0);
   const [statusFilter, setStatusFilter] = useState<"all" | "new" | "approved">("new");
-  const [sortBy, setSortBy] = useState<"recent" | "alpha">("recent");
+  const [sortBy, setSortBy] = useState<"recent" | "alpha">("alpha");
   const [page, setPage] = useState(1);
   const [error, setError] = useState<string>("");
 
@@ -240,48 +240,46 @@ export default function AdminProspectsPage() {
         </div>
       </div>
 
-      <div className="mb-4 inline-flex border border-zinc-800">
-        <button
-          onClick={() => setStatusFilter("all")}
-          className={`h-10 px-4 text-sm transition ${
-            statusFilter === "all"
-              ? "bg-zinc-100 text-zinc-950"
-              : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
-          }`}
-        >
-          Todos
-        </button>
-        <button
-          onClick={() => setStatusFilter("new")}
-          className={`h-10 border-l border-zinc-800 px-4 text-sm transition ${
-            statusFilter === "new"
-              ? "bg-zinc-100 text-zinc-950"
-              : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
-          }`}
-        >
-          Novos
-        </button>
-        <button
-          onClick={() => setStatusFilter("approved")}
-          className={`h-10 border-l border-zinc-800 px-4 text-sm transition ${
-            statusFilter === "approved"
-              ? "bg-zinc-100 text-zinc-950"
-              : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
-          }`}
-        >
-          Aprovados
-        </button>
-      </div>
-
       <div className="mb-4 flex items-center justify-between gap-3">
-        <div />
+        <div className="inline-flex border border-zinc-800">
+          <button
+            onClick={() => setStatusFilter("all")}
+            className={`h-10 px-4 text-sm transition ${
+              statusFilter === "all"
+                ? "bg-zinc-100 text-zinc-950"
+                : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
+            }`}
+          >
+            Todos
+          </button>
+          <button
+            onClick={() => setStatusFilter("new")}
+            className={`h-10 border-l border-zinc-800 px-4 text-sm transition ${
+              statusFilter === "new"
+                ? "bg-zinc-100 text-zinc-950"
+                : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
+            }`}
+          >
+            Novos
+          </button>
+          <button
+            onClick={() => setStatusFilter("approved")}
+            className={`h-10 border-l border-zinc-800 px-4 text-sm transition ${
+              statusFilter === "approved"
+                ? "bg-zinc-100 text-zinc-950"
+                : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
+            }`}
+          >
+            Aprovados
+          </button>
+        </div>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as "recent" | "alpha")}
-          className="h-10 rounded-none border border-zinc-800 bg-zinc-950 px-3 text-sm text-zinc-100"
+          className="h-10 rounded-none border border-zinc-800 bg-zinc-950 pl-3 pr-9 text-sm text-zinc-100"
         >
-          <option value="recent">Organizar: Data de adição</option>
-          <option value="alpha">Organizar: Ordem alfabética</option>
+          <option value="alpha">Ordem alfabética</option>
+          <option value="recent">Data de adição</option>
         </select>
       </div>
 
