@@ -3,6 +3,7 @@ import type { ProspectItem } from "@/lib/types";
 import { readProspectsDb, writeProspectsDb } from "@/lib/prospectsDb";
 import { readReferencesDb, writeReferencesDb } from "@/lib/referencesDb";
 import { canonicalCity, canonicalCountry } from "@/lib/location";
+import countriesData from "@/data/i18n/countries.json";
 
 function normalizeUrlKey(value: string) {
   try {
@@ -67,6 +68,97 @@ function inferMacroType(prospect: ProspectItem) {
   if (/(foundry|typeface|font|typography|tipografia)/i.test(bag)) return "Foundries";
   if (/(designer|design)/i.test(bag)) return "Designers";
   return "Studios";
+}
+
+function normalizeKey(value: string) {
+  return (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+const COUNTRY_TERMS = (() => {
+  const values = Object.values(countriesData || {}) as Array<{ pt?: string; en?: string; es?: string }>;
+  const set = new Set<string>();
+  for (const row of values) {
+    for (const value of [row?.pt, row?.en, row?.es]) {
+      const key = normalizeKey(value || "");
+      if (!key) continue;
+      set.add(key);
+    }
+  }
+  return Array.from(set).sort((a, b) => b.length - a.length);
+})();
+
+const LOCATION_NOISE_TOKENS = [
+  "design",
+  "technology",
+  "studio",
+  "home",
+  "empowering",
+  "brands",
+  "through",
+  "strategy",
+  "work",
+  "projects",
+  "portfolio",
+  "contact",
+  "about",
+  "services",
+  "creative",
+];
+
+function cleanLocationText(value: string) {
+  return decodeHtmlEntities(value || "")
+    .replace(/https?:\/\/\S+/gi, " ")
+    .replace(/\bwww\.\S+/gi, " ")
+    .replace(/[\u00A0\s]+/g, " ")
+    .replace(/[|]+/g, " ")
+    .trim();
+}
+
+function findCountryInLine(rawLine: string) {
+  const line = normalizeKey(rawLine);
+  if (!line) return null;
+  for (const term of COUNTRY_TERMS) {
+    if (!term) continue;
+    const re = new RegExp(`(^|\\b)${escapeRegex(term)}(\\b|$)`, "i");
+    if (re.test(line)) {
+      const canonical = canonicalCountry(term);
+      if (canonical) return { term, canonical };
+    }
+  }
+  return null;
+}
+
+function sanitizeCityCandidate(value: string) {
+  const raw = cleanLocationText(value)
+    .replace(/^[,;:\-•\s]+/, "")
+    .replace(/[,;:\-•\s]+$/, "");
+  if (!raw) return null;
+  if (raw.length > 45) return null;
+  if (/\d{3,}/.test(raw)) return null;
+
+  const words = raw.split(/\s+/).filter(Boolean);
+  if (!words.length || words.length > 4) return null;
+
+  const low = normalizeKey(raw);
+  if (LOCATION_NOISE_TOKENS.some((token) => low.includes(token))) return null;
+
+  const canonical = canonicalCity(raw);
+  const canonicalLow = normalizeKey(canonical || "");
+  if (!canonical) return null;
+  if (!canonicalLow) return null;
+  if (LOCATION_NOISE_TOKENS.some((token) => canonicalLow.includes(token))) return null;
+  if (canonicalLow.length < 2) return null;
+  return canonical;
 }
 
 async function fetchHtml(url: string, timeoutMs = 6500) {
@@ -158,32 +250,56 @@ async function firstReachableImage(candidates: string[]) {
 }
 
 function extractLocationFromHtml(html: string) {
-  const text = decodeHtmlEntities(
+  const text = cleanLocationText(
     html
       .replace(/<script[\s\S]*?<\/script>/gi, " ")
       .replace(/<style[\s\S]*?<\/style>/gi, " ")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<\/(p|div|li|section|address|footer|header|article|main|span|h[1-6])>/gi, "\n")
       .replace(/<[^>]+>/g, " ")
-      .replace(/\s+/g, " ")
   );
 
-  const based = text.match(
-    /\b(?:based in|located in|estudio em|studio in|office in)\s+([A-ZÀ-ÿ][A-Za-zÀ-ÿ.' -]{1,50})(?:,\s*|\s+)([A-ZÀ-ÿ][A-Za-zÀ-ÿ.' -]{1,50})/i
-  );
-  if (based?.[1] || based?.[2]) {
-    return {
-      city: canonicalCity((based[1] || "").trim()) || null,
-      country: canonicalCountry((based[2] || "").trim()) || null,
-    };
-  }
+  const lines = text
+    .split(/\n+/)
+    .map((line) => cleanLocationText(line))
+    .filter(Boolean)
+    .slice(0, 400);
 
-  const cityCountry = text.match(
-    /\b([A-ZÀ-ÿ][A-Za-zÀ-ÿ.' -]{1,40})\s*(?:,|•|-)\s*([A-ZÀ-ÿ][A-Za-zÀ-ÿ.' -]{1,40})\b/
-  );
-  if (cityCountry?.[1] || cityCountry?.[2]) {
-    return {
-      city: canonicalCity((cityCountry[1] || "").trim()) || null,
-      country: canonicalCountry((cityCountry[2] || "").trim()) || null,
-    };
+  const locationCues = ["based", "located", "office", "studio", "contact", "about", "address"];
+
+  for (const line of lines) {
+    const lineLow = normalizeKey(line);
+    if (!lineLow) continue;
+
+    const countryHit = findCountryInLine(line);
+    const hasCue = locationCues.some((cue) => lineLow.includes(cue));
+    if (!countryHit && !hasCue) continue;
+
+    const country = countryHit?.canonical || null;
+
+    let city: string | null = null;
+    if (countryHit?.term) {
+      const termIdx = lineLow.indexOf(countryHit.term);
+      if (termIdx >= 0) {
+        const before = line.slice(0, termIdx);
+        const candidate = before.split(/[,•|-]/).map((part) => part.trim()).filter(Boolean).pop() || "";
+        city = sanitizeCityCandidate(candidate);
+      }
+    }
+
+    if (!city && hasCue) {
+      const cueMatch = line.match(
+        /\b(?:based in|located in|office in|studio in)\s+([^,•\-]{2,40})(?:[,•\-]\s*([^,•\-]{2,40}))?/i
+      );
+      if (cueMatch?.[1]) {
+        const maybeCity = sanitizeCityCandidate(cueMatch[1]);
+        if (maybeCity) city = maybeCity;
+      }
+    }
+
+    if (country || city) {
+      return { city: city || null, country: country || null };
+    }
   }
 
   return { city: null, country: null };
@@ -204,21 +320,22 @@ async function enrichProspect(prospect: ProspectItem) {
   const pages = [
     url,
     absUrl(url, "/"),
-    absUrl(url, "/work"),
-    absUrl(url, "/works"),
-    absUrl(url, "/projects"),
-    absUrl(url, "/portfolio"),
     absUrl(url, "/about"),
     absUrl(url, "/about-us"),
     absUrl(url, "/contact"),
     absUrl(url, "/info"),
+    absUrl(url, "/studio"),
+    absUrl(url, "/work"),
+    absUrl(url, "/works"),
+    absUrl(url, "/projects"),
+    absUrl(url, "/portfolio"),
   ].filter(Boolean);
 
   let thumbnailUrl: string | null = null;
   let country: string | null = null;
   let city: string | null = null;
 
-  for (const page of pages.slice(0, 6)) {
+  for (const page of pages.slice(0, 9)) {
     const html = await fetchHtml(page);
     if (!html) continue;
 
