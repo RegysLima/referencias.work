@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { ProspectsDB, ProspectStatus } from "@/lib/types";
 
 const EMPTY: ProspectsDB = {
@@ -36,6 +36,8 @@ export default function AdminProspectsPage() {
   const [page, setPage] = useState(1);
   const [exitingIds, setExitingIds] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string>("");
+  const rowRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const prevTopsRef = useRef<Record<string, number>>({});
 
   async function loadData() {
     setLoading(true);
@@ -195,6 +197,31 @@ export default function AdminProspectsPage() {
   const pageStart = (currentPage - 1) * PAGE_SIZE;
   const pagedItems = filteredItems.slice(pageStart, pageStart + PAGE_SIZE);
 
+  useLayoutEffect(() => {
+    const nextTops: Record<string, number> = {};
+
+    for (const item of pagedItems) {
+      const node = rowRefs.current[item.id];
+      if (!node) continue;
+      const nextTop = node.getBoundingClientRect().top;
+      nextTops[item.id] = nextTop;
+      const prevTop = prevTopsRef.current[item.id];
+      if (prevTop === undefined) continue;
+
+      const deltaY = prevTop - nextTop;
+      if (!deltaY) continue;
+
+      node.style.transition = "none";
+      node.style.transform = `translateY(${deltaY}px)`;
+      requestAnimationFrame(() => {
+        node.style.transition = "transform 240ms ease, opacity 200ms ease";
+        node.style.transform = "";
+      });
+    }
+
+    prevTopsRef.current = nextTops;
+  }, [pagedItems]);
+
   useEffect(() => {
     setPage(1);
   }, [statusFilter, filteredItems.length]);
@@ -313,6 +340,9 @@ export default function AdminProspectsPage() {
           pagedItems.map((item) => (
             <div
               key={item.id}
+              ref={(node) => {
+                rowRefs.current[item.id] = node;
+              }}
               className={[
                 "grid grid-cols-12 items-center gap-2 border-b border-zinc-900 px-3 py-3 text-sm text-zinc-200",
                 "transition-all duration-200 ease-out",
