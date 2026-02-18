@@ -38,6 +38,39 @@ function absUrl(base: string, maybe: string) {
   }
 }
 
+function decodeHtmlEntities(value: string) {
+  return (value || "")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, "\"")
+    .replace(/&#39;/gi, "'")
+    .replace(/&#x27;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">");
+}
+
+function normalizeImageCandidate(pageUrl: string, raw: string) {
+  const decoded = decodeHtmlEntities((raw || "").trim());
+  if (!decoded) return "";
+
+  const absolute = absUrl(pageUrl, decoded);
+  if (!absolute) return "";
+
+  try {
+    const url = new URL(absolute);
+    // Muitos sites Next expõem /_next/image?url=...&w=...&q=...
+    // Converter para a imagem origem evita links quebrados no modal.
+    if (url.pathname.includes("/_next/image")) {
+      const inner = url.searchParams.get("url") || "";
+      if (inner) {
+        return absUrl(pageUrl, decodeHtmlEntities(inner));
+      }
+    }
+    return url.toString();
+  } catch {
+    return absolute;
+  }
+}
+
 function uniq(list: string[]) {
   const seen = new Set<string>();
   const out: string[] = [];
@@ -105,6 +138,72 @@ function scoreImage(url: string) {
   return score;
 }
 
+async function checkImageReachable(url: string, timeoutMs = 6000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const head = await fetch(url, {
+      method: "HEAD",
+      redirect: "follow",
+      cache: "no-store",
+      signal: ctrl.signal,
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari",
+        accept: "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+      },
+    });
+
+    const ctHead = (head.headers.get("content-type") || "").toLowerCase();
+    if (head.ok && ctHead.startsWith("image/")) return true;
+  } catch {
+    // tenta GET fallback
+  } finally {
+    clearTimeout(t);
+  }
+
+  const ctrlGet = new AbortController();
+  const tGet = setTimeout(() => ctrlGet.abort(), timeoutMs);
+  try {
+    const get = await fetch(url, {
+      method: "GET",
+      redirect: "follow",
+      cache: "no-store",
+      signal: ctrlGet.signal,
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari",
+        accept: "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+        range: "bytes=0-0",
+      },
+    });
+    const ctGet = (get.headers.get("content-type") || "").toLowerCase();
+    return get.ok && ctGet.startsWith("image/");
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(tGet);
+  }
+}
+
+async function filterReachableImages(candidates: string[]) {
+  const out: string[] = [];
+  const queue = [...candidates];
+  const CONCURRENCY = 6;
+
+  const workers = Array.from({ length: CONCURRENCY }, async () => {
+    while (queue.length) {
+      const current = queue.shift();
+      if (!current) break;
+      const ok = await checkImageReachable(current);
+      if (ok) out.push(current);
+    }
+  });
+
+  await Promise.all(workers);
+  return out;
+}
+
 async function fetchText(url: string, timeoutMs = 8000) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -139,9 +238,9 @@ function extractFromHtml(pageUrl: string, html: string) {
 
   // og:image
   {
-    const og = html.match(/property=["']og:image["'][^>]*content=["']([^"']+)["']/i);
-    if (og?.[1]) {
-      const u = absUrl(pageUrl, og[1]);
+      const og = html.match(/property=["']og:image["'][^>]*content=["']([^"']+)["']/i);
+      if (og?.[1]) {
+      const u = normalizeImageCandidate(pageUrl, og[1]);
       if (u) out.push(u);
     }
   }
@@ -150,7 +249,7 @@ function extractFromHtml(pageUrl: string, html: string) {
   {
     const tw = html.match(/name=["']twitter:image["'][^>]*content=["']([^"']+)["']/i);
     if (tw?.[1]) {
-      const u = absUrl(pageUrl, tw[1]);
+      const u = normalizeImageCandidate(pageUrl, tw[1]);
       if (u) out.push(u);
     }
   }
@@ -160,7 +259,7 @@ function extractFromHtml(pageUrl: string, html: string) {
     const re = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
     let m: RegExpExecArray | null;
     while ((m = re.exec(html))) {
-      const u = absUrl(pageUrl, m[1]);
+      const u = normalizeImageCandidate(pageUrl, m[1]);
       if (u) out.push(u);
     }
   }
@@ -170,7 +269,7 @@ function extractFromHtml(pageUrl: string, html: string) {
     const re = /<img[^>]+data-src=["']([^"']+)["'][^>]*>/gi;
     let m: RegExpExecArray | null;
     while ((m = re.exec(html))) {
-      const u = absUrl(pageUrl, m[1]);
+      const u = normalizeImageCandidate(pageUrl, m[1]);
       if (u) out.push(u);
     }
   }
@@ -185,7 +284,7 @@ function extractFromHtml(pageUrl: string, html: string) {
         .map((x) => x.trim().split(/\s+/)[0])
         .filter(Boolean);
       for (const p of parts) {
-        const u = absUrl(pageUrl, p);
+        const u = normalizeImageCandidate(pageUrl, p);
         if (u) out.push(u);
       }
     }
@@ -197,7 +296,7 @@ function extractFromHtml(pageUrl: string, html: string) {
     let m: RegExpExecArray | null;
     while ((m = re.exec(html))) {
       const raw = (m[1] || "").trim().replace(/^['"]|['"]$/g, "");
-      const u = absUrl(pageUrl, raw);
+      const u = normalizeImageCandidate(pageUrl, raw);
       if (u) out.push(u);
     }
   }
@@ -207,7 +306,7 @@ function extractFromHtml(pageUrl: string, html: string) {
     const re = /<a[^>]+href=["']([^"']+)["'][^>]*>/gi;
     let m: RegExpExecArray | null;
     while ((m = re.exec(html))) {
-      const u = absUrl(pageUrl, m[1]);
+      const u = normalizeImageCandidate(pageUrl, m[1]);
       if (u) out.push(u);
     }
   }
@@ -222,7 +321,7 @@ function extractFromHtml(pageUrl: string, html: string) {
       const urlRe = /"([^"]+\.(?:jpg|jpeg|png|webp|gif)(?:\?[^"]*)?)"/gi;
       let u: RegExpExecArray | null;
       while ((u = urlRe.exec(chunk))) {
-        const abs = absUrl(pageUrl, u[1]);
+        const abs = normalizeImageCandidate(pageUrl, u[1]);
         if (abs) out.push(abs);
       }
     }
@@ -297,9 +396,11 @@ export async function GET(req: Request) {
 
     const ranked = filtered
       .sort((a, b) => scoreImage(b) - scoreImage(a))
-      .slice(0, 60);
+      .slice(0, 80);
 
-    return NextResponse.json({ candidates: ranked });
+    const reachable = await filterReachableImages(ranked);
+
+    return NextResponse.json({ candidates: reachable.slice(0, 60) });
   } catch {
     return NextResponse.json({ candidates: [] }, { status: 400 });
   }
