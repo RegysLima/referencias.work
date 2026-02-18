@@ -153,7 +153,11 @@ export default function AdminProspectsPage() {
     after?: () => void
   ) {
     setExitingIds((prev) => ({ ...prev, [id]: true }));
-    await new Promise((resolve) => setTimeout(resolve, 140));
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => {
+        setTimeout(() => resolve(), 90);
+      });
+    });
     applyLocalPatch(id, payload);
     setExitingIds((prev) => {
       const copy = { ...prev };
@@ -161,13 +165,18 @@ export default function AdminProspectsPage() {
       return copy;
     });
     after?.();
-    const ok = await patchItemServer(id, payload);
-    if (!ok) {
-      await loadData();
-      return;
-    }
-    // reconcilia dados do backend sem bloquear a micro-interação local
-    void loadData();
+    // Sincroniza no backend sem bloquear a experiência da lista
+    void (async () => {
+      const ok = await patchItemServer(id, payload);
+      if (!ok) {
+        await loadData();
+        return;
+      }
+      // reconcilia sem interromper o encadeamento visual da transição
+      setTimeout(() => {
+        void loadData();
+      }, 180);
+    })();
   }
 
   useEffect(() => {
