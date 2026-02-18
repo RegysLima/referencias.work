@@ -166,6 +166,15 @@ export default function AdminProspectsPage() {
     return sorted;
   }, [data.items, statusFilter, sortBy]);
 
+  const pendingCount = useMemo(
+    () => data.items.filter((item) => item.status === "new").length,
+    [data.items]
+  );
+  const approvedCount = useMemo(
+    () => data.items.filter((item) => item.status === "approved").length,
+    [data.items]
+  );
+
   const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
   const pageStart = (currentPage - 1) * PAGE_SIZE;
@@ -204,39 +213,19 @@ export default function AdminProspectsPage() {
 
       <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Total na base</div>
-          <div className="mt-1 text-2xl text-zinc-100">{data.count}</div>
-          <div className="mt-1 text-xs text-zinc-500">candidatos após limpeza</div>
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Para curadoria</div>
+          <div className="mt-1 text-2xl text-zinc-100">{pendingCount}</div>
+          <div className="mt-1 text-xs text-zinc-500">links pendentes de revisão</div>
         </div>
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Novos pendentes</div>
-          <div className="mt-1 text-2xl text-zinc-100">
-            {data.items.filter((item) => item.status === "new").length}
-          </div>
-          <div className="mt-1 text-xs text-zinc-500">status Novo</div>
-        </div>
-        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Páginas rastreadas</div>
-          <div className="mt-1 text-2xl text-zinc-100">{data.lastRun?.crawledPages || 0}</div>
-          <div className="mt-1 text-xs text-zinc-500">na última coleta</div>
-        </div>
-      </div>
-
-      <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
-        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Descobertos</div>
-          <div className="mt-1 text-2xl text-zinc-100">{data.lastRun?.discoveredCandidates || 0}</div>
-          <div className="mt-1 text-xs text-zinc-500">domínios únicos vistos no crawl</div>
-        </div>
-        <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Novos adicionados</div>
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Adicionados na última coleta</div>
           <div className="mt-1 text-2xl text-zinc-100">{data.lastRun?.newCandidates || 0}</div>
-          <div className="mt-1 text-xs text-zinc-500">entraram na sua base</div>
+          <div className="mt-1 text-xs text-zinc-500">entraram na lista para curadoria</div>
         </div>
         <div className="rounded-none border border-zinc-900 bg-zinc-950/70 p-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Já existentes</div>
+          <div className="text-xs uppercase tracking-[0.18em] text-zinc-500">Já estavam nas referências</div>
           <div className="mt-1 text-2xl text-zinc-100">{data.lastRun?.skippedAlreadyKnownDomains || 0}</div>
-          <div className="mt-1 text-xs text-zinc-500">já estavam nas referências</div>
+          <div className="mt-1 text-xs text-zinc-500">não entraram na lista</div>
         </div>
       </div>
 
@@ -250,7 +239,7 @@ export default function AdminProspectsPage() {
                 : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
             }`}
           >
-            Todos
+            Todos ({data.count})
           </button>
           <button
             onClick={() => setStatusFilter("new")}
@@ -260,7 +249,7 @@ export default function AdminProspectsPage() {
                 : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
             }`}
           >
-            Novos
+            Novos ({pendingCount})
           </button>
           <button
             onClick={() => setStatusFilter("approved")}
@@ -270,7 +259,7 @@ export default function AdminProspectsPage() {
                 : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
             }`}
           >
-            Aprovados
+            Aprovados ({approvedCount})
           </button>
         </div>
         <div className="relative">
