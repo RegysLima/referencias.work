@@ -112,20 +112,6 @@ function normalizeUrl(u: string) {
   }
 }
 
-function deriveNameFromUrl(u: string) {
-  try {
-    const host = new URL(u).hostname.replace(/^www\./, "");
-    const base = host.split(".")[0] || host;
-    if (!base) return "Nova referência";
-    return base
-      .split("-")
-      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-      .join(" ");
-  } catch {
-    return "Nova referência";
-  }
-}
-
 function normalizeSearchText(value: string) {
   return (value || "")
     .toLowerCase()
@@ -362,13 +348,23 @@ function normalizeLocations(
   city: string | null | undefined,
   preserveEmptyRows = false
 ) {
-  const rows = [
-    { country, city },
-    ...((input || []).map((row) => ({
+  const normalizedInput =
+    (input || []).map((row) => ({
       country: row?.country ?? null,
       city: row?.city ?? null,
-    })) || []),
-  ];
+    })) || [];
+
+  const rows =
+    normalizedInput.length > 0
+      ? normalizedInput.map((row, idx) =>
+          idx === 0
+            ? {
+                country: country ?? row.country ?? null,
+                city: city ?? row.city ?? null,
+              }
+            : row
+        )
+      : [{ country: country ?? null, city: city ?? null }];
 
   const out: Array<{ country?: string | null; city?: string | null }> = [];
   const seen = new Set<string>();
@@ -398,8 +394,6 @@ type ThumbModalState = {
 
 export default function AdminPage() {
   const [items, setItems] = useState<RefItem[]>([]);
-  const [loaded, setLoaded] = useState(false);
-  const prefillHandledRef = useRef(false);
   const [q, setQ] = useState("");
   const [onlyNoImage, setOnlyNoImage] = useState(false);
   const [onlyUnreviewed, setOnlyUnreviewed] = useState(false);
@@ -480,26 +474,25 @@ export default function AdminPage() {
           city: locations[0]?.city ? normalizeCityValue(locations[0].city ?? null) : null,
           locations,
         };
-      }).filter((it) => {
-        const isProspectGhost =
-          (it.id || "").startsWith("prospect-") &&
-          !(it.url || "").trim() &&
-          (!(it.name || "").trim() || (it.name || "").trim() === "Nova referência");
+      });
+
+      const cleaned = normalized.filter((it) => {
+        const isProspectGhost = (it.id || "").startsWith("prospect-") && !(it.url || "").trim();
         return !isProspectGhost;
       });
 
-      setItems(normalized.map(normalizeReviewFlags));
+      setItems(cleaned.map(normalizeReviewFlags));
 
       const primaryAreaDraftMap: Record<string, string> = {};
       const draft: Record<string, string> = {};
       const countryDraftMap: Record<string, string> = {};
       const cityDraftMap: Record<string, string> = {};
       const locationDraftMap: Record<string, string> = {};
-      for (const it of normalized) primaryAreaDraftMap[it.id] = (it.areaPrimary ?? "").trim();
-      for (const it of normalized) draft[it.id] = (it.areasSecondary ?? []).join(", ");
-      for (const it of normalized) countryDraftMap[it.id] = (it.country ?? "").trim();
-      for (const it of normalized) cityDraftMap[it.id] = (it.city ?? "").trim();
-      for (const it of normalized) {
+      for (const it of cleaned) primaryAreaDraftMap[it.id] = (it.areaPrimary ?? "").trim();
+      for (const it of cleaned) draft[it.id] = (it.areasSecondary ?? []).join(", ");
+      for (const it of cleaned) countryDraftMap[it.id] = (it.country ?? "").trim();
+      for (const it of cleaned) cityDraftMap[it.id] = (it.city ?? "").trim();
+      for (const it of cleaned) {
         for (let idx = 1; idx < (it.locations || []).length; idx += 1) {
           const row = it.locations?.[idx];
           locationDraftMap[`${it.id}:${idx}:country`] = (row?.country ?? "").trim();
@@ -511,63 +504,12 @@ export default function AdminPage() {
       setCountryDraft(countryDraftMap);
       setCityDraft(cityDraftMap);
       setLocationDraft(locationDraftMap);
-      setLoaded(true);
+      if (cleaned.length < normalized.length) {
+        setAutoSavePending(true);
+        showToast("Card vazio removido.");
+      }
     })();
   }, []);
-
-  useEffect(() => {
-    if (!loaded || prefillHandledRef.current) return;
-    prefillHandledRef.current = true;
-
-    const params = new URLSearchParams(window.location.search);
-    const prefillSource = (params.get("prefillSource") || "").trim().toLowerCase();
-    if (prefillSource !== "prospects") return;
-
-    const prefillUrl = (params.get("prefillUrl") || "").trim();
-    const normalizedPrefillUrl = normalizeUrl(prefillUrl);
-    if (!prefillUrl || !normalizedPrefillUrl || normalizedPrefillUrl === "https://") {
-      window.history.replaceState({}, "", "/admin");
-      return;
-    }
-
-    const alreadyExists = items.some((it) => normalizeUrl(it.url) === normalizedPrefillUrl);
-    if (alreadyExists) {
-      showToast("URL já existe nas referências.");
-      window.history.replaceState({}, "", "/admin");
-      return;
-    }
-
-    const id = `prospect-${Date.now()}`;
-    const now = new Date().toISOString();
-    const prefillName = (params.get("prefillName") || "").trim();
-    const prefillMacroType = normalizeMacro((params.get("prefillMacroType") || "Studios").trim());
-
-    const newItem: RefItem = {
-      id,
-      name: prefillName || deriveNameFromUrl(prefillUrl),
-      url: prefillUrl,
-      macroType: prefillMacroType,
-      areaPrimary: "",
-      areasSecondary: [],
-      tags: [],
-      country: null,
-      city: null,
-      locations: [],
-      thumbnailUrl: null,
-      thumbnailSource: "manual",
-      updatedAt: now,
-      reviewedAt: null,
-    };
-
-    setItems((prev) => [newItem, ...prev]);
-    setPrimaryAreaDraft((prev) => ({ ...prev, [id]: "" }));
-    setSecondaryDraft((prev) => ({ ...prev, [id]: "" }));
-    setCountryDraft((prev) => ({ ...prev, [id]: "" }));
-    setCityDraft((prev) => ({ ...prev, [id]: "" }));
-    setOpenId(id);
-    showToast("Referência pré-preenchida adicionada.");
-    window.history.replaceState({}, "", "/admin");
-  }, [loaded, items]);
 
   const duplicateMap = useMemo(() => {
     const map = new Map<string, number>();

@@ -10,6 +10,8 @@ const EMPTY: ProspectsDB = {
   lastRun: null,
 };
 
+const PAGE_SIZE = 20;
+
 function labelStatus(value: ProspectStatus) {
   if (value === "new") return "Novo";
   if (value === "approved") return "Aprovado";
@@ -28,7 +30,8 @@ export default function AdminProspectsPage() {
   const [loading, setLoading] = useState(false);
   const [collecting, setCollecting] = useState(false);
   const [collectProgress, setCollectProgress] = useState(0);
-  const [statusFilter, setStatusFilter] = useState<"all" | "new">("new");
+  const [statusFilter, setStatusFilter] = useState<"all" | "new" | "approved">("new");
+  const [page, setPage] = useState(1);
   const [error, setError] = useState<string>("");
 
   async function loadData() {
@@ -119,11 +122,6 @@ export default function AdminProspectsPage() {
   async function approveAndOpen(item: ProspectsDB["items"][number]) {
     try {
       setError("");
-      const candidateUrl = (item.homepageUrl || `https://${item.domain || ""}`).trim();
-      if (!candidateUrl || candidateUrl === "https://") {
-        throw new Error("Prospect sem URL válida para pré-preenchimento.");
-      }
-
       const res = await fetch("/api/admin/prospects", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
@@ -134,13 +132,9 @@ export default function AdminProspectsPage() {
         throw new Error(text || "Falha ao aprovar prospect");
       }
 
-      const params = new URLSearchParams();
-      params.set("prefillName", item.displayName || item.domain);
-      params.set("prefillUrl", candidateUrl);
-      params.set("prefillMacroType", "Studios");
-      params.set("prospectId", item.id);
-      params.set("prefillSource", "prospects");
-      window.location.href = `/admin?${params.toString()}`;
+      await loadData();
+      setStatusFilter("approved");
+      setPage(1);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro inesperado";
       setError(msg);
@@ -149,8 +143,18 @@ export default function AdminProspectsPage() {
 
   const filteredItems = useMemo(() => {
     if (statusFilter === "all") return data.items;
+    if (statusFilter === "approved") return data.items.filter((item) => item.status === "approved");
     return data.items.filter((item) => item.status === "new");
   }, [data.items, statusFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageStart = (currentPage - 1) * PAGE_SIZE;
+  const pagedItems = filteredItems.slice(pageStart, pageStart + PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [statusFilter, filteredItems.length]);
 
   return (
     <main className="mx-auto w-full max-w-7xl px-6 pb-12 pt-8 sm:px-10 lg:px-12">
@@ -238,6 +242,16 @@ export default function AdminProspectsPage() {
         >
           Novos
         </button>
+        <button
+          onClick={() => setStatusFilter("approved")}
+          className={`h-10 border-l border-zinc-800 px-4 text-sm transition ${
+            statusFilter === "approved"
+              ? "bg-zinc-100 text-zinc-950"
+              : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
+          }`}
+        >
+          Aprovados
+        </button>
       </div>
 
       {error ? (
@@ -255,10 +269,10 @@ export default function AdminProspectsPage() {
           <div className="col-span-3">Ações</div>
         </div>
 
-        {filteredItems.length === 0 ? (
+        {pagedItems.length === 0 ? (
           <div className="p-4 text-sm text-zinc-400">Nenhum prospect para o filtro atual.</div>
         ) : (
-          filteredItems.map((item) => (
+          pagedItems.map((item) => (
             <div
               key={item.id}
               className="grid grid-cols-12 items-center gap-2 border-b border-zinc-900 px-3 py-3 text-sm text-zinc-200"
@@ -308,6 +322,28 @@ export default function AdminProspectsPage() {
             </div>
           ))
         )}
+      </div>
+
+      <div className="mt-4 flex items-center justify-between">
+        <div className="text-xs text-zinc-500">
+          Página {currentPage} de {totalPages} • {filteredItems.length} itens
+        </div>
+        <div className="inline-flex border border-zinc-800">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage <= 1}
+            className="h-9 px-3 text-xs text-zinc-300 disabled:opacity-40"
+          >
+            Anterior
+          </button>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage >= totalPages}
+            className="h-9 border-l border-zinc-800 px-3 text-xs text-zinc-300 disabled:opacity-40"
+          >
+            Próxima
+          </button>
+        </div>
       </div>
     </main>
   );

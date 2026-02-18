@@ -14,8 +14,10 @@ export type Reference = {
     city?: string | null;
   }>;
   thumbnailUrl: string | null;
+  thumbnailSource?: string | null;
   hidden?: boolean;
   updatedAt: string;
+  reviewedAt?: string | null;
   reviewFlags?: {
     country?: boolean;
     city?: boolean;

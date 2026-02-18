@@ -1,6 +1,45 @@
 import { NextResponse } from "next/server";
 import type { ProspectItem } from "@/lib/types";
 import { readProspectsDb, writeProspectsDb } from "@/lib/prospectsDb";
+import { readReferencesDb, writeReferencesDb } from "@/lib/referencesDb";
+
+function normalizeUrlKey(value: string) {
+  try {
+    const url = new URL((value || "").trim());
+    const path = url.pathname.replace(/\/+$/, "");
+    url.hash = "";
+    url.search = "";
+    return `${url.protocol}//${url.host}${path}`.toLowerCase();
+  } catch {
+    return (value || "").trim().toLowerCase();
+  }
+}
+
+function toPrefillReference(prospect: ProspectItem) {
+  const now = new Date().toISOString();
+  const fallbackUrl = prospect.domain ? `https://${prospect.domain}` : "";
+  const url = (prospect.homepageUrl || fallbackUrl).trim();
+  const name = (prospect.displayName || prospect.domain || "Nova referência").trim();
+
+  return {
+    id: `prospect-${Date.now()}`,
+    name,
+    url,
+    type: "Studios",
+    macroType: "Studios",
+    areaPrimary: "",
+    areasSecondary: [],
+    tags: [],
+    country: null,
+    city: null,
+    locations: [],
+    thumbnailUrl: null,
+    thumbnailSource: "manual",
+    hidden: false,
+    updatedAt: now,
+    reviewedAt: null,
+  };
+}
 
 export async function GET() {
   const db = await readProspectsDb();
@@ -36,6 +75,7 @@ export async function PATCH(req: Request) {
 
   const db = await readProspectsDb();
   let found = false;
+  let approvedItem: ProspectItem | null = null;
 
   if (status === "rejected") {
     const next = db.items.filter((item) => {
@@ -50,6 +90,7 @@ export async function PATCH(req: Request) {
     db.items = db.items.map((item) => {
       if (item.id !== id) return item;
       found = true;
+      if (status === "approved") approvedItem = item;
       return {
         ...item,
         status: hasStatus ? (status as ProspectItem["status"]) : item.status,
@@ -65,6 +106,21 @@ export async function PATCH(req: Request) {
   db.count = db.items.length;
   db.updatedAt = new Date().toISOString();
   await writeProspectsDb(db);
+
+  if (status === "approved" && approvedItem) {
+    const candidate = toPrefillReference(approvedItem);
+    const candidateKey = normalizeUrlKey(candidate.url);
+    if (candidateKey && candidateKey !== "https://") {
+      const refDb = await readReferencesDb();
+      const exists = refDb.items.some((item) => normalizeUrlKey(item.url) === candidateKey);
+      if (!exists) {
+        refDb.items = [candidate, ...refDb.items];
+        refDb.count = refDb.items.length;
+        refDb.updatedAt = new Date().toISOString();
+        await writeReferencesDb(refDb);
+      }
+    }
+  }
 
   return NextResponse.json({ ok: true });
 }
