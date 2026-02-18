@@ -123,14 +123,19 @@ export default function AdminProspectsPage() {
 
   function applyLocalPatch(id: string, payload: { status?: ProspectStatus; notes?: string | null }) {
     setData((prev) => {
+      const nextStatus = payload.status;
+      const mustLeaveCurrentTab =
+        nextStatus === "rejected" ||
+        (nextStatus && nextStatus !== statusFilter);
+
       const nextItems =
-        payload.status === "rejected"
+        mustLeaveCurrentTab
           ? prev.items.filter((item) => item.id !== id)
           : prev.items.map((item) => {
               if (item.id !== id) return item;
               return {
                 ...item,
-                status: payload.status ?? item.status,
+                status: nextStatus ?? item.status,
                 notes:
                   payload.notes !== undefined
                     ? payload.notes || null
@@ -170,12 +175,7 @@ export default function AdminProspectsPage() {
       const ok = await patchItemServer(id, payload);
       if (!ok) {
         await loadData();
-        return;
       }
-      // reconcilia sem interromper o encadeamento visual da transição
-      setTimeout(() => {
-        void loadData();
-      }, 180);
     })();
   }
 
