@@ -333,12 +333,13 @@ export async function PATCH(req: Request) {
     db.items = db.items.map((item) => {
       if (item.id !== id) return item;
       found = true;
-      if (status === "approved") approvedItem = item;
-      return {
+      const nextItem = {
         ...item,
         status: hasStatus ? (status as ProspectItem["status"]) : item.status,
         notes: hasNotes ? (notes || null) : item.notes || null,
       };
+      if (status === "approved") approvedItem = nextItem;
+      return nextItem;
     });
   }
 
