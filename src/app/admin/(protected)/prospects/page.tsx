@@ -273,14 +273,19 @@ export default function AdminProspectsPage() {
             Aprovados
           </button>
         </div>
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as "recent" | "alpha")}
-          className="h-10 rounded-none border border-zinc-800 bg-zinc-950 pl-3 pr-9 text-sm text-zinc-100"
-        >
-          <option value="alpha">Ordem alfabética</option>
-          <option value="recent">Data de adição</option>
-        </select>
+        <div className="relative">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as "recent" | "alpha")}
+            className="h-10 appearance-none rounded-none border border-zinc-800 bg-zinc-950 pl-3 pr-10 text-sm text-zinc-100"
+          >
+            <option value="alpha">Ordem alfabética</option>
+            <option value="recent">Data de adição</option>
+          </select>
+          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
+            ▾
+          </span>
+        </div>
       </div>
 
       {error ? (
