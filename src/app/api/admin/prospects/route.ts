@@ -37,15 +37,26 @@ export async function PATCH(req: Request) {
   const db = await readProspectsDb();
   let found = false;
 
-  db.items = db.items.map((item) => {
-    if (item.id !== id) return item;
-    found = true;
-    return {
-      ...item,
-      status: hasStatus ? (status as ProspectItem["status"]) : item.status,
-      notes: hasNotes ? (notes || null) : item.notes || null,
-    };
-  });
+  if (status === "rejected") {
+    const next = db.items.filter((item) => {
+      if (item.id === id) {
+        found = true;
+        return false;
+      }
+      return true;
+    });
+    db.items = next;
+  } else {
+    db.items = db.items.map((item) => {
+      if (item.id !== id) return item;
+      found = true;
+      return {
+        ...item,
+        status: hasStatus ? (status as ProspectItem["status"]) : item.status,
+        notes: hasNotes ? (notes || null) : item.notes || null,
+      };
+    });
+  }
 
   if (!found) {
     return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });

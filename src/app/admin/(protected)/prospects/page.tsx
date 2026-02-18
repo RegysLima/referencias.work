@@ -13,7 +13,7 @@ const EMPTY: ProspectsDB = {
 function labelStatus(value: ProspectStatus) {
   if (value === "new") return "Novo";
   if (value === "approved") return "Aprovado";
-  return "Descartado";
+  return "Novo";
 }
 
 function formatDate(value: string | null | undefined) {
@@ -28,7 +28,7 @@ export default function AdminProspectsPage() {
   const [loading, setLoading] = useState(false);
   const [collecting, setCollecting] = useState(false);
   const [collectProgress, setCollectProgress] = useState(0);
-  const [statusFilter, setStatusFilter] = useState<"all" | ProspectStatus>("new");
+  const [statusFilter, setStatusFilter] = useState<"all" | "new">("new");
   const [error, setError] = useState<string>("");
 
   async function loadData() {
@@ -143,7 +143,7 @@ export default function AdminProspectsPage() {
 
   const filteredItems = useMemo(() => {
     if (statusFilter === "all") return data.items;
-    return data.items.filter((item) => item.status === statusFilter);
+    return data.items.filter((item) => item.status === "new");
   }, [data.items, statusFilter]);
 
   return (
@@ -211,18 +211,27 @@ export default function AdminProspectsPage() {
         </div>
       </div>
 
-      <div className="mb-4 flex items-center gap-3">
-        <label className="text-sm text-zinc-400">Status:</label>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as "all" | ProspectStatus)}
-          className="h-10 rounded-none border border-zinc-800 bg-zinc-950 px-3 text-sm text-zinc-100"
+      <div className="mb-4 inline-flex border border-zinc-800">
+        <button
+          onClick={() => setStatusFilter("all")}
+          className={`h-10 px-4 text-sm transition ${
+            statusFilter === "all"
+              ? "bg-zinc-100 text-zinc-950"
+              : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
+          }`}
         >
-          <option value="new">Novos</option>
-          <option value="all">Todos</option>
-          <option value="approved">Aprovados</option>
-          <option value="rejected">Descartados</option>
-        </select>
+          Todos
+        </button>
+        <button
+          onClick={() => setStatusFilter("new")}
+          className={`h-10 border-l border-zinc-800 px-4 text-sm transition ${
+            statusFilter === "new"
+              ? "bg-zinc-100 text-zinc-950"
+              : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
+          }`}
+        >
+          Novos
+        </button>
       </div>
 
       {error ? (
