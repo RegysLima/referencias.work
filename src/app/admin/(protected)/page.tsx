@@ -1075,6 +1075,14 @@ export default function AdminPage() {
   function addLocationRow(id: string) {
     const current = items.find((it) => it.id === id);
     const rows = current?.locations ? [...current.locations] : [];
+    // index 0 é reservado para o país/cidade principal.
+    // garante a linha base antes de adicionar uma linha extra visível.
+    if (!rows.length) {
+      rows.push({
+        country: normalizeCountryValue(current?.country ?? null),
+        city: normalizeCityValue(current?.city ?? null),
+      });
+    }
     const rowIndex = rows.length;
     rows.push({ country: null, city: null });
     setLocationDraft((prev) => ({

@@ -31,6 +31,7 @@ export default function AdminProspectsPage() {
   const [collecting, setCollecting] = useState(false);
   const [collectProgress, setCollectProgress] = useState(0);
   const [statusFilter, setStatusFilter] = useState<"all" | "new" | "approved">("new");
+  const [sortBy, setSortBy] = useState<"recent" | "alpha">("recent");
   const [page, setPage] = useState(1);
   const [error, setError] = useState<string>("");
 
@@ -142,10 +143,28 @@ export default function AdminProspectsPage() {
   }
 
   const filteredItems = useMemo(() => {
-    if (statusFilter === "all") return data.items;
-    if (statusFilter === "approved") return data.items.filter((item) => item.status === "approved");
-    return data.items.filter((item) => item.status === "new");
-  }, [data.items, statusFilter]);
+    const base =
+      statusFilter === "all"
+        ? data.items
+        : statusFilter === "approved"
+        ? data.items.filter((item) => item.status === "approved")
+        : data.items.filter((item) => item.status === "new");
+
+    const sorted = [...base];
+    if (sortBy === "alpha") {
+      sorted.sort((a, b) =>
+        (a.displayName || a.domain || "").localeCompare((b.displayName || b.domain || ""), "pt-BR")
+      );
+      return sorted;
+    }
+
+    sorted.sort(
+      (a, b) =>
+        new Date(b.firstSeenAt || b.lastSeenAt || 0).getTime() -
+        new Date(a.firstSeenAt || a.lastSeenAt || 0).getTime()
+    );
+    return sorted;
+  }, [data.items, statusFilter, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -251,6 +270,29 @@ export default function AdminProspectsPage() {
           }`}
         >
           Aprovados
+        </button>
+      </div>
+
+      <div className="mb-4 inline-flex border border-zinc-800">
+        <button
+          onClick={() => setSortBy("recent")}
+          className={`h-10 px-4 text-sm transition ${
+            sortBy === "recent"
+              ? "bg-zinc-100 text-zinc-950"
+              : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
+          }`}
+        >
+          Data de adição
+        </button>
+        <button
+          onClick={() => setSortBy("alpha")}
+          className={`h-10 border-l border-zinc-800 px-4 text-sm transition ${
+            sortBy === "alpha"
+              ? "bg-zinc-100 text-zinc-950"
+              : "bg-zinc-950 text-zinc-300 hover:bg-zinc-900"
+          }`}
+        >
+          Ordem alfabética
         </button>
       </div>
 
