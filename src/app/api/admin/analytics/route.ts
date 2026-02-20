@@ -34,6 +34,7 @@ type Summary = {
     paypalClick: number;
     dismiss: number;
   };
+  heatmapHome?: Record<string, number>;
   normalizeFilters?: NormalizeFiltersStatus | null;
   lastUpdated?: string | null;
 };
@@ -105,6 +106,7 @@ function normalizeSummaryLangs(summary: Summary): Summary {
       paypalClick: 0,
       dismiss: 0,
     },
+    heatmapHome: summary.heatmapHome || {},
   };
 }
 
@@ -136,6 +138,7 @@ export async function GET() {
         paypalClick: 0,
         dismiss: 0,
       },
+      heatmapHome: {},
       normalizeFilters: null,
       lastUpdated: null,
     };

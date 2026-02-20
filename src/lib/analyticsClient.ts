@@ -16,6 +16,10 @@ type EventPayload = {
   utmMedium?: string;
   referrer?: string;
   device?: "mobile" | "desktop";
+  x?: number;
+  y?: number;
+  vw?: number;
+  vh?: number;
 };
 
 const SESSION_KEY = "rw_session_id";
@@ -87,4 +91,3 @@ export function sendAnalyticsEvent(payload: EventPayload) {
     // ignore
   }
 }
-

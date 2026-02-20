@@ -30,6 +30,7 @@ type Summary = {
     paypalClick: number;
     dismiss: number;
   };
+  heatmapHome?: Record<string, number>;
   lastUpdated?: string | null;
 };
 
@@ -113,6 +114,34 @@ function normalizeSearchQuery(value: string | undefined) {
   return cleaned;
 }
 
+function clamp01(value: number) {
+  if (!Number.isFinite(value)) return 0;
+  if (value < 0) return 0;
+  if (value > 1) return 1;
+  return value;
+}
+
+function resolveHeatmapBucket(body: {
+  x?: number;
+  y?: number;
+  vw?: number;
+  vh?: number;
+}) {
+  const cols = 24;
+  const rows = 14;
+  const x = Number(body?.x);
+  const y = Number(body?.y);
+  const vw = Number(body?.vw);
+  const vh = Number(body?.vh);
+  if (![x, y, vw, vh].every(Number.isFinite) || vw <= 0 || vh <= 0) return null;
+
+  const nx = clamp01(x / vw);
+  const ny = clamp01(y / vh);
+  const cx = Math.min(cols - 1, Math.max(0, Math.floor(nx * cols)));
+  const cy = Math.min(rows - 1, Math.max(0, Math.floor(ny * rows)));
+  return `${cx}:${cy}`;
+}
+
 export async function POST(req: Request) {
   if (!KV_ENABLED) {
     return NextResponse.json({ ok: false, error: "KV disabled" }, { status: 503 });
@@ -134,6 +163,10 @@ export async function POST(req: Request) {
     utmMedium?: string;
     referrer?: string;
     device?: string;
+    x?: number;
+    y?: number;
+    vw?: number;
+    vh?: number;
   };
   const type = normalizeType((body?.type || "page").toString());
   const path = (body?.path || "/").toString().slice(0, 200);
@@ -165,6 +198,7 @@ export async function POST(req: Request) {
       paypalClick: 0,
       dismiss: 0,
     },
+    heatmapHome: {},
   };
   const current = normalizeSummaryLangs(currentRaw);
   current.byType = current.byType || {};
@@ -174,6 +208,17 @@ export async function POST(req: Request) {
   current.byNoResultQuery = current.byNoResultQuery || {};
   current.byDayNoResultQuery = current.byDayNoResultQuery || {};
   current.donation = current.donation || { cardView: 0, pixClick: 0, paypalClick: 0, dismiss: 0 };
+  current.heatmapHome = current.heatmapHome || {};
+
+  if (type === "mouse_move_home" && path === "/") {
+    const bucket = resolveHeatmapBucket(body);
+    if (bucket) {
+      current.heatmapHome[bucket] = (current.heatmapHome[bucket] || 0) + 1;
+      current.lastUpdated = new Date().toISOString();
+      await kv.set(KV_KEY, current);
+    }
+    return NextResponse.json({ ok: true });
+  }
 
   const day = todayKey();
   current.byType[type] = (current.byType[type] || 0) + 1;

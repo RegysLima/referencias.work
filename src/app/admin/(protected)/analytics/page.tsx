@@ -26,6 +26,7 @@ type Summary = {
     paypalClick: number;
     dismiss: number;
   };
+  heatmapHome?: Record<string, number>;
   normalizeFilters?: {
     ranAt: string;
     total: number;
@@ -60,6 +61,7 @@ const EMPTY: Summary = {
     paypalClick: 0,
     dismiss: 0,
   },
+  heatmapHome: {},
   normalizeFilters: null,
   lastUpdated: null,
 };
@@ -253,6 +255,20 @@ function getInteractionLabel(type: string) {
   return type.replace(/_/g, " ");
 }
 
+function parseHeatmapCells(source: Record<string, number>) {
+  const cells = Object.entries(source)
+    .map(([key, value]) => {
+      const [xRaw, yRaw] = key.split(":");
+      const x = Number(xRaw);
+      const y = Number(yRaw);
+      if (!Number.isInteger(x) || !Number.isInteger(y)) return null;
+      return { key, x, y, value: Number(value) || 0 };
+    })
+    .filter((item): item is { key: string; x: number; y: number; value: number } => Boolean(item));
+  const max = Math.max(0, ...cells.map((c) => c.value));
+  return { cells, max };
+}
+
 export default function AdminAnalyticsPage() {
   const [summary, setSummary] = useState<Summary>(EMPTY);
   const [loading, setLoading] = useState(true);
@@ -403,6 +419,10 @@ export default function AdminAnalyticsPage() {
       rangeDays[rangeDays.length - 1]
     )}`;
   }, [range, rangeDays]);
+  const heatmap = useMemo(
+    () => parseHeatmapCells(summary.heatmapHome || {}),
+    [summary.heatmapHome]
+  );
 
   const metricCardClass = "rounded-xl border border-zinc-800 bg-zinc-950/30 p-5 min-h-[112px]";
   const panelCardClass = "rounded-xl border border-zinc-800 bg-zinc-950/30 p-5";
@@ -583,6 +603,34 @@ export default function AdminAnalyticsPage() {
               ))
             ) : (
               <div className="text-zinc-500">—</div>
+            )}
+          </div>
+        </div>
+        <div className={`${panelCardClass} xl:col-span-8`}>
+          <div className={panelTitleClass}>Heatmap de mouse (home)</div>
+          <div className="mt-4">
+            {heatmap.cells.length ? (
+              <div className="relative aspect-[16/7] overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950/70">
+                {heatmap.cells.map((cell) => {
+                  const alpha = heatmap.max ? cell.value / heatmap.max : 0;
+                  return (
+                    <div
+                      key={cell.key}
+                      className="absolute"
+                      style={{
+                        left: `${(cell.x / 24) * 100}%`,
+                        top: `${(cell.y / 14) * 100}%`,
+                        width: `${100 / 24}%`,
+                        height: `${100 / 14}%`,
+                        background: `rgba(59, 130, 246, ${Math.max(0.1, alpha * 0.9)})`,
+                      }}
+                      title={`${cell.value} movimentos`}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-sm text-zinc-500">Sem dados ainda.</div>
             )}
           </div>
         </div>
