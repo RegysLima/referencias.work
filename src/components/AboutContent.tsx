@@ -1,6 +1,5 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import type { Lang } from "@/lib/i18n";
 import type { AboutContent } from "@/lib/loadAbout";
 
@@ -23,11 +22,7 @@ export default function AboutContent({
   about: AboutContent;
   initialLang: Lang;
 }) {
-  const searchParams = useSearchParams();
-  const langParam = searchParams.get("lang");
-  const lang = (["pt", "en", "es"] as Lang[]).includes(langParam as Lang)
-    ? (langParam as Lang)
-    : initialLang;
+  const lang = initialLang;
   const paragraphs = splitParagraphs(pickText(about.body, lang));
   const sections = Array.isArray(about.sections) ? about.sections : [];
 

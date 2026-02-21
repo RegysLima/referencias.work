@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Lang } from "@/lib/i18n";
 
@@ -9,7 +9,6 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
   const [lang, setLang] = useState<Lang>(initialLang);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const aboutLabel = lang === "en" ? "About" : "Sobre";
   const backLabel = lang === "en" ? "Back to home" : lang === "es" ? "Volver al inicio" : "Voltar à home";
@@ -26,13 +25,6 @@ export default function AboutHeader({ initialLang }: { initialLang: Lang }) {
   useEffect(() => {
     setLang(initialLang);
   }, [initialLang]);
-
-  useEffect(() => {
-    const next = searchParams.get("lang");
-    if (next === "pt" || next === "en" || next === "es") {
-      setLang(next);
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     window.localStorage.setItem("rw_theme", theme);
