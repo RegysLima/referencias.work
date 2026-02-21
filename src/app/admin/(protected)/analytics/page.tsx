@@ -269,6 +269,13 @@ function parseHeatmapCells(source: Record<string, number>) {
   return { cells, max };
 }
 
+function getHeatColor(ratio: number) {
+  const clamped = Math.max(0, Math.min(1, ratio));
+  const hue = Math.round(220 - clamped * 220);
+  const alpha = 0.16 + clamped * 0.84;
+  return `hsla(${hue}, 92%, 54%, ${alpha})`;
+}
+
 export default function AdminAnalyticsPage() {
   const [summary, setSummary] = useState<Summary>(EMPTY);
   const [loading, setLoading] = useState(true);
@@ -608,11 +615,20 @@ export default function AdminAnalyticsPage() {
         </div>
         <div className={`${panelCardClass} xl:col-span-8`}>
           <div className={panelTitleClass}>Heatmap de mouse (home)</div>
+          <div className="mt-1 text-xs text-zinc-500">
+            Visualização aproximada sobre a home para facilitar leitura de contexto.
+          </div>
           <div className="mt-4">
             {heatmap.cells.length ? (
-              <div className="relative aspect-[16/7] overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950/70">
+              <div className="relative aspect-[16/9] overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950/90">
+                <iframe
+                  src="/"
+                  title="Prévia da home"
+                  className="pointer-events-none absolute inset-0 h-full w-full opacity-55 saturate-0"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-zinc-950/30 via-zinc-950/10 to-zinc-950/70" />
                 {heatmap.cells.map((cell) => {
-                  const alpha = heatmap.max ? cell.value / heatmap.max : 0;
+                  const ratio = heatmap.max ? cell.value / heatmap.max : 0;
                   return (
                     <div
                       key={cell.key}
@@ -622,12 +638,17 @@ export default function AdminAnalyticsPage() {
                         top: `${(cell.y / 14) * 100}%`,
                         width: `${100 / 24}%`,
                         height: `${100 / 14}%`,
-                        background: `rgba(59, 130, 246, ${Math.max(0.1, alpha * 0.9)})`,
+                        background: getHeatColor(ratio),
                       }}
                       title={`${cell.value} movimentos`}
                     />
                   );
                 })}
+                <div className="pointer-events-none absolute bottom-3 right-3 rounded-md border border-zinc-700/80 bg-zinc-950/80 px-2 py-1 text-[11px] text-zinc-300">
+                  Frio
+                  <span className="mx-1 inline-block h-2 w-14 align-middle bg-gradient-to-r from-blue-500 via-cyan-400 via-yellow-400 to-red-500" />
+                  Quente
+                </div>
               </div>
             ) : (
               <div className="text-sm text-zinc-500">Sem dados ainda.</div>
