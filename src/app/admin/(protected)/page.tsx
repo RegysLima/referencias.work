@@ -1519,25 +1519,12 @@ export default function AdminPage() {
                       title="Clique para usar"
                     >
                       <div className="aspect-[4/3] w-full bg-zinc-900">
-                        {isVideoUrl(src) ? (
-                          <VideoThumb
-                            src={src}
-                            className="pointer-events-none h-full w-full object-cover transition group-hover:scale-[1.02]"
-                          />
-                        ) : isVimeoUrl(src) ? (
-                          <iframe
-                            src={getVimeoEmbedSrc(src)}
-                            title=""
-                            allow="autoplay; fullscreen; picture-in-picture"
-                            loading="lazy"
-                            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                            style={{
-                              width: "112%",
-                              height: "100%",
-                              minWidth: "100%",
-                              minHeight: "100%",
-                            }}
-                          />
+                        {isVideoUrl(src) || isVimeoUrl(src) ? (
+                          <div className="flex h-full w-full items-center justify-center bg-zinc-950 text-zinc-200">
+                            <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs uppercase tracking-[0.12em]">
+                              Video
+                            </span>
+                          </div>
                         ) : (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
