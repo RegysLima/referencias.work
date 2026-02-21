@@ -411,6 +411,8 @@ type ThumbModalState = {
   candidates: string[];
 };
 
+const ADMIN_PAGE_SIZE = 20;
+
 export default function AdminPage() {
   const [items, setItems] = useState<RefItem[]>([]);
   const [q, setQ] = useState("");
@@ -420,6 +422,7 @@ export default function AdminPage() {
   const [onlyNeedsReview, setOnlyNeedsReview] = useState(false);
   const [onlyBrokenImages, setOnlyBrokenImages] = useState(false);
   const [macroFilter, setMacroFilter] = useState<string>("Todos");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [openId, setOpenId] = useState<string | null>(null);
   const [primaryAreaDraft, setPrimaryAreaDraft] = useState<Record<string, string>>({});
@@ -782,6 +785,31 @@ export default function AdminPage() {
     duplicateMap,
     brokenThumbs,
   ]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ADMIN_PAGE_SIZE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const pagedItems = useMemo(() => {
+    const start = (safeCurrentPage - 1) * ADMIN_PAGE_SIZE;
+    return filtered.slice(start, start + ADMIN_PAGE_SIZE);
+  }, [filtered, safeCurrentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [
+    q,
+    onlyNoImage,
+    onlyUnreviewed,
+    onlyDuplicates,
+    onlyNeedsReview,
+    onlyBrokenImages,
+    macroFilter,
+  ]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const areaMap = useMemo(() => buildAreaMap(items), [items]);
   const areaOptions = useMemo(() => {
@@ -1589,7 +1617,7 @@ export default function AdminPage() {
         <div>
           {/* CONTENT - GRID */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((i) => {
+            {pagedItems.map((i) => {
               const isOpen = openId === i.id;
               const k = normalizeUrl(i.url);
               const dup = k && (duplicateMap.get(k) ?? 0) >= 2;
@@ -2645,10 +2673,34 @@ export default function AdminPage() {
                   </div>
                 ) : null}
               </div>
-            );
-          })}
+              );
+            })}
+          </div>
+
+          <div className="mt-5 flex items-center justify-between text-xs text-zinc-500">
+            <span>
+              Página {safeCurrentPage} de {totalPages} • {filtered.length} itens
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={safeCurrentPage <= 1}
+                className="rounded-none border border-zinc-800 px-3 py-1.5 text-xs text-zinc-200 hover:border-zinc-700 disabled:opacity-40"
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={safeCurrentPage >= totalPages}
+                className="rounded-none border border-zinc-800 px-3 py-1.5 text-xs text-zinc-200 hover:border-zinc-700 disabled:opacity-40"
+              >
+                Próxima
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );
