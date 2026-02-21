@@ -272,6 +272,90 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
   );
 }
 
+function VideoFramePreview({ src, className }: { src: string; className: string }) {
+  const [frame, setFrame] = useState<string>("");
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    setFrame("");
+    setFailed(false);
+
+    const video = document.createElement("video");
+    video.src = src;
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "metadata";
+    video.crossOrigin = "anonymous";
+
+    const onLoaded = () => {
+      try {
+        video.currentTime = Math.min(0.2, Math.max(0, (video.duration || 0) / 5));
+      } catch {
+        // ignore and wait canplay
+      }
+    };
+
+    const capture = () => {
+      try {
+        const w = Math.max(2, video.videoWidth || 0);
+        const h = Math.max(2, video.videoHeight || 0);
+        if (!w || !h) throw new Error("no-size");
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) throw new Error("no-ctx");
+        ctx.drawImage(video, 0, 0, w, h);
+        const data = canvas.toDataURL("image/jpeg", 0.75);
+        if (alive && data) setFrame(data);
+      } catch {
+        if (alive) setFailed(true);
+      }
+    };
+
+    const onError = () => {
+      if (alive) setFailed(true);
+    };
+
+    video.addEventListener("loadedmetadata", onLoaded);
+    video.addEventListener("seeked", capture);
+    video.addEventListener("error", onError);
+    video.load();
+
+    return () => {
+      alive = false;
+      video.removeEventListener("loadedmetadata", onLoaded);
+      video.removeEventListener("seeked", capture);
+      video.removeEventListener("error", onError);
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    };
+  }, [src]);
+
+  if (frame) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={frame}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className={`${className} pointer-events-none`}
+      />
+    );
+  }
+
+  return (
+    <div className={`${className} pointer-events-none flex items-center justify-center bg-zinc-950 text-zinc-200`}>
+      <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs uppercase tracking-[0.12em]">
+        {failed ? "Video" : "Carregando"}
+      </span>
+    </div>
+  );
+}
+
 function normalizeMacro(raw: string) {
   const v = (raw || "").trim();
   const low = v.toLowerCase();
@@ -1523,7 +1607,7 @@ export default function AdminPage() {
                     >
                       <div className="aspect-[4/3] w-full bg-zinc-900">
                         {isVideoUrl(src) ? (
-                          <VideoThumb
+                          <VideoFramePreview
                             src={src}
                             className="pointer-events-none h-full w-full object-cover transition group-hover:scale-[1.02]"
                           />
