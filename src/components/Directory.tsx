@@ -236,6 +236,10 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       tabIndex={-1}
       onError={() => setFailed(true)}
       onClick={(e) => e.preventDefault()}
+      onMouseDown={(e) => e.preventDefault()}
+      onPointerDown={(e) => e.preventDefault()}
+      onDoubleClick={(e) => e.preventDefault()}
+      onContextMenu={(e) => e.preventDefault()}
       className={`${className} absolute inset-0 block`}
       style={{
         objectFit: "cover",

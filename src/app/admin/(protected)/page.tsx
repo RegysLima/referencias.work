@@ -253,6 +253,10 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       tabIndex={-1}
       onError={() => setFailed(true)}
       onClick={(e) => e.preventDefault()}
+      onMouseDown={(e) => e.preventDefault()}
+      onPointerDown={(e) => e.preventDefault()}
+      onDoubleClick={(e) => e.preventDefault()}
+      onContextMenu={(e) => e.preventDefault()}
       className={`${className} absolute inset-0 block`}
       style={{
         objectFit: "cover",
@@ -1506,6 +1510,11 @@ export default function AdminPage() {
                     <button
                       key={src}
                       onClick={() => pickThumb(src)}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onDoubleClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
                       className="group overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 text-left hover:border-zinc-700"
                       title="Clique para usar"
                     >
