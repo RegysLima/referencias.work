@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useCallback,
   useDeferredValue,
   useEffect,
   useMemo,
@@ -418,6 +419,7 @@ type ThumbModalState = {
 };
 
 const ADMIN_PAGE_SIZE = 20;
+const ADMIN_REFS_CACHE_KEY = "rw_admin_refs_cache_v1";
 
 export default function AdminPage() {
   const [items, setItems] = useState<RefItem[]>([]);
@@ -482,78 +484,104 @@ export default function AdminPage() {
     candidates: [],
   });
 
+  const hydrateItems = useCallback((loaded: RefItem[], options?: { autoFix?: boolean }) => {
+    // normaliza macroType (corrige “Studio” etc) ao carregar
+    const normalized = loaded.map((it) => {
+      const macroType = normalizeMacro(
+        getStringField(it, "macroType") || getStringField(it, "macro")
+      );
+      const ap = (it.areaPrimary ?? "") as string;
+      const as = normalizeSecondaryAreas(ap, (it.areasSecondary ?? []) as string[]);
+      const locations = normalizeLocations(it.locations, it.country ?? null, it.city ?? null);
+      return {
+        ...it,
+        macroType,
+        areasSecondary: as,
+        tags: deriveTags(ap, as),
+        country: locations[0]?.country ? normalizeCountryValue(locations[0].country ?? null) : null,
+        city: locations[0]?.city ? normalizeCityValue(locations[0].city ?? null) : null,
+        locations,
+      };
+    });
+
+    const cleaned = normalized.filter((it) => !isEmptyPlaceholderReference(it));
+    let hadDuplicateIds = false;
+    const seenIds = new Set<string>();
+    const uniqued = cleaned.map((it, idx) => {
+      let nextId = (it.id || "").trim();
+      if (!nextId) {
+        hadDuplicateIds = true;
+        nextId = `ref-${Date.now()}-${idx}`;
+      }
+      if (seenIds.has(nextId)) {
+        hadDuplicateIds = true;
+        nextId = `${nextId}-${Date.now()}-${idx}`;
+      }
+      seenIds.add(nextId);
+      if (nextId === it.id) return it;
+      return { ...it, id: nextId };
+    });
+
+    setItems(uniqued.map(normalizeReviewFlags));
+
+    const primaryAreaDraftMap: Record<string, string> = {};
+    const draft: Record<string, string> = {};
+    const countryDraftMap: Record<string, string> = {};
+    const cityDraftMap: Record<string, string> = {};
+    const locationDraftMap: Record<string, string> = {};
+    for (const it of uniqued) primaryAreaDraftMap[it.id] = (it.areaPrimary ?? "").trim();
+    for (const it of uniqued) draft[it.id] = (it.areasSecondary ?? []).join(", ");
+    for (const it of uniqued) countryDraftMap[it.id] = (it.country ?? "").trim();
+    for (const it of uniqued) cityDraftMap[it.id] = (it.city ?? "").trim();
+    for (const it of uniqued) {
+      for (let idx = 1; idx < (it.locations || []).length; idx += 1) {
+        const row = it.locations?.[idx];
+        locationDraftMap[`${it.id}:${idx}:country`] = (row?.country ?? "").trim();
+        locationDraftMap[`${it.id}:${idx}:city`] = (row?.city ?? "").trim();
+      }
+    }
+    setPrimaryAreaDraft(primaryAreaDraftMap);
+    setSecondaryDraft(draft);
+    setCountryDraft(countryDraftMap);
+    setCityDraft(cityDraftMap);
+    setLocationDraft(locationDraftMap);
+
+    if (options?.autoFix && (cleaned.length < normalized.length || hadDuplicateIds)) {
+      setAutoSavePending(true);
+      showToast("Cards inválidos corrigidos.");
+    }
+  }, []);
+
   useEffect(() => {
     (async () => {
+      // 1) Mostra snapshot local imediatamente (reduz delay perceptível de primeira carga)
+      try {
+        const raw = window.localStorage.getItem(ADMIN_REFS_CACHE_KEY);
+        if (raw) {
+          const cached = JSON.parse(raw) as { items?: RefItem[] };
+          if (Array.isArray(cached?.items) && cached.items.length) {
+            hydrateItems(cached.items, { autoFix: false });
+          }
+        }
+      } catch {
+        // ignore cache parse
+      }
+
+      // 2) Atualiza com dados frescos da API
       const res = await fetch("/api/admin/references");
       const db = await res.json();
       const loaded: RefItem[] = db.items ?? [];
-
-      // normaliza macroType (corrige “Studio” etc) ao carregar
-      const normalized = loaded.map((it) => {
-        const macroType = normalizeMacro(
-          getStringField(it, "macroType") || getStringField(it, "macro")
+      hydrateItems(loaded, { autoFix: true });
+      try {
+        window.localStorage.setItem(
+          ADMIN_REFS_CACHE_KEY,
+          JSON.stringify({ items: loaded, updatedAt: db?.updatedAt || null })
         );
-        const ap = (it.areaPrimary ?? "") as string;
-        const as = normalizeSecondaryAreas(ap, (it.areasSecondary ?? []) as string[]);
-        const locations = normalizeLocations(it.locations, it.country ?? null, it.city ?? null);
-        return {
-          ...it,
-          macroType,
-          areasSecondary: as,
-          tags: deriveTags(ap, as),
-          country: locations[0]?.country ? normalizeCountryValue(locations[0].country ?? null) : null,
-          city: locations[0]?.city ? normalizeCityValue(locations[0].city ?? null) : null,
-          locations,
-        };
-      });
-
-      const cleaned = normalized.filter((it) => !isEmptyPlaceholderReference(it));
-      let hadDuplicateIds = false;
-      const seenIds = new Set<string>();
-      const uniqued = cleaned.map((it, idx) => {
-        let nextId = (it.id || "").trim();
-        if (!nextId) {
-          hadDuplicateIds = true;
-          nextId = `ref-${Date.now()}-${idx}`;
-        }
-        if (seenIds.has(nextId)) {
-          hadDuplicateIds = true;
-          nextId = `${nextId}-${Date.now()}-${idx}`;
-        }
-        seenIds.add(nextId);
-        if (nextId === it.id) return it;
-        return { ...it, id: nextId };
-      });
-
-      setItems(uniqued.map(normalizeReviewFlags));
-
-      const primaryAreaDraftMap: Record<string, string> = {};
-      const draft: Record<string, string> = {};
-      const countryDraftMap: Record<string, string> = {};
-      const cityDraftMap: Record<string, string> = {};
-      const locationDraftMap: Record<string, string> = {};
-      for (const it of uniqued) primaryAreaDraftMap[it.id] = (it.areaPrimary ?? "").trim();
-      for (const it of uniqued) draft[it.id] = (it.areasSecondary ?? []).join(", ");
-      for (const it of uniqued) countryDraftMap[it.id] = (it.country ?? "").trim();
-      for (const it of uniqued) cityDraftMap[it.id] = (it.city ?? "").trim();
-      for (const it of uniqued) {
-        for (let idx = 1; idx < (it.locations || []).length; idx += 1) {
-          const row = it.locations?.[idx];
-          locationDraftMap[`${it.id}:${idx}:country`] = (row?.country ?? "").trim();
-          locationDraftMap[`${it.id}:${idx}:city`] = (row?.city ?? "").trim();
-        }
-      }
-      setPrimaryAreaDraft(primaryAreaDraftMap);
-      setSecondaryDraft(draft);
-      setCountryDraft(countryDraftMap);
-      setCityDraft(cityDraftMap);
-      setLocationDraft(locationDraftMap);
-      if (cleaned.length < normalized.length || hadDuplicateIds) {
-        setAutoSavePending(true);
-        showToast("Cards inválidos corrigidos.");
+      } catch {
+        // ignore localStorage quota/issues
       }
     })();
-  }, []);
+  }, [hydrateItems]);
 
   const duplicateMap = useMemo(() => {
     const map = new Map<string, number>();
