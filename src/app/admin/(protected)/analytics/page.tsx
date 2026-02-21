@@ -481,17 +481,24 @@ export default function AdminAnalyticsPage() {
       if (!doc) return;
       const root = doc.documentElement;
       const body = doc.body;
-      const measured = Math.max(
+      const footer = doc.querySelector("footer");
+      const footerBottom = footer
+        ? footer.getBoundingClientRect().bottom + (doc.defaultView?.scrollY || 0)
+        : 0;
+      const measuredByScroll = Math.max(
         root?.scrollHeight || 0,
         body?.scrollHeight || 0,
         root?.offsetHeight || 0,
         body?.offsetHeight || 0
       );
+      const measured = footerBottom > 0 ? footerBottom : measuredByScroll;
       if (!Number.isFinite(measured) || measured <= 0) return;
       if (device === "desktop") {
-        setDesktopPreviewHeight(Math.max(1800, Math.min(5600, measured + 40)));
+        const next = Math.max(1600, Math.min(5600, Math.round(measured + 8)));
+        setDesktopPreviewHeight(next);
       } else {
-        setMobilePreviewHeight(Math.max(2200, Math.min(7200, measured + 40)));
+        const next = Math.max(2000, Math.min(7600, Math.round(measured + 8)));
+        setMobilePreviewHeight(next);
       }
     } catch {
       // ignore cross-origin or transient load cases
