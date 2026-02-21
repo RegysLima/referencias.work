@@ -245,7 +245,8 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       muted
       loop
       playsInline
-      preload="none"
+      autoPlay
+      preload="metadata"
       onError={() => setFailed(true)}
       className={`${className} absolute inset-0 block`}
       style={{
