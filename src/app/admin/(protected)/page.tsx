@@ -1507,7 +1507,7 @@ export default function AdminPage() {
                         {isVideoUrl(src) ? (
                           <VideoThumb
                             src={src}
-                            className="h-full w-full object-cover transition group-hover:scale-[1.02]"
+                            className="pointer-events-none h-full w-full object-cover transition group-hover:scale-[1.02]"
                           />
                         ) : isVimeoUrl(src) ? (
                           <iframe
