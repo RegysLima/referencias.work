@@ -1507,19 +1507,27 @@ export default function AdminPage() {
               ) : (
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                   {thumbModal.candidates.map((src) => (
-                    <button
+                    <div
                       key={src}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => pickThumb(src)}
-                      onMouseDown={(e) => e.preventDefault()}
-                      onDoubleClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          pickThumb(src);
+                        }
                       }}
-                      className="group overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 text-left hover:border-zinc-700"
+                      className="group cursor-pointer overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 text-left hover:border-zinc-700 focus:outline-none focus:ring-1 focus:ring-zinc-500"
                       title="Clique para usar"
                     >
                       <div className="aspect-[4/3] w-full bg-zinc-900">
-                        {isVideoUrl(src) || isVimeoUrl(src) ? (
+                        {isVideoUrl(src) ? (
+                          <VideoThumb
+                            src={src}
+                            className="pointer-events-none h-full w-full object-cover transition group-hover:scale-[1.02]"
+                          />
+                        ) : isVimeoUrl(src) ? (
                           <div className="flex h-full w-full items-center justify-center bg-zinc-950 text-zinc-200">
                             <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs uppercase tracking-[0.12em]">
                               Video
@@ -1540,7 +1548,7 @@ export default function AdminPage() {
                       <div className="p-2">
                         <div className="truncate text-[11px] text-zinc-400">{src}</div>
                       </div>
-                    </button>
+                    </div>
                   ))}
                 </div>
               )}
