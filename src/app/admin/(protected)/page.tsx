@@ -1569,7 +1569,7 @@ export default function AdminPage() {
                       className="group cursor-pointer overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 text-left hover:border-zinc-700 focus:outline-none focus:ring-1 focus:ring-zinc-500"
                       title="Clique para usar"
                     >
-                      <div className="aspect-[4/3] w-full bg-zinc-900">
+                      <div className="relative aspect-[4/3] w-full bg-zinc-900">
                         {isVideoUrl(src) || isVimeoUrl(src) ? (
                           <span className="pointer-events-none absolute left-2 top-2 z-10 rounded-full border border-zinc-700 bg-zinc-950/90 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-zinc-100">
                             Video
