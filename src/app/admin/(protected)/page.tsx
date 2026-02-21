@@ -244,8 +244,7 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       muted
       loop
       playsInline
-      autoPlay
-      preload="metadata"
+      preload="none"
       onError={() => setFailed(true)}
       className={`${className} absolute inset-0 block`}
       style={{
@@ -1477,7 +1476,14 @@ export default function AdminPage() {
                     >
                       <div className="aspect-[4/3] w-full bg-zinc-900">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={src} alt="" className="h-full w-full object-cover transition group-hover:scale-[1.02]" />
+                        <img
+                          src={src}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          fetchPriority="low"
+                          className="h-full w-full object-cover transition group-hover:scale-[1.02]"
+                        />
                       </div>
                       <div className="p-2">
                         <div className="truncate text-[11px] text-zinc-400">{src}</div>
@@ -1670,6 +1676,7 @@ export default function AdminPage() {
                             src={getVimeoEmbedSrc(i.thumbnailUrl)}
                             title=""
                             allow="autoplay; fullscreen; picture-in-picture"
+                            loading="lazy"
                             className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                             style={{
                               width: "112%",
@@ -1683,6 +1690,9 @@ export default function AdminPage() {
                           <img
                             src={i.thumbnailUrl}
                             alt=""
+                            loading="lazy"
+                            decoding="async"
+                            fetchPriority="low"
                             onError={() => setBrokenThumbState(i.id, true)}
                             onLoad={() => setBrokenThumbState(i.id, false)}
                             className="h-full w-full object-cover transition group-hover:scale-[1.01]"
