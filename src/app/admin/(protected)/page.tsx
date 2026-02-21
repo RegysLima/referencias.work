@@ -2033,18 +2033,23 @@ export default function AdminPage() {
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                           <label className="text-xs text-zinc-400">Categoria (macro)</label>
-                          <select
-                            value={normalizeMacro(i.macroType ?? "Designers")}
-                            onChange={(e) => updateItem(i.id, { macroType: e.target.value })}
-                            className="mt-1 w-full min-w-0 rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
-                            style={{ textOverflow: "ellipsis" }}
-                          >
-                            {MACROS.map((m) => (
-                              <option key={m} value={m}>
-                                {m}
-                              </option>
-                            ))}
-                          </select>
+                          <div className="relative mt-1">
+                            <select
+                              value={normalizeMacro(i.macroType ?? "Designers")}
+                              onChange={(e) => updateItem(i.id, { macroType: e.target.value })}
+                              className="h-10 w-full min-w-0 appearance-none rounded-none border border-zinc-800 bg-zinc-950 pl-3 pr-10 text-sm text-zinc-100"
+                              style={{ textOverflow: "ellipsis" }}
+                            >
+                              {MACROS.map((m) => (
+                                <option key={m} value={m}>
+                                  {m}
+                                </option>
+                              ))}
+                            </select>
+                            <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
+                              ▾
+                            </span>
+                          </div>
                         </div>
 
                         <div>
