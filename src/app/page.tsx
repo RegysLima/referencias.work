@@ -2,7 +2,7 @@ import AnalyticsTracker from "@/components/AnalyticsTracker";
 import Directory from "@/components/Directory";
 import { loadReferences } from "@/lib/loadReferences";
 
-export const revalidate = 0;
+export const revalidate = 300;
 
 export default async function Page() {
   const db = await loadReferences();

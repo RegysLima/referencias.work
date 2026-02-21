@@ -4,8 +4,7 @@ import AboutContent from "@/components/AboutContent";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 import type { Lang } from "@/lib/i18n";
 
-export const revalidate = 0;
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function SobrePage({
   searchParams,

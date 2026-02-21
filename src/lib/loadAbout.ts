@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { kv } from "@vercel/kv";
+import { unstable_cache } from "next/cache";
 import type { Lang } from "@/lib/i18n";
 
 export type AboutContent = {
@@ -19,6 +20,7 @@ const KV_KEY = "about:content";
 const KV_ENABLED = Boolean(
   process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN,
 );
+export const ABOUT_CACHE_TAG = "about:public";
 
 const LANGS: Lang[] = ["pt", "en", "es"];
 
@@ -70,7 +72,7 @@ function normalizeAbout(input: unknown): AboutContent {
   };
 }
 
-export async function loadAbout(): Promise<AboutContent> {
+async function loadAboutUncached(): Promise<AboutContent> {
   if (KV_ENABLED) {
     const db = await kv.get<AboutContent>(KV_KEY);
     if (db) {
@@ -88,4 +90,17 @@ export async function loadAbout(): Promise<AboutContent> {
   }
 
   return fileDb;
+}
+
+const loadAboutCached = unstable_cache(
+  async (): Promise<AboutContent> => loadAboutUncached(),
+  ["about:public:v1"],
+  {
+    revalidate: 300,
+    tags: [ABOUT_CACHE_TAG],
+  }
+);
+
+export async function loadAbout(): Promise<AboutContent> {
+  return loadAboutCached();
 }

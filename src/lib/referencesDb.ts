@@ -1,11 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import { kv } from "@vercel/kv";
+import { revalidateTag } from "next/cache";
 import type { ReferenceDB } from "@/lib/types";
 
 const DB_PATH = path.join(process.cwd(), "public", "data", "references.json");
 const KV_KEY = "references:db";
 const KV_ENABLED = Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+export const REFERENCES_CACHE_TAG = "references:public";
 
 export async function readReferencesDb(): Promise<ReferenceDB> {
   if (KV_ENABLED) {
@@ -26,8 +28,10 @@ export async function readReferencesDb(): Promise<ReferenceDB> {
 export async function writeReferencesDb(db: ReferenceDB) {
   if (KV_ENABLED) {
     await kv.set(KV_KEY, db);
+    revalidateTag(REFERENCES_CACHE_TAG, "max");
     return;
   }
 
   fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), "utf-8");
+  revalidateTag(REFERENCES_CACHE_TAG, "max");
 }

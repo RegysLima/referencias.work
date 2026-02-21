@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { kv } from "@vercel/kv";
+import { revalidateTag } from "next/cache";
 import type { Lang } from "@/lib/i18n";
+import { ABOUT_CACHE_TAG } from "@/lib/loadAbout";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -96,10 +98,12 @@ async function writeAbout(data: AboutContent) {
 
   if (KV_ENABLED) {
     await kv.set(KV_KEY, next);
+    revalidateTag(ABOUT_CACHE_TAG, "max");
     return;
   }
 
   fs.writeFileSync(DB_PATH, JSON.stringify(next, null, 2), "utf-8");
+  revalidateTag(ABOUT_CACHE_TAG, "max");
 }
 
 export async function GET() {
