@@ -59,6 +59,10 @@ export default function AnalyticsTracker() {
         body?.offsetHeight || 0,
         vh
       );
+      const footer = document.querySelector("footer");
+      const ch = footer
+        ? Math.max(footer.getBoundingClientRect().bottom + sy, vh)
+        : dh;
       lastAt = now;
       lastX = event.clientX;
       lastY = event.clientY;
@@ -72,6 +76,7 @@ export default function AnalyticsTracker() {
         vh,
         sy,
         dh,
+        ch,
       });
     };
 

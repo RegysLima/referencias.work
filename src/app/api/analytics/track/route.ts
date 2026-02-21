@@ -140,6 +140,7 @@ function resolveHeatmapBucket(body: {
   vh?: number;
   sy?: number;
   dh?: number;
+  ch?: number;
 }) {
   const x = Number(body?.x);
   const y = Number(body?.y);
@@ -147,11 +148,13 @@ function resolveHeatmapBucket(body: {
   const vh = Number(body?.vh);
   const sy = Number(body?.sy);
   const dh = Number(body?.dh);
+  const ch = Number(body?.ch);
   if (![x, y, vw, vh].every(Number.isFinite) || vw <= 0 || vh <= 0) return null;
 
   const nx = clamp01(x / vw);
   const rawPageY = Number.isFinite(sy) ? y + Math.max(0, sy) : y;
-  const pageHeight = Number.isFinite(dh) && dh > 0 ? dh : vh;
+  const contentHeight = Number.isFinite(ch) && ch > 0 ? ch : 0;
+  const pageHeight = contentHeight || (Number.isFinite(dh) && dh > 0 ? dh : vh);
   const ny = clamp01(rawPageY / pageHeight);
   const cx = Math.min(HEATMAP_COLS - 1, Math.max(0, Math.floor(nx * HEATMAP_COLS)));
   const cy = Math.min(HEATMAP_ROWS - 1, Math.max(0, Math.floor(ny * HEATMAP_ROWS)));
@@ -185,6 +188,7 @@ export async function POST(req: Request) {
     vh?: number;
     sy?: number;
     dh?: number;
+    ch?: number;
   };
   const type = normalizeType((body?.type || "page").toString());
   const path = (body?.path || "/").toString().slice(0, 200);
