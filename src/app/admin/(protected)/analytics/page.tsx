@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Summary = {
   total: number;
@@ -277,11 +278,14 @@ function getHeatColor(ratio: number) {
 }
 
 export default function AdminAnalyticsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [summary, setSummary] = useState<Summary>(EMPTY);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState("30");
   const [pathFilter, setPathFilter] = useState("all");
   const [langFilter, setLangFilter] = useState("all");
+  const view = searchParams.get("view") === "heatmap" ? "heatmap" : "dashboard";
 
   useEffect(() => {
     let active = true;
@@ -430,6 +434,18 @@ export default function AdminAnalyticsPage() {
     () => parseHeatmapCells(summary.heatmapHome || {}),
     [summary.heatmapHome]
   );
+  const heatmapTotal = useMemo(
+    () => heatmap.cells.reduce((acc, cell) => acc + cell.value, 0),
+    [heatmap.cells]
+  );
+
+  function setView(next: "dashboard" | "heatmap") {
+    const params = new URLSearchParams(searchParams.toString());
+    if (next === "heatmap") params.set("view", "heatmap");
+    else params.delete("view");
+    const query = params.toString();
+    router.replace(query ? `/admin/analytics?${query}` : "/admin/analytics");
+  }
 
   const metricCardClass = "rounded-xl border border-zinc-800 bg-zinc-950/30 p-5 min-h-[112px]";
   const panelCardClass = "rounded-xl border border-zinc-800 bg-zinc-950/30 p-5";
@@ -438,79 +454,109 @@ export default function AdminAnalyticsPage() {
   return (
     <div className="mx-auto w-full max-w-7xl px-6 pb-16 pt-10 sm:px-10 lg:px-12">
       <div className="mb-6 text-sm uppercase tracking-[0.18em] text-zinc-400">Analytics</div>
-
-      <div className={panelCardClass}>
-        <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-300">
-          <div className={panelTitleClass}>Filtros</div>
-
-          <div className="relative">
-            <select
-              value={range}
-              onChange={(e) => setRange(e.target.value)}
-              className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
+        <aside className="h-fit rounded-xl border border-zinc-800 bg-zinc-950/30 p-3">
+          <div className={panelTitleClass}>Visões</div>
+          <div className="mt-3 grid gap-2">
+            <button
+              type="button"
+              onClick={() => setView("dashboard")}
+              className={`rounded-md border px-3 py-2 text-left text-sm transition ${
+                view === "dashboard"
+                  ? "border-zinc-100 bg-zinc-100 text-zinc-900"
+                  : "border-zinc-800 bg-zinc-950 text-zinc-200 hover:border-zinc-700"
+              }`}
             >
-              <option value="7">Últimos 7 dias</option>
-              <option value="30">Últimos 30 dias</option>
-              <option value="90">Últimos 90 dias</option>
-              <option value="all">Todo o período</option>
-            </select>
-            <svg
-              aria-hidden="true"
-              className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500"
-              viewBox="0 0 12 12"
-              fill="none"
+              Dashboard
+            </button>
+            <button
+              type="button"
+              onClick={() => setView("heatmap")}
+              className={`rounded-md border px-3 py-2 text-left text-sm transition ${
+                view === "heatmap"
+                  ? "border-zinc-100 bg-zinc-100 text-zinc-900"
+                  : "border-zinc-800 bg-zinc-950 text-zinc-200 hover:border-zinc-700"
+              }`}
             >
-              <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+              Heatmap
+            </button>
           </div>
+        </aside>
 
-          <div className="relative">
-            <select
-              value={pathFilter}
-              onChange={(e) => setPathFilter(e.target.value)}
-              className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
-            >
-              {pathOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            <svg
-              aria-hidden="true"
-              className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500"
-              viewBox="0 0 12 12"
-              fill="none"
-            >
-              <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
+        {view === "dashboard" ? (
+          <section>
+            <div className={panelCardClass}>
+              <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-300">
+                <div className={panelTitleClass}>Filtros</div>
 
-          <div className="relative">
-            <select
-              value={langFilter}
-              onChange={(e) => setLangFilter(e.target.value)}
-              className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
-            >
-              {langOptions.map((lang) => (
-                <option key={lang} value={lang}>
-                  {lang === "all" ? "Todos os idiomas" : lang.toUpperCase()}
-                </option>
-              ))}
-            </select>
-            <svg
-              aria-hidden="true"
-              className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500"
-              viewBox="0 0 12 12"
-              fill="none"
-            >
-              <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-        </div>
-      </div>
+                <div className="relative">
+                  <select
+                    value={range}
+                    onChange={(e) => setRange(e.target.value)}
+                    className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                  >
+                    <option value="7">Últimos 7 dias</option>
+                    <option value="30">Últimos 30 dias</option>
+                    <option value="90">Últimos 90 dias</option>
+                    <option value="all">Todo o período</option>
+                  </select>
+                  <svg
+                    aria-hidden="true"
+                    className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                  >
+                    <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-12">
+                <div className="relative">
+                  <select
+                    value={pathFilter}
+                    onChange={(e) => setPathFilter(e.target.value)}
+                    className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                  >
+                    {pathOptions.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  <svg
+                    aria-hidden="true"
+                    className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                  >
+                    <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+
+                <div className="relative">
+                  <select
+                    value={langFilter}
+                    onChange={(e) => setLangFilter(e.target.value)}
+                    className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                  >
+                    {langOptions.map((lang) => (
+                      <option key={lang} value={lang}>
+                        {lang === "all" ? "Todos os idiomas" : lang.toUpperCase()}
+                      </option>
+                    ))}
+                  </select>
+                  <svg
+                    aria-hidden="true"
+                    className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                  >
+                    <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-12">
         <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Total visitas</div>
           <div className="mt-2 text-2xl text-zinc-100">{summary.total}</div>
@@ -576,7 +622,7 @@ export default function AdminAnalyticsPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-12">
+            <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-12">
         <div className={`${panelCardClass} xl:col-span-8`}>
           <div className="flex items-center justify-between gap-3">
             <div className={panelTitleClass}>Visitas por dia</div>
@@ -610,48 +656,6 @@ export default function AdminAnalyticsPage() {
               ))
             ) : (
               <div className="text-zinc-500">—</div>
-            )}
-          </div>
-        </div>
-        <div className={`${panelCardClass} xl:col-span-8`}>
-          <div className={panelTitleClass}>Heatmap de mouse (home)</div>
-          <div className="mt-1 text-xs text-zinc-500">
-            Visualização aproximada sobre a home para facilitar leitura de contexto.
-          </div>
-          <div className="mt-4">
-            {heatmap.cells.length ? (
-              <div className="relative aspect-[16/9] overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950/90">
-                <iframe
-                  src="/"
-                  title="Prévia da home"
-                  className="pointer-events-none absolute inset-0 h-full w-full opacity-55 saturate-0"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-zinc-950/30 via-zinc-950/10 to-zinc-950/70" />
-                {heatmap.cells.map((cell) => {
-                  const ratio = heatmap.max ? cell.value / heatmap.max : 0;
-                  return (
-                    <div
-                      key={cell.key}
-                      className="absolute"
-                      style={{
-                        left: `${(cell.x / 24) * 100}%`,
-                        top: `${(cell.y / 14) * 100}%`,
-                        width: `${100 / 24}%`,
-                        height: `${100 / 14}%`,
-                        background: getHeatColor(ratio),
-                      }}
-                      title={`${cell.value} movimentos`}
-                    />
-                  );
-                })}
-                <div className="pointer-events-none absolute bottom-3 right-3 rounded-md border border-zinc-700/80 bg-zinc-950/80 px-2 py-1 text-[11px] text-zinc-300">
-                  Frio
-                  <span className="mx-1 inline-block h-2 w-14 align-middle bg-gradient-to-r from-blue-500 via-cyan-400 via-yellow-400 to-red-500" />
-                  Quente
-                </div>
-              </div>
-            ) : (
-              <div className="text-sm text-zinc-500">Sem dados ainda.</div>
             )}
           </div>
         </div>
@@ -732,6 +736,65 @@ export default function AdminAnalyticsPage() {
             )}
           </div>
         </div>
+      </div>
+          </section>
+        ) : (
+          <section className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+              <div className={`${metricCardClass} xl:col-span-4`}>
+                <div className="text-xs text-zinc-500">Pontos capturados (home)</div>
+                <div className="mt-2 text-2xl text-zinc-100">{heatmapTotal}</div>
+              </div>
+              <div className={`${metricCardClass} xl:col-span-4`}>
+                <div className="text-xs text-zinc-500">Células com atividade</div>
+                <div className="mt-2 text-2xl text-zinc-100">{heatmap.cells.length}</div>
+              </div>
+              <div className={`${metricCardClass} xl:col-span-4`}>
+                <div className="text-xs text-zinc-500">Última atualização</div>
+                <div className="mt-2 text-sm text-zinc-300">{formatDateBR(summary.lastUpdated, true)}</div>
+              </div>
+            </div>
+
+            <div className={`${panelCardClass} overflow-hidden`}>
+              <div className={panelTitleClass}>Heatmap de mouse (home)</div>
+              <div className="mt-1 text-xs text-zinc-500">
+                Preview em viewport desktop para leitura fiel da navegação.
+              </div>
+              <div className="mt-4 overflow-x-auto rounded-lg border border-zinc-800">
+                <div className="relative h-[740px] min-w-[1180px] bg-zinc-950/90">
+                  <iframe
+                    src="/"
+                    title="Prévia da home desktop"
+                    className="pointer-events-none absolute inset-0 h-full w-full opacity-60 saturate-0"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/5 to-zinc-950/55" />
+                  {heatmap.cells.map((cell) => {
+                    const ratio = heatmap.max ? cell.value / heatmap.max : 0;
+                    return (
+                      <div
+                        key={cell.key}
+                        className="absolute"
+                        style={{
+                          left: `${(cell.x / 24) * 100}%`,
+                          top: `${(cell.y / 14) * 100}%`,
+                          width: `${100 / 24}%`,
+                          height: `${100 / 14}%`,
+                          background: getHeatColor(ratio),
+                        }}
+                        title={`${cell.value} movimentos`}
+                      />
+                    );
+                  })}
+                  <div className="pointer-events-none absolute bottom-4 right-4 rounded-md border border-zinc-700/80 bg-zinc-950/85 px-3 py-1.5 text-[11px] text-zinc-300">
+                    Frio
+                    <span className="mx-1 inline-block h-2 w-20 align-middle bg-gradient-to-r from-blue-500 via-cyan-400 via-yellow-400 to-red-500" />
+                    Quente
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
