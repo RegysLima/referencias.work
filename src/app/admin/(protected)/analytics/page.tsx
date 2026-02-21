@@ -827,9 +827,6 @@ export default function AdminAnalyticsPage() {
 
             <div className={`${panelCardClass} overflow-hidden`}>
               <div className={panelTitleClass}>Heatmap de mouse (home)</div>
-              <div className="mt-1 text-xs text-zinc-500">
-                Mapa vertical estilo sessão completa, com largura desktop estável.
-              </div>
               <div className="mt-3 inline-flex rounded-md border border-zinc-800 bg-zinc-950/50 p-1">
                 <button
                   type="button"
@@ -904,11 +901,6 @@ export default function AdminAnalyticsPage() {
                   Quente
                 </div>
               </div>
-              {!heatmap.cells.length ? (
-                <div className="mt-2 text-xs text-zinc-500">
-                  Sem dados na base nova ainda. Navegue na home para iniciar a coleta precisa.
-                </div>
-              ) : null}
             </div>
           </section>
         )}
