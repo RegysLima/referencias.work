@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { canonicalCity, canonicalCountry } from "@/lib/location";
 
 type RefItem = {
@@ -416,6 +423,9 @@ const ADMIN_PAGE_SIZE = 20;
 export default function AdminPage() {
   const [items, setItems] = useState<RefItem[]>([]);
   const [q, setQ] = useState("");
+  const [qInput, setQInput] = useState("");
+  const deferredQ = useDeferredValue(q);
+  const [, startQueryTransition] = useTransition();
   const [onlyNoImage, setOnlyNoImage] = useState(false);
   const [onlyUnreviewed, setOnlyUnreviewed] = useState(false);
   const [onlyDuplicates, setOnlyDuplicates] = useState(false);
@@ -558,8 +568,16 @@ export default function AdminPage() {
 
   function setBrokenThumbState(id: string, broken: boolean) {
     setBrokenThumbs((prev) => {
-      if (prev[id] === broken) return prev;
-      return { ...prev, [id]: broken };
+      const current = prev[id] === true;
+      if (broken) {
+        if (current) return prev;
+        return { ...prev, [id]: true };
+      }
+      // Evita persistir "false" e elimina centenas de re-renders em onLoad.
+      if (!current) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
     });
   }
 
@@ -606,16 +624,18 @@ export default function AdminPage() {
 
     const CONCURRENCY = 6;
     let brokenCount = 0;
+    const checkedState: Record<string, boolean> = {};
     const workers = Array.from({ length: CONCURRENCY }, async () => {
       while (queue.length) {
         const result = await next();
         if (!result) break;
-        setBrokenThumbs((prev) => ({ ...prev, [result.id]: !result.ok }));
+        checkedState[result.id] = !result.ok;
         if (!result.ok) brokenCount += 1;
       }
     });
 
     await Promise.all(workers);
+    setBrokenThumbs(checkedState);
 
     setCheckingThumbs(false);
     showToast(
@@ -678,8 +698,8 @@ export default function AdminPage() {
   }
 
   const filtered = useMemo(() => {
-    const queryTokens = tokenizeSearchQuery(q);
-    const normalizedQuery = normalizeSearchText(q);
+    const queryTokens = tokenizeSearchQuery(deferredQ);
+    const normalizedQuery = normalizeSearchText(deferredQ);
 
     const base = items.filter((i) => {
       if (macroFilter !== "Todos" && i.macroType !== macroFilter) return false;
@@ -775,7 +795,7 @@ export default function AdminPage() {
     return ranked.map((entry) => entry.i);
   }, [
     items,
-    q,
+    deferredQ,
     onlyNoImage,
     onlyBrokenImages,
     onlyUnreviewed,
@@ -796,7 +816,7 @@ export default function AdminPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [
-    q,
+    deferredQ,
     onlyNoImage,
     onlyUnreviewed,
     onlyDuplicates,
@@ -1495,8 +1515,12 @@ export default function AdminPage() {
             </button>
 
             <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
+              value={qInput}
+              onChange={(e) => {
+                const next = e.target.value;
+                setQInput(next);
+                startQueryTransition(() => setQ(next));
+              }}
               placeholder="Buscar"
               className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none focus:border-zinc-600"
             />
