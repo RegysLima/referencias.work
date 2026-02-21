@@ -82,7 +82,7 @@ export default function AdminAboutPage() {
     <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-10 sm:px-10 lg:px-12">
       <div className="mb-6 text-sm uppercase tracking-[0.18em] text-zinc-400">Sobre</div>
 
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-950/30 p-5">
+      <div className="rounded-none border border-zinc-800 bg-zinc-950/30 p-5">
         <div className="flex items-center gap-3 text-xs text-zinc-400">
           <span>Idioma:</span>
           {(["pt", "es", "en"] as Lang[]).map((code) => (
@@ -90,7 +90,7 @@ export default function AdminAboutPage() {
               key={code}
               onClick={() => setAboutLang(code)}
               className={[
-                "rounded-full border px-2 py-1 text-[11px]",
+                "rounded-none border px-2 py-1 text-[11px]",
                 aboutLang === code
                   ? "border-zinc-600 bg-zinc-900 text-zinc-200"
                   : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-700",
@@ -109,7 +109,7 @@ export default function AdminAboutPage() {
               onChange={(e) =>
                 setAboutTitle((prev) => ({ ...prev, [aboutLang]: e.target.value }))
               }
-              className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
             />
           </div>
 
@@ -121,7 +121,7 @@ export default function AdminAboutPage() {
                 setAboutBody((prev) => ({ ...prev, [aboutLang]: e.target.value }))
               }
               rows={6}
-              className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
             />
             <div className="mt-2 text-xs text-zinc-500">
               Use quebras de linha para separar parágrafos.
@@ -133,7 +133,7 @@ export default function AdminAboutPage() {
           <div className="text-xs uppercase tracking-[0.16em] text-zinc-500">Seções adicionais</div>
           <div className="mt-4 space-y-4">
             {aboutSections.map((section, idx) => (
-              <div key={section.id} className="rounded-xl border border-zinc-800 bg-zinc-950/40 p-4">
+              <div key={section.id} className="rounded-none border border-zinc-800 bg-zinc-950/40 p-4">
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_1fr] lg:items-start">
                   <div>
                     <label className="text-xs text-zinc-400">Título</label>
@@ -147,7 +147,7 @@ export default function AdminAboutPage() {
                         };
                         setAboutSections(next);
                       }}
-                      className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                      className="mt-1 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                     />
                   </div>
 
@@ -164,7 +164,7 @@ export default function AdminAboutPage() {
                         setAboutSections(next);
                       }}
                       rows={4}
-                      className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                      className="mt-1 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                     />
                   </div>
                 </div>
@@ -174,7 +174,7 @@ export default function AdminAboutPage() {
                       const next = aboutSections.filter((_, i) => i !== idx);
                       setAboutSections(next);
                     }}
-                    className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs hover:border-zinc-700"
+                    className="rounded-none border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs hover:border-zinc-700"
                   >
                     Remover seção
                   </button>
@@ -195,7 +195,7 @@ export default function AdminAboutPage() {
                   },
                 ])
               }
-              className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+              className="rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
             >
               + Adicionar seção
             </button>
@@ -207,7 +207,7 @@ export default function AdminAboutPage() {
           <button
             onClick={saveAbout}
             disabled={aboutSaving}
-            className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 text-sm hover:border-zinc-700 disabled:opacity-60"
+            className="rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 text-sm hover:border-zinc-700 disabled:opacity-60"
           >
             {aboutSaving ? "Salvando…" : "Salvar Sobre"}
           </button>

@@ -311,7 +311,7 @@ function VideoFramePreview({ src, className }: { src: string; className: string 
       />
       {!ready || failed ? (
         <div className={`${className} pointer-events-none flex items-center justify-center bg-zinc-950 text-zinc-200`}>
-          <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs uppercase tracking-[0.12em]">
+          <span className="rounded-none border border-zinc-700 px-3 py-1 text-xs uppercase tracking-[0.12em]">
             {failed ? "Video" : "Carregando"}
           </span>
         </div>
@@ -1518,7 +1518,7 @@ export default function AdminPage() {
     <div className="mx-auto max-w-7xl px-6 pb-10 pt-6">
       {/* TOAST */}
       {toast ? (
-        <div className="fixed bottom-6 right-6 z-50 rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 text-sm text-zinc-200 shadow-lg">
+        <div className="fixed bottom-6 right-6 z-50 rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 text-sm text-zinc-200 shadow-lg">
           {toast}
         </div>
       ) : null}
@@ -1530,7 +1530,7 @@ export default function AdminPage() {
           onClick={closeRemoveConfirm}
         >
           <div
-            className="w-full max-w-md overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950"
+            className="w-full max-w-md overflow-hidden rounded-none border border-zinc-800 bg-zinc-950"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="border-b border-zinc-800 px-5 py-4">
@@ -1545,13 +1545,13 @@ export default function AdminPage() {
             <div className="flex items-center justify-end gap-2 border-t border-zinc-800 px-5 py-4">
               <button
                 onClick={closeRemoveConfirm}
-                className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                className="rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleRemoveConfirmed}
-                className="rounded-xl border border-red-700 bg-red-950/40 px-3 py-2 text-sm text-red-200 hover:border-red-600"
+                className="rounded-none border border-red-700 bg-red-950/40 px-3 py-2 text-sm text-red-200 hover:border-red-600"
               >
                 Excluir
               </button>
@@ -1567,7 +1567,7 @@ export default function AdminPage() {
           onClick={closeThumbPicker}
         >
           <div
-            className="w-full max-w-4xl max-h-[85vh] overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950"
+            className="w-full max-w-4xl max-h-[85vh] overflow-hidden rounded-none border border-zinc-800 bg-zinc-950"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-3 border-b border-zinc-800 px-5 py-4">
@@ -1581,7 +1581,7 @@ export default function AdminPage() {
 
               <button
                 onClick={closeThumbPicker}
-                className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                className="rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
               >
                 Fechar
               </button>
@@ -1611,12 +1611,12 @@ export default function AdminPage() {
                           pickThumb(src);
                         }
                       }}
-                      className="group cursor-pointer overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 text-left hover:border-zinc-700 focus:outline-none focus:ring-1 focus:ring-zinc-500"
+                      className="group cursor-pointer overflow-hidden rounded-none border border-zinc-800 bg-zinc-950 text-left hover:border-zinc-700 focus:outline-none focus:ring-1 focus:ring-zinc-500"
                       title="Clique para usar"
                     >
                       <div className="relative aspect-[4/3] w-full bg-zinc-900">
                         {isVideoUrl(src) || isVimeoUrl(src) ? (
-                          <span className="pointer-events-none absolute left-2 top-2 z-10 rounded-full border border-zinc-700 bg-zinc-950/90 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-zinc-100">
+                          <span className="pointer-events-none absolute left-2 top-2 z-10 rounded-none border border-zinc-700 bg-zinc-950/90 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-zinc-100">
                             Video
                           </span>
                         ) : null}
@@ -1627,7 +1627,7 @@ export default function AdminPage() {
                           />
                         ) : isVimeoUrl(src) ? (
                           <div className="flex h-full w-full items-center justify-center bg-zinc-950 text-zinc-200">
-                            <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs uppercase tracking-[0.12em]">
+                            <span className="rounded-none border border-zinc-700 px-3 py-1 text-xs uppercase tracking-[0.12em]">
                               Video
                             </span>
                           </div>
@@ -1656,7 +1656,7 @@ export default function AdminPage() {
               <div className="border-t border-zinc-800 px-5 py-4">
                 <button
                   onClick={() => openThumbPicker(thumbModal.itemId || "", thumbModal.baseUrl)}
-                  className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                  className="rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
                 >
                   Buscar novamente
                 </button>
@@ -1668,12 +1668,12 @@ export default function AdminPage() {
 
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
         <aside className="h-fit lg:sticky lg:top-6">
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-950/40 p-4">
+          <div className="rounded-none border border-zinc-800 bg-zinc-950/40 p-4">
             <div className="text-xs text-zinc-400">{filtered.length} itens</div>
 
             <button
               onClick={addNew}
-              className="mt-4 w-full rounded-xl border border-white bg-white px-3 py-2 text-sm text-black hover:opacity-90"
+              className="mt-4 w-full rounded-none border border-white bg-white px-3 py-2 text-sm text-black hover:opacity-90"
             >
               + Adicionar
             </button>
@@ -1686,13 +1686,13 @@ export default function AdminPage() {
                 startQueryTransition(() => setQ(next));
               }}
               placeholder="Buscar"
-              className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none focus:border-zinc-600"
+              className="mt-3 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none focus:border-zinc-600"
             />
 
             <select
               value={macroFilter}
               onChange={(e) => setMacroFilter(e.target.value)}
-              className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm outline-none focus:border-zinc-600"
+              className="mt-3 w-full rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm outline-none focus:border-zinc-600"
             >
               <option value="Todos">Todas as categorias</option>
               {MACROS.map((m) => (
@@ -1777,7 +1777,7 @@ export default function AdminPage() {
             <button
               onClick={checkBrokenImages}
               disabled={checkingThumbs}
-              className="mt-4 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 disabled:opacity-60"
+              className="mt-4 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 disabled:opacity-60"
             >
               {checkingThumbs ? "Verificando…" : "Verificar imagens"}
             </button>
@@ -1786,7 +1786,7 @@ export default function AdminPage() {
               onClick={saveAll}
               disabled={saveState === "saving"}
               className={[
-                "mt-3 w-full rounded-xl border px-3 py-2 text-sm transition disabled:opacity-60",
+                "mt-3 w-full rounded-none border px-3 py-2 text-sm transition disabled:opacity-60",
                 saveBtnClass,
               ].join(" ")}
             >
@@ -1795,7 +1795,7 @@ export default function AdminPage() {
 
             <button
               onClick={logout}
-              className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+              className="mt-3 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
             >
               Sair
             </button>
@@ -1814,7 +1814,7 @@ export default function AdminPage() {
               return (
                 <div
                   key={i.id}
-                  className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/20"
+                  className="overflow-hidden rounded-none border border-zinc-800 bg-zinc-900/20"
                 >
                   <button
                     type="button"
@@ -1870,7 +1870,7 @@ export default function AdminPage() {
                           <div className="mt-1 truncate text-xs text-zinc-400">{i.url}</div>
                         </div>
 
-                        <span className="shrink-0 rounded-full border border-zinc-800 bg-zinc-950 px-2 py-1 text-[11px] text-zinc-300">
+                        <span className="shrink-0 rounded-none border border-zinc-800 bg-zinc-950 px-2 py-1 text-[11px] text-zinc-300">
                           {normalizeMacro(i.macroType) || "—"}
                         </span>
                       </div>
@@ -1878,7 +1878,7 @@ export default function AdminPage() {
                       <div className="mt-3 flex flex-wrap items-center gap-2">
                         <span
                           className={[
-                            "rounded-full border px-2 py-1 text-[11px]",
+                            "rounded-none border px-2 py-1 text-[11px]",
                             i.reviewedAt
                               ? "border-emerald-700/60 bg-emerald-950/30 text-emerald-200"
                               : "border-zinc-800 bg-zinc-950 text-zinc-300",
@@ -1888,24 +1888,24 @@ export default function AdminPage() {
                         </span>
 
                         {brokenThumb ? (
-                          <span className="rounded-full border border-red-700/60 bg-red-950/30 px-2 py-1 text-[11px] text-red-200">
+                          <span className="rounded-none border border-red-700/60 bg-red-950/30 px-2 py-1 text-[11px] text-red-200">
                             imagem quebrada
                           </span>
                         ) : null}
 
                         {hasActiveReviewFlags(i) ? (
-                          <span className="rounded-full border border-amber-700/60 bg-amber-950/25 px-2 py-1 text-[11px] text-amber-200">
+                          <span className="rounded-none border border-amber-700/60 bg-amber-950/25 px-2 py-1 text-[11px] text-amber-200">
                             revisar
                           </span>
                         ) : null}
 
                         {dup ? (
-                          <span className="rounded-full border border-amber-700/60 bg-amber-950/25 px-2 py-1 text-[11px] text-amber-200">
+                          <span className="rounded-none border border-amber-700/60 bg-amber-950/25 px-2 py-1 text-[11px] text-amber-200">
                             duplicado
                           </span>
                         ) : null}
                         {i.hidden ? (
-                          <span className="rounded-full border border-zinc-700/60 bg-zinc-900/40 px-2 py-1 text-[11px] text-zinc-200">
+                          <span className="rounded-none border border-zinc-700/60 bg-zinc-900/40 px-2 py-1 text-[11px] text-zinc-200">
                             oculto
                           </span>
                         ) : null}
@@ -1926,7 +1926,7 @@ export default function AdminPage() {
                         onClick={() => openUrl(i.url)}
                         aria-label="Abrir"
                         title="Abrir"
-                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
+                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-none border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
                         <span
                           className="h-5 w-5 bg-white transition group-hover:bg-black"
@@ -1947,7 +1947,7 @@ export default function AdminPage() {
                         onClick={() => markReviewed(i.id)}
                         aria-label="Revisado"
                         title="Revisado"
-                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
+                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-none border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
                         <span
                           className="h-5 w-5 bg-white transition group-hover:bg-black"
@@ -1968,7 +1968,7 @@ export default function AdminPage() {
                         onClick={() => updateItem(i.id, { hidden: !i.hidden })}
                         aria-label={i.hidden ? "Mostrar" : "Ocultar"}
                         title={i.hidden ? "Mostrar" : "Ocultar"}
-                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
+                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-none border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
                         <span
                           className="h-5 w-5 bg-white transition group-hover:bg-black"
@@ -1989,7 +1989,7 @@ export default function AdminPage() {
                         onClick={() => confirmRemove(i)}
                         aria-label="Excluir"
                         title="Excluir"
-                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
+                        className="group flex h-11 w-11 cursor-pointer items-center justify-center rounded-none border border-zinc-800 bg-zinc-950 transition hover:border-zinc-200 hover:bg-white"
                       >
                         <span
                           className="h-5 w-5 bg-white transition group-hover:bg-black"
@@ -2016,7 +2016,7 @@ export default function AdminPage() {
                           <input
                             value={i.name ?? ""}
                             onChange={(e) => updateItem(i.id, { name: e.target.value })}
-                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                            className="mt-1 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                           />
                         </div>
 
@@ -2026,7 +2026,7 @@ export default function AdminPage() {
                             value={i.url ?? ""}
                             onChange={(e) => updateItem(i.id, { url: e.target.value })}
                             placeholder="https://..."
-                            className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                            className="mt-1 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                           />
                         </div>
 
@@ -2036,7 +2036,7 @@ export default function AdminPage() {
                           <select
                             value={normalizeMacro(i.macroType ?? "Designers")}
                             onChange={(e) => updateItem(i.id, { macroType: e.target.value })}
-                            className="mt-1 w-full min-w-0 rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-8 text-sm"
+                            className="mt-1 w-full min-w-0 rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm"
                             style={{ textOverflow: "ellipsis" }}
                           >
                             {MACROS.map((m) => (
@@ -2114,10 +2114,10 @@ export default function AdminPage() {
                                   setPrimaryAreaSuggestOpenId(null);
                                 }
                               }}
-                              className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                              className="w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                             />
                             {primaryAreaSuggestOpenId === i.id ? (
-                              <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                              <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-none border border-zinc-800 bg-zinc-950 shadow-xl">
                                 {getPrimaryAreaSuggestions(primaryAreaDraft[i.id] ?? i.areaPrimary ?? "").length ? (
                                   getPrimaryAreaSuggestions(
                                     primaryAreaDraft[i.id] ?? i.areaPrimary ?? ""
@@ -2238,10 +2238,10 @@ export default function AdminPage() {
                               }
                             }}
                             placeholder="Ex: Moda Beleza Tipografia"
-                            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                            className="w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                           />
                           {secondarySuggestOpenId === i.id ? (
-                            <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                            <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-none border border-zinc-800 bg-zinc-950 shadow-xl">
                               {getSecondarySuggestions(secondaryDraft[i.id] ?? "").length ? (
                                 getSecondarySuggestions(secondaryDraft[i.id] ?? "").map(
                                   (option, idx) => (
@@ -2360,10 +2360,10 @@ export default function AdminPage() {
                                   setCountrySuggestOpenId(null);
                                 }
                               }}
-                              className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                              className="w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                             />
                             {countrySuggestOpenId === i.id ? (
-                              <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                              <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-none border border-zinc-800 bg-zinc-950 shadow-xl">
                                 {getLocationSuggestions(
                                   countryDraft[i.id] ?? i.country ?? "",
                                   getScopedCountryOptions(cityDraft[i.id] ?? i.city ?? ""),
@@ -2479,10 +2479,10 @@ export default function AdminPage() {
                                   setCitySuggestOpenId(null);
                                 }
                               }}
-                              className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                              className="w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                             />
                             {citySuggestOpenId === i.id ? (
-                              <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                              <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-none border border-zinc-800 bg-zinc-950 shadow-xl">
                                 {getLocationSuggestions(
                                   cityDraft[i.id] ?? i.city ?? "",
                                   getScopedCityOptions(countryDraft[i.id] ?? i.country ?? ""),
@@ -2627,10 +2627,10 @@ export default function AdminPage() {
                                         setLocationSuggestOpenKey(null);
                                       }
                                     }}
-                                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                                    className="w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                                   />
                                   {locationSuggestOpenKey === countryFieldKey ? (
-                                    <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                                    <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-none border border-zinc-800 bg-zinc-950 shadow-xl">
                                       {getLocationSuggestions(
                                         locationDraft[countryFieldKey] ?? row?.country ?? "",
                                         getScopedCountryOptions(
@@ -2760,10 +2760,10 @@ export default function AdminPage() {
                                         setLocationSuggestOpenKey(null);
                                       }
                                     }}
-                                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                                    className="w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                                   />
                                   {locationSuggestOpenKey === cityFieldKey ? (
-                                    <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
+                                    <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-none border border-zinc-800 bg-zinc-950 shadow-xl">
                                       {getLocationSuggestions(
                                         locationDraft[cityFieldKey] ?? row?.city ?? "",
                                         getScopedCityOptions(
@@ -2819,7 +2819,7 @@ export default function AdminPage() {
                             type="button"
                             onMouseDown={(e) => e.preventDefault()}
                             onClick={() => addLocationRow(i.id)}
-                            className="mb-2 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                            className="mb-2 rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
                           >
                             + Adicionar país e cidade
                           </button>
@@ -2840,17 +2840,17 @@ export default function AdminPage() {
                             })
                           }
                           placeholder="https://..."
-                          className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                          className="mt-1 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
                         />
                         <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
                           <button
                             onClick={() => openThumbPicker(i.id, i.url)}
-                            className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                            className="rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
                           >
                             Escolher
                           </button>
 
-                          <label className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 cursor-pointer text-center">
+                          <label className="rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 cursor-pointer text-center">
                             {uploadingId === i.id ? "Enviando…" : "Upload"}
                             <input
                               type="file"
@@ -2869,7 +2869,7 @@ export default function AdminPage() {
                             onClick={() => downloadThumbnail(i.thumbnailUrl || "", i.name || "thumbnail")}
                             disabled={!i.thumbnailUrl}
                             className={[
-                              "rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700",
+                              "rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700",
                               i.thumbnailUrl ? "cursor-pointer" : "cursor-not-allowed text-zinc-400 opacity-60",
                             ].join(" ")}
                           >

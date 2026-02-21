@@ -509,8 +509,8 @@ export default function AdminAnalyticsPage() {
     }
   }
 
-  const metricCardClass = "rounded-xl border border-zinc-800 bg-zinc-950/30 p-5 min-h-[112px]";
-  const panelCardClass = "rounded-xl border border-zinc-800 bg-zinc-950/30 p-5";
+  const metricCardClass = "rounded-none border border-zinc-800 bg-zinc-950/30 p-5 min-h-[112px]";
+  const panelCardClass = "rounded-none border border-zinc-800 bg-zinc-950/30 p-5";
   const panelTitleClass = "text-xs uppercase tracking-[0.16em] text-zinc-500";
 
   useEffect(() => {
@@ -525,13 +525,13 @@ export default function AdminAnalyticsPage() {
     <div className="mx-auto w-full max-w-[1800px] px-6 pb-16 pt-10 sm:px-10 lg:px-12">
       <div className="mb-6 text-sm uppercase tracking-[0.18em] text-zinc-400">Analytics</div>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[180px_minmax(0,1fr)]">
-        <aside className="h-fit rounded-xl border border-zinc-800 bg-zinc-950/30 p-3 lg:sticky lg:top-24">
+        <aside className="h-fit rounded-none border border-zinc-800 bg-zinc-950/30 p-3 lg:sticky lg:top-24">
           <div className={panelTitleClass}>Visões</div>
           <div className="mt-3 grid gap-2">
             <button
               type="button"
               onClick={() => setView("dashboard")}
-              className={`cursor-pointer rounded-md border px-3 py-2 text-left text-sm transition ${
+              className={`cursor-pointer rounded-none border px-3 py-2 text-left text-sm transition ${
                 view === "dashboard"
                   ? "border-zinc-100 bg-zinc-100 text-zinc-900"
                   : "border-zinc-800 bg-zinc-950 text-zinc-200 hover:border-zinc-700"
@@ -542,7 +542,7 @@ export default function AdminAnalyticsPage() {
             <button
               type="button"
               onClick={() => setView("heatmap")}
-              className={`cursor-pointer rounded-md border px-3 py-2 text-left text-sm transition ${
+              className={`cursor-pointer rounded-none border px-3 py-2 text-left text-sm transition ${
                 view === "heatmap"
                   ? "border-zinc-100 bg-zinc-100 text-zinc-900"
                   : "border-zinc-800 bg-zinc-950 text-zinc-200 hover:border-zinc-700"
@@ -563,7 +563,7 @@ export default function AdminAnalyticsPage() {
                   <select
                     value={range}
                     onChange={(e) => setRange(e.target.value)}
-                    className="cursor-pointer appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                    className="cursor-pointer appearance-none rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
                   >
                     <option value="7">Últimos 7 dias</option>
                     <option value="30">Últimos 30 dias</option>
@@ -584,7 +584,7 @@ export default function AdminAnalyticsPage() {
                   <select
                     value={pathFilter}
                     onChange={(e) => setPathFilter(e.target.value)}
-                    className="cursor-pointer appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                    className="cursor-pointer appearance-none rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
                   >
                     {pathOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -606,7 +606,7 @@ export default function AdminAnalyticsPage() {
                   <select
                     value={langFilter}
                     onChange={(e) => setLangFilter(e.target.value)}
-                    className="cursor-pointer appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                    className="cursor-pointer appearance-none rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
                   >
                     {langOptions.map((lang) => (
                       <option key={lang} value={lang}>
@@ -827,7 +827,7 @@ export default function AdminAnalyticsPage() {
 
             <div className={`${panelCardClass} overflow-hidden`}>
               <div className={panelTitleClass}>Heatmap de mouse (home)</div>
-              <div className="mt-3 inline-flex rounded-md border border-zinc-800 bg-zinc-950/50 p-1">
+              <div className="mt-3 inline-flex rounded-none border border-zinc-800 bg-zinc-950/50 p-1">
                 <button
                   type="button"
                   onClick={() => setHeatmapDeviceTab("desktop")}
@@ -854,7 +854,7 @@ export default function AdminAnalyticsPage() {
               <div className="mt-2 flex items-center justify-end text-[11px] text-zinc-500">
                 Role verticalmente para explorar a página completa
               </div>
-              <div className="mt-2 h-[70vh] overflow-y-auto overflow-x-hidden rounded-lg border border-zinc-800 bg-zinc-950/90 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <div className="mt-2 h-[70vh] overflow-y-auto overflow-x-hidden rounded-none border border-zinc-800 bg-zinc-950/90 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 <div
                   className={`relative mx-auto overflow-hidden ${
                     heatmapDeviceTab === "desktop"
@@ -895,7 +895,7 @@ export default function AdminAnalyticsPage() {
                     );
                   })}
                 </div>
-                <div className="pointer-events-none sticky bottom-4 ml-auto mr-4 mt-[-36px] w-fit rounded-md border border-zinc-700/80 bg-zinc-950/85 px-3 py-1.5 text-[11px] text-zinc-300">
+                <div className="pointer-events-none sticky bottom-4 ml-auto mr-4 mt-[-36px] w-fit rounded-none border border-zinc-700/80 bg-zinc-950/85 px-3 py-1.5 text-[11px] text-zinc-300">
                   Frio
                   <span className="mx-1 inline-block h-2 w-20 align-middle bg-gradient-to-r from-blue-500 via-cyan-400 via-yellow-400 to-red-500" />
                   Quente
