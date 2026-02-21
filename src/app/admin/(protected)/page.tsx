@@ -247,7 +247,12 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       playsInline
       autoPlay
       preload="metadata"
+      controls={false}
+      disablePictureInPicture
+      controlsList="nofullscreen nodownload noplaybackrate noremoteplayback"
+      tabIndex={-1}
       onError={() => setFailed(true)}
+      onClick={(e) => e.preventDefault()}
       className={`${className} absolute inset-0 block`}
       style={{
         objectFit: "cover",
@@ -257,6 +262,7 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
         minWidth: "100%",
         minHeight: "100%",
         display: "block",
+        pointerEvents: "none",
       }}
     />
   );
