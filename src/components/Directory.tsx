@@ -498,6 +498,13 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [hideSupportCardBySection, setHideSupportCardBySection] = useState(false);
   const supportSectionRef = useRef<HTMLElement | null>(null);
   const donationViewTrackedRef = useRef(false);
+  const refClicksCountRef = useRef(0);
+  const loadMoreClicksCountRef = useRef(0);
+  const supportTriggerRef = useRef({
+    byRef: false,
+    byLoadMore: false,
+    bySession: false,
+  });
   const searchTrackTimerRef = useRef<number | null>(null);
 
   const ui = UI[lang] || UI.pt;
@@ -601,6 +608,37 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }, [supportCardDismissed, isMobile]);
 
   useEffect(() => {
+    if (supportCardDismissed || supportCardVisible) return;
+
+    const startedAt = Date.now();
+    let cancelled = false;
+
+    const evaluate = () => {
+      if (cancelled || supportCardDismissed || supportCardVisible) return;
+      const elapsed = Date.now() - startedAt;
+      const deepScroll = window.scrollY > 900;
+      if (elapsed >= 45000 && deepScroll) {
+        if (!supportTriggerRef.current.bySession) {
+          supportTriggerRef.current.bySession = true;
+          sendAnalyticsEvent({ type: "donation_trigger_session", lang });
+        }
+        setSupportCardVisible(true);
+      }
+    };
+
+    const onScroll = () => evaluate();
+    const interval = window.setInterval(evaluate, 4000);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    evaluate();
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [lang, supportCardDismissed, supportCardVisible]);
+
+  useEffect(() => {
     if (hideMobileMenus && filtersOpen) {
       setFiltersOpen(false);
     }
@@ -624,6 +662,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     try {
       await navigator.clipboard.writeText(PIX_CODE);
       setPixCopied(true);
+      sendAnalyticsEvent({ type: "pix_copy_code", lang });
     } catch {
       showToast("Não foi possível copiar");
     }
@@ -633,6 +672,35 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     sendAnalyticsEvent({ type: "donation_card_dismiss", lang });
     setSupportCardDismissed(true);
     setSupportCardVisible(false);
+  }
+
+  function openSupportCardBy(reason: "ref" | "load_more" | "cta") {
+    if (supportCardDismissed) return;
+    if (reason === "ref" && !supportTriggerRef.current.byRef) {
+      supportTriggerRef.current.byRef = true;
+      sendAnalyticsEvent({ type: "donation_trigger_ref", lang });
+    }
+    if (reason === "load_more" && !supportTriggerRef.current.byLoadMore) {
+      supportTriggerRef.current.byLoadMore = true;
+      sendAnalyticsEvent({ type: "donation_trigger_load_more", lang });
+    }
+    if (reason === "cta") {
+      sendAnalyticsEvent({ type: "donation_cta_click", lang });
+    }
+    setSupportCardVisible(true);
+  }
+
+  function handleReferenceClick(name: string, url: string, macro: string) {
+    trackReferenceClick(name, url, {
+      lang,
+      query: q.trim(),
+      macro,
+    });
+
+    refClicksCountRef.current += 1;
+    if (refClicksCountRef.current >= 3) {
+      openSupportCardBy("ref");
+    }
   }
 
   function handleClear() {
@@ -1387,11 +1455,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   target="_blank"
                   rel="noreferrer"
                   onClick={() =>
-                    trackReferenceClick(getName(spotlight), getUrl(spotlight), {
-                      lang,
-                      query: q.trim(),
-                      macro: getMacro(spotlight),
-                    })
+                    handleReferenceClick(getName(spotlight), getUrl(spotlight), getMacro(spotlight))
                   }
                   className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]"
                 >
@@ -1422,11 +1486,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() =>
-                  trackReferenceClick(name, url, {
-                    lang,
-                    query: q.trim(),
-                    macro: m,
-                  })
+                  handleReferenceClick(name, url, m)
                 }
                 className="group min-w-0 border border-zinc-200 bg-white"
               >
@@ -1554,7 +1614,8 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   value: String(visibleCount),
                 });
                 setVisibleCount((n) => Math.min(n + 5, Math.max(0, total - 1)));
-                if (!isMobile && !supportCardDismissed) setSupportCardVisible(true);
+                loadMoreClicksCountRef.current += 1;
+                if (loadMoreClicksCountRef.current >= 2) openSupportCardBy("load_more");
               }}
               className="btn cursor-pointer px-6 py-3 text-[16px] tracking-[0.02em]"
             >
@@ -1583,7 +1644,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               <>
                 As referências te ajudaram?
                 <br />
-                Considere contribuir com o projeto.
+                Este acervo é independente. Sua contribuição mantém a curadoria ativa.
               </>
             )}
           </h2>
@@ -1678,6 +1739,16 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         </div>
       ) : null}
 
+      {!supportCardDismissed && !supportCardVisible && !hideSupportCardBySection ? (
+        <button
+          type="button"
+          onClick={() => openSupportCardBy("cta")}
+          className="fixed bottom-5 right-5 z-40 border border-zinc-300 bg-white/95 px-4 py-2 text-sm text-zinc-900 shadow-sm backdrop-blur transition hover:border-zinc-900 lg:text-[15px]"
+        >
+          {lang === "en" ? "Support project" : lang === "es" ? "Apoyar proyecto" : "Apoiar projeto"}
+        </button>
+      ) : null}
+
       {!supportCardDismissed && supportCardVisible && !hideSupportCardBySection ? (
         <div className="fixed bottom-4 left-1/2 z-50 w-[min(92vw,390px)] -translate-x-1/2 lg:bottom-5 lg:left-auto lg:right-5 lg:w-[390px] lg:translate-x-0">
           <div
@@ -1700,10 +1771,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 </div>
                 <div className="mt-1 text-base leading-snug">
                   {lang === "en"
-                    ? "Help this project keep growing."
+                    ? "This archive is independent. Your contribution keeps the curation active."
                     : lang === "es"
-                    ? "Ayuda a que este proyecto siga creciendo."
-                    : "Ajude esse projeto a continuar crescendo."}
+                    ? "Este acervo es independiente. Tu contribución mantiene la curaduría activa."
+                    : "Este acervo é independente. Sua contribuição mantém a curadoria ativa."}
                 </div>
               </div>
               <button
@@ -1728,10 +1799,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                 ].join(" ")}
               >
                 {lang === "en"
-                  ? "Your contribution strengthens the curation and keeps referencias.work active."
+                  ? "Contribute with Pix or PayPal to keep referencias.work active."
                   : lang === "es"
-                  ? "Tu contribución fortalece la curaduría y mantiene referencias.work activo."
-                  : "Sua contribuição fortalece a curadoria e mantém o referencias.work ativo."}
+                  ? "Contribuye con Pix o PayPal para mantener referencias.work activo."
+                  : "Contribua com Pix ou PayPal para manter o referencias.work ativo."}
               </p>
               <div className="grid grid-cols-2 gap-3">
                 <button
