@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 const HEATMAP_COLS = 24;
 const HEATMAP_ROWS = 120;
@@ -296,6 +296,10 @@ export default function AdminAnalyticsPage() {
   const [pathFilter, setPathFilter] = useState("all");
   const [langFilter, setLangFilter] = useState("all");
   const [heatmapDeviceTab, setHeatmapDeviceTab] = useState<"desktop" | "mobile">("desktop");
+  const [desktopPreviewHeight, setDesktopPreviewHeight] = useState(3600);
+  const [mobilePreviewHeight, setMobilePreviewHeight] = useState(5200);
+  const desktopFrameRef = useRef<HTMLIFrameElement | null>(null);
+  const mobileFrameRef = useRef<HTMLIFrameElement | null>(null);
   const view = searchParams.get("view") === "heatmap" ? "heatmap" : "dashboard";
 
   useEffect(() => {
@@ -469,9 +473,42 @@ export default function AdminAnalyticsPage() {
     router.replace(query ? `/admin/analytics?${query}` : "/admin/analytics");
   }
 
+  function measurePreviewHeight(device: "desktop" | "mobile") {
+    const frame = device === "desktop" ? desktopFrameRef.current : mobileFrameRef.current;
+    if (!frame) return;
+    try {
+      const doc = frame.contentDocument;
+      if (!doc) return;
+      const root = doc.documentElement;
+      const body = doc.body;
+      const measured = Math.max(
+        root?.scrollHeight || 0,
+        body?.scrollHeight || 0,
+        root?.offsetHeight || 0,
+        body?.offsetHeight || 0
+      );
+      if (!Number.isFinite(measured) || measured <= 0) return;
+      if (device === "desktop") {
+        setDesktopPreviewHeight(Math.max(1800, Math.min(5600, measured + 40)));
+      } else {
+        setMobilePreviewHeight(Math.max(2200, Math.min(7200, measured + 40)));
+      }
+    } catch {
+      // ignore cross-origin or transient load cases
+    }
+  }
+
   const metricCardClass = "rounded-xl border border-zinc-800 bg-zinc-950/30 p-5 min-h-[112px]";
   const panelCardClass = "rounded-xl border border-zinc-800 bg-zinc-950/30 p-5";
   const panelTitleClass = "text-xs uppercase tracking-[0.16em] text-zinc-500";
+
+  useEffect(() => {
+    if (view !== "heatmap") return;
+    const timer = window.setTimeout(() => {
+      measurePreviewHeight(heatmapDeviceTab);
+    }, 220);
+    return () => window.clearTimeout(timer);
+  }, [view, heatmapDeviceTab]);
 
   return (
     <div className="mx-auto w-full max-w-[1800px] px-6 pb-16 pt-10 sm:px-10 lg:px-12">
@@ -809,17 +846,26 @@ export default function AdminAnalyticsPage() {
               <div className="mt-2 flex items-center justify-end text-[11px] text-zinc-500">
                 Role verticalmente para explorar a página completa
               </div>
-              <div className="mt-2 h-[78vh] overflow-y-auto overflow-x-hidden rounded-lg border border-zinc-800 bg-zinc-950/90 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <div className="mt-2 h-[70vh] overflow-y-auto overflow-x-hidden rounded-lg border border-zinc-800 bg-zinc-950/90 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 <div
                   className={`relative mx-auto overflow-hidden ${
                     heatmapDeviceTab === "desktop"
-                      ? "h-[5200px] w-full max-w-[1440px]"
-                      : "h-[4200px] w-full max-w-[430px]"
+                      ? "w-full max-w-[1320px]"
+                      : "w-full max-w-[390px]"
                   }`}
+                  style={{
+                    height: `${
+                      heatmapDeviceTab === "desktop"
+                        ? desktopPreviewHeight
+                        : mobilePreviewHeight
+                    }px`,
+                  }}
                 >
                   <iframe
                     src="/"
                     title={`Prévia da home ${heatmapDeviceTab}`}
+                    ref={heatmapDeviceTab === "desktop" ? desktopFrameRef : mobileFrameRef}
+                    onLoad={() => measurePreviewHeight(heatmapDeviceTab)}
                     className="pointer-events-none absolute inset-0 h-full w-full opacity-60 saturate-0"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/10 to-zinc-950/60" />
