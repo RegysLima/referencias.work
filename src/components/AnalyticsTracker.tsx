@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { sendAnalyticsEvent } from "@/lib/analyticsClient";
 
 function normalizeLang(value: string | null | undefined) {
@@ -16,27 +16,33 @@ function normalizeLang(value: string | null | undefined) {
   return "pt";
 }
 
-function getLang(searchParams: URLSearchParams) {
-  const fromUrl = searchParams.get("lang");
-  if (fromUrl) return normalizeLang(fromUrl);
+function getLang() {
   if (typeof window !== "undefined") {
+    const fromUrl = new URLSearchParams(window.location.search).get("lang");
+    if (fromUrl) return normalizeLang(fromUrl);
+
     const stored = window.localStorage.getItem("rw_lang");
     if (stored) return normalizeLang(stored);
   }
+
   return "pt";
+}
+
+function getPath(pathname: string | null) {
+  if (pathname) return pathname;
+  if (typeof window !== "undefined") return window.location.pathname || "/";
+  return "/";
 }
 
 export default function AnalyticsTracker() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const lang = getLang(searchParams);
-    sendAnalyticsEvent({ type: "page", path: pathname, lang });
-  }, [pathname, searchParams]);
+    sendAnalyticsEvent({ type: "page", path: getPath(pathname), lang: getLang() });
+  }, [pathname]);
 
   useEffect(() => {
-    if (pathname !== "/") return;
+    if (getPath(pathname) !== "/") return;
 
     let lastAt = 0;
     let lastX = -9999;
@@ -60,9 +66,8 @@ export default function AnalyticsTracker() {
         vh
       );
       const footer = document.querySelector("footer");
-      const ch = footer
-        ? Math.max(footer.getBoundingClientRect().bottom + sy, vh)
-        : dh;
+      const ch = footer ? Math.max(footer.getBoundingClientRect().bottom + sy, vh) : dh;
+
       lastAt = now;
       lastX = event.clientX;
       lastY = event.clientY;
