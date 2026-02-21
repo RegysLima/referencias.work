@@ -474,9 +474,9 @@ export default function AdminAnalyticsPage() {
   const panelTitleClass = "text-xs uppercase tracking-[0.16em] text-zinc-500";
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 pb-16 pt-10 sm:px-10 lg:px-12">
+    <div className="mx-auto w-full max-w-[1800px] px-6 pb-16 pt-10 sm:px-10 lg:px-12">
       <div className="mb-6 text-sm uppercase tracking-[0.18em] text-zinc-400">Analytics</div>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[180px_minmax(0,1fr)]">
         <aside className="h-fit rounded-xl border border-zinc-800 bg-zinc-950/30 p-3 lg:sticky lg:top-24">
           <div className={panelTitleClass}>Visões</div>
           <div className="mt-3 grid gap-2">
@@ -809,12 +809,12 @@ export default function AdminAnalyticsPage() {
               <div className="mt-2 flex items-center justify-end text-[11px] text-zinc-500">
                 Role verticalmente para explorar a página completa
               </div>
-              <div className="mt-2 h-[75vh] overflow-y-auto overflow-x-hidden rounded-lg border border-zinc-800 bg-zinc-950/90">
+              <div className="mt-2 h-[78vh] overflow-y-auto overflow-x-hidden rounded-lg border border-zinc-800 bg-zinc-950/90 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 <div
                   className={`relative mx-auto overflow-hidden ${
                     heatmapDeviceTab === "desktop"
-                      ? "h-[3300px] w-full max-w-[1220px]"
-                      : "h-[3000px] w-full max-w-[390px]"
+                      ? "h-[5200px] w-full max-w-[1440px]"
+                      : "h-[4200px] w-full max-w-[430px]"
                   }`}
                 >
                   <iframe
