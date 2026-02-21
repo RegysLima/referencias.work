@@ -101,6 +101,19 @@ function looksLikeImage(url: string) {
   );
 }
 
+function looksLikeVideo(url: string) {
+  const u = url.toLowerCase();
+  if (u.startsWith("data:")) return false;
+  return (
+    u.includes(".mp4") ||
+    u.includes(".webm") ||
+    u.includes(".mov") ||
+    u.includes(".m4v") ||
+    u.includes(".ogv") ||
+    u.includes(".m3u8")
+  );
+}
+
 function isLikelyGarbage(url: string) {
   const u = url.toLowerCase();
   return (
@@ -138,6 +151,12 @@ function scoreImage(url: string) {
   return score;
 }
 
+function scoreMedia(url: string) {
+  const base = scoreImage(url);
+  if (looksLikeVideo(url)) return base + 2;
+  return base;
+}
+
 async function checkImageReachable(url: string, timeoutMs = 6000) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -155,7 +174,15 @@ async function checkImageReachable(url: string, timeoutMs = 6000) {
     });
 
     const ctHead = (head.headers.get("content-type") || "").toLowerCase();
-    if (head.ok && ctHead.startsWith("image/")) return true;
+    if (
+      head.ok &&
+      (ctHead.startsWith("image/") ||
+        ctHead.startsWith("video/") ||
+        ctHead.includes("application/vnd.apple.mpegurl") ||
+        ctHead.includes("application/x-mpegurl"))
+    ) {
+      return true;
+    }
   } catch {
     // tenta GET fallback
   } finally {
@@ -178,7 +205,15 @@ async function checkImageReachable(url: string, timeoutMs = 6000) {
       },
     });
     const ctGet = (get.headers.get("content-type") || "").toLowerCase();
-    return get.ok && ctGet.startsWith("image/");
+    const videoExt = /\.(mp4|webm|mov|m4v|ogv|m3u8)(\?|#|$)/i.test(url);
+    return (
+      get.ok &&
+      (ctGet.startsWith("image/") ||
+        ctGet.startsWith("video/") ||
+        ctGet.includes("application/vnd.apple.mpegurl") ||
+        ctGet.includes("application/x-mpegurl") ||
+        (videoExt && (ctGet.includes("application/octet-stream") || !ctGet)))
+    );
   } catch {
     return false;
   } finally {
@@ -311,6 +346,26 @@ function extractFromHtml(pageUrl: string, html: string) {
     }
   }
 
+  // <video src="">
+  {
+    const re = /<video[^>]+src=["']([^"']+)["'][^>]*>/gi;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(html))) {
+      const u = normalizeImageCandidate(pageUrl, m[1]);
+      if (u) out.push(u);
+    }
+  }
+
+  // <source src=""> dentro de <video>
+  {
+    const re = /<source[^>]+src=["']([^"']+)["'][^>]*>/gi;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(html))) {
+      const u = normalizeImageCandidate(pageUrl, m[1]);
+      if (u) out.push(u);
+    }
+  }
+
   // JSON-LD (às vezes tem "image": "...")
   {
     const re = /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
@@ -391,11 +446,11 @@ export async function GET(req: Request) {
     const filtered = uniq(collected)
       .map((u) => u.trim())
       .filter(Boolean)
-      .filter((u) => looksLikeImage(u))
+      .filter((u) => looksLikeImage(u) || looksLikeVideo(u))
       .filter((u) => !isLikelyGarbage(u));
 
     const ranked = filtered
-      .sort((a, b) => scoreImage(b) - scoreImage(a))
+      .sort((a, b) => scoreMedia(b) - scoreMedia(a))
       .slice(0, 80);
 
     const reachable = await filterReachableImages(ranked);

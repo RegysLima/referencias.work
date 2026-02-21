@@ -1359,7 +1359,7 @@ export default function AdminPage() {
         setThumbModal((s) => ({
           ...s,
           loading: false,
-          error: "Não foi possível buscar imagens. (site bloqueou ou falha na requisição)",
+          error: "Não foi possível buscar mídias. (site bloqueou ou falha na requisição)",
         }));
         return;
       }
@@ -1371,13 +1371,13 @@ export default function AdminPage() {
         ...s,
         loading: false,
         candidates,
-        error: candidates.length ? "" : "Nenhuma imagem encontrada nas páginas de projetos/works/portfolio.",
+        error: candidates.length ? "" : "Nenhuma mídia encontrada nas páginas de projetos/works/portfolio.",
       }));
     } catch {
       setThumbModal((s) => ({
         ...s,
         loading: false,
-        error: "Falha ao buscar imagens. Verifique conexão / URL.",
+        error: "Falha ao buscar mídias. Verifique conexão / URL.",
       }));
     }
   }
@@ -1472,7 +1472,7 @@ export default function AdminPage() {
                 <div className="text-sm text-zinc-400">Escolher thumbnail</div>
                 <div className="mt-1 truncate text-base font-medium">{thumbModal.baseUrl}</div>
                 <div className="mt-1 text-xs text-zinc-500">
-                  Buscando imagens em páginas típicas de projetos/works/portfolio.
+                  Buscando imagens e vídeos em páginas típicas de projetos/works/portfolio.
                 </div>
               </div>
 
@@ -1486,7 +1486,7 @@ export default function AdminPage() {
 
             <div className="max-h-[60vh] overflow-y-auto px-5 py-4">
               {thumbModal.loading ? (
-                <div className="text-sm text-zinc-400">Buscando imagens…</div>
+                <div className="text-sm text-zinc-400">Buscando mídias…</div>
               ) : thumbModal.error ? (
                 <div className="text-sm text-zinc-300">
                   {thumbModal.error}
@@ -1504,15 +1504,36 @@ export default function AdminPage() {
                       title="Clique para usar"
                     >
                       <div className="aspect-[4/3] w-full bg-zinc-900">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={src}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                          fetchPriority="low"
-                          className="h-full w-full object-cover transition group-hover:scale-[1.02]"
-                        />
+                        {isVideoUrl(src) ? (
+                          <VideoThumb
+                            src={src}
+                            className="h-full w-full object-cover transition group-hover:scale-[1.02]"
+                          />
+                        ) : isVimeoUrl(src) ? (
+                          <iframe
+                            src={getVimeoEmbedSrc(src)}
+                            title=""
+                            allow="autoplay; fullscreen; picture-in-picture"
+                            loading="lazy"
+                            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                            style={{
+                              width: "112%",
+                              height: "100%",
+                              minWidth: "100%",
+                              minHeight: "100%",
+                            }}
+                          />
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={src}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            fetchPriority="low"
+                            className="h-full w-full object-cover transition group-hover:scale-[1.02]"
+                          />
+                        )}
                       </div>
                       <div className="p-2">
                         <div className="truncate text-[11px] text-zinc-400">{src}</div>
