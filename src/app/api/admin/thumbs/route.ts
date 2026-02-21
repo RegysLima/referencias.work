@@ -93,11 +93,19 @@ function looksLikeImage(url: string) {
     u.includes(".jpeg") ||
     u.includes(".png") ||
     u.includes(".webp") ||
+    u.includes(".avif") ||
+    u.includes(".svg") ||
     u.includes(".gif") ||
     u.includes("wp-content/uploads") ||
     u.includes("/uploads/") ||
     u.includes("/images/") ||
-    u.includes("image")
+    u.includes("image") ||
+    u.includes("imgix") ||
+    u.includes("cloudinary") ||
+    u.includes("prismic") ||
+    u.includes("framerusercontent") ||
+    u.includes("cdn.sanity.io/images/") ||
+    u.includes("images.ctfassets.net")
   );
 }
 
@@ -157,9 +165,15 @@ function scoreMedia(url: string) {
   return base;
 }
 
-async function checkImageReachable(url: string, timeoutMs = 6000) {
+async function checkImageReachable(url: string, timeoutMs = 6000, referer = "") {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  const refererHeaders: Record<string, string> = referer
+    ? {
+        referer,
+        origin: referer.replace(/\/$/, ""),
+      }
+    : {};
   try {
     const head = await fetch(url, {
       method: "HEAD",
@@ -170,6 +184,7 @@ async function checkImageReachable(url: string, timeoutMs = 6000) {
         "user-agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari",
         accept: "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+        ...refererHeaders,
       },
     });
 
@@ -202,6 +217,7 @@ async function checkImageReachable(url: string, timeoutMs = 6000) {
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari",
         accept: "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
         range: "bytes=0-0",
+        ...refererHeaders,
       },
     });
     const ctGet = (get.headers.get("content-type") || "").toLowerCase();
@@ -221,7 +237,7 @@ async function checkImageReachable(url: string, timeoutMs = 6000) {
   }
 }
 
-async function filterReachableImages(candidates: string[]) {
+async function filterReachableMedia(candidates: string[], referer = "") {
   const out: string[] = [];
   const queue = [...candidates];
   const CONCURRENCY = 6;
@@ -230,7 +246,7 @@ async function filterReachableImages(candidates: string[]) {
     while (queue.length) {
       const current = queue.shift();
       if (!current) break;
-      const ok = await checkImageReachable(current);
+      const ok = await checkImageReachable(current, 6000, referer);
       if (ok) out.push(current);
     }
   });
@@ -311,7 +327,7 @@ function extractFromHtml(pageUrl: string, html: string) {
 
   // srcset / data-srcset
   {
-    const re = /<img[^>]+(?:srcset|data-srcset)=["']([^"']+)["'][^>]*>/gi;
+    const re = /<(?:img|source)[^>]+(?:srcset|data-srcset)=["']([^"']+)["'][^>]*>/gi;
     let m: RegExpExecArray | null;
     while ((m = re.exec(html))) {
       const parts = (m[1] || "")
@@ -366,6 +382,16 @@ function extractFromHtml(pageUrl: string, html: string) {
     }
   }
 
+  // data-bg / data-background / poster
+  {
+    const re = /(?:data-bg|data-background|poster)=["']([^"']+)["']/gi;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(html))) {
+      const u = normalizeImageCandidate(pageUrl, m[1]);
+      if (u) out.push(u);
+    }
+  }
+
   // JSON-LD (às vezes tem "image": "...")
   {
     const re = /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
@@ -382,7 +408,51 @@ function extractFromHtml(pageUrl: string, html: string) {
     }
   }
 
+  // URLs absolutas em scripts/HTML (fallback robusto para sites SPA/headless)
+  {
+    const re = /https?:\/\/[^"'\\\s<>()]+/gi;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(html))) {
+      const u = normalizeImageCandidate(pageUrl, m[0]);
+      if (u) out.push(u);
+    }
+  }
+
   return out;
+}
+
+function extractInternalProjectLinks(pageUrl: string, html: string, baseOrigin: string) {
+  const links: string[] = [];
+  const re = /<a[^>]+href=["']([^"']+)["'][^>]*>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(html))) {
+    const href = m[1] || "";
+    const abs = absUrl(pageUrl, href);
+    if (!abs) continue;
+    try {
+      const u = new URL(abs);
+      if (u.origin !== baseOrigin) continue;
+      if (!u.pathname || u.pathname === "/") continue;
+      if (/\.(?:jpg|jpeg|png|webp|gif|svg|mp4|webm|mov|pdf|zip)$/i.test(u.pathname)) continue;
+      const p = u.pathname.toLowerCase();
+      if (
+        p.includes("/work/") ||
+        p.includes("/project/") ||
+        p.includes("/projects/") ||
+        p.includes("/case/") ||
+        p.includes("/cases/") ||
+        p.includes("/portfolio/") ||
+        p.includes("/showcase/")
+      ) {
+        u.hash = "";
+        u.search = "";
+        links.push(u.toString());
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return uniq(links);
 }
 
 async function tryWpJsonMedia(base: string) {
@@ -417,25 +487,48 @@ export async function GET(req: Request) {
 
   try {
     const base = normalizeBaseUrl(raw);
+    const baseUrl = new URL(base);
+    const baseOrigin = baseUrl.origin;
 
     // monta lista de páginas “prováveis”
-    const pages = uniq(
+    const pages = uniq([
+      base,
+      `${baseOrigin}/`,
       DEFAULT_PAGES.map((p) => {
         if (!p) return base;
-        return base.replace(/\/$/, "") + p;
-      })
-    );
+        return new URL(p, `${baseOrigin}/`).toString();
+      }),
+    ].flat());
 
     const collected: string[] = [];
+    const htmlSources: Array<{ pageUrl: string; html: string }> = [];
 
     // 1) varre HTML dessas páginas
     for (const pageUrl of pages) {
       try {
         const { text, contentType } = await fetchText(pageUrl, 8000);
         if (!contentType.toLowerCase().includes("text/html")) continue;
+        htmlSources.push({ pageUrl, html: text });
         collected.push(...extractFromHtml(pageUrl, text));
       } catch {
         // ignora páginas bloqueadas / 404
+      }
+    }
+
+    // 1.1) rastreia páginas de projetos internas a partir das páginas já coletadas
+    const projectPages = uniq(
+      htmlSources
+        .flatMap(({ pageUrl, html }) => extractInternalProjectLinks(pageUrl, html, baseOrigin))
+        .slice(0, 24)
+    );
+
+    for (const pageUrl of projectPages) {
+      try {
+        const { text, contentType } = await fetchText(pageUrl, 8000);
+        if (!contentType.toLowerCase().includes("text/html")) continue;
+        collected.push(...extractFromHtml(pageUrl, text));
+      } catch {
+        // ignora páginas bloqueadas
       }
     }
 
@@ -451,9 +544,9 @@ export async function GET(req: Request) {
 
     const ranked = filtered
       .sort((a, b) => scoreMedia(b) - scoreMedia(a))
-      .slice(0, 80);
+      .slice(0, 120);
 
-    const reachable = await filterReachableImages(ranked);
+    const reachable = await filterReachableMedia(ranked, `${baseOrigin}/`);
 
     return NextResponse.json({ candidates: reachable.slice(0, 60) });
   } catch {
