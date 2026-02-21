@@ -28,6 +28,10 @@ type Summary = {
     dismiss: number;
   };
   heatmapHome?: Record<string, number>;
+  heatmapHomeByDevice?: {
+    desktop: Record<string, number>;
+    mobile: Record<string, number>;
+  };
   normalizeFilters?: {
     ranAt: string;
     total: number;
@@ -63,6 +67,10 @@ const EMPTY: Summary = {
     dismiss: 0,
   },
   heatmapHome: {},
+  heatmapHomeByDevice: {
+    desktop: {},
+    mobile: {},
+  },
   normalizeFilters: null,
   lastUpdated: null,
 };
@@ -285,6 +293,7 @@ export default function AdminAnalyticsPage() {
   const [range, setRange] = useState("30");
   const [pathFilter, setPathFilter] = useState("all");
   const [langFilter, setLangFilter] = useState("all");
+  const [heatmapDeviceTab, setHeatmapDeviceTab] = useState<"desktop" | "mobile">("desktop");
   const view = searchParams.get("view") === "heatmap" ? "heatmap" : "dashboard";
 
   useEffect(() => {
@@ -430,13 +439,24 @@ export default function AdminAnalyticsPage() {
       rangeDays[rangeDays.length - 1]
     )}`;
   }, [range, rangeDays]);
-  const heatmap = useMemo(
+  const heatmapDesktop = useMemo(
+    () => parseHeatmapCells(summary.heatmapHomeByDevice?.desktop || {}),
+    [summary.heatmapHomeByDevice]
+  );
+  const heatmapMobile = useMemo(
+    () => parseHeatmapCells(summary.heatmapHomeByDevice?.mobile || {}),
+    [summary.heatmapHomeByDevice]
+  );
+  const heatmapCombined = useMemo(
     () => parseHeatmapCells(summary.heatmapHome || {}),
     [summary.heatmapHome]
   );
+  const heatmap = heatmapDeviceTab === "desktop" ? heatmapDesktop : heatmapMobile;
+  const heatmapFallback =
+    !heatmap.cells.length && heatmapCombined.cells.length ? heatmapCombined : heatmap;
   const heatmapTotal = useMemo(
-    () => heatmap.cells.reduce((acc, cell) => acc + cell.value, 0),
-    [heatmap.cells]
+    () => heatmapFallback.cells.reduce((acc, cell) => acc + cell.value, 0),
+    [heatmapFallback.cells]
   );
 
   function setView(next: "dashboard" | "heatmap") {
@@ -455,13 +475,13 @@ export default function AdminAnalyticsPage() {
     <div className="mx-auto w-full max-w-7xl px-6 pb-16 pt-10 sm:px-10 lg:px-12">
       <div className="mb-6 text-sm uppercase tracking-[0.18em] text-zinc-400">Analytics</div>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
-        <aside className="h-fit rounded-xl border border-zinc-800 bg-zinc-950/30 p-3">
+        <aside className="h-fit rounded-xl border border-zinc-800 bg-zinc-950/30 p-3 lg:sticky lg:top-24">
           <div className={panelTitleClass}>Visões</div>
           <div className="mt-3 grid gap-2">
             <button
               type="button"
               onClick={() => setView("dashboard")}
-              className={`rounded-md border px-3 py-2 text-left text-sm transition ${
+              className={`cursor-pointer rounded-md border px-3 py-2 text-left text-sm transition ${
                 view === "dashboard"
                   ? "border-zinc-100 bg-zinc-100 text-zinc-900"
                   : "border-zinc-800 bg-zinc-950 text-zinc-200 hover:border-zinc-700"
@@ -472,7 +492,7 @@ export default function AdminAnalyticsPage() {
             <button
               type="button"
               onClick={() => setView("heatmap")}
-              className={`rounded-md border px-3 py-2 text-left text-sm transition ${
+              className={`cursor-pointer rounded-md border px-3 py-2 text-left text-sm transition ${
                 view === "heatmap"
                   ? "border-zinc-100 bg-zinc-100 text-zinc-900"
                   : "border-zinc-800 bg-zinc-950 text-zinc-200 hover:border-zinc-700"
@@ -493,7 +513,7 @@ export default function AdminAnalyticsPage() {
                   <select
                     value={range}
                     onChange={(e) => setRange(e.target.value)}
-                    className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                    className="cursor-pointer appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
                   >
                     <option value="7">Últimos 7 dias</option>
                     <option value="30">Últimos 30 dias</option>
@@ -514,7 +534,7 @@ export default function AdminAnalyticsPage() {
                   <select
                     value={pathFilter}
                     onChange={(e) => setPathFilter(e.target.value)}
-                    className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                    className="cursor-pointer appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
                   >
                     {pathOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -536,7 +556,7 @@ export default function AdminAnalyticsPage() {
                   <select
                     value={langFilter}
                     onChange={(e) => setLangFilter(e.target.value)}
-                    className="appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                    className="cursor-pointer appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
                   >
                     {langOptions.map((lang) => (
                       <option key={lang} value={lang}>
@@ -742,12 +762,12 @@ export default function AdminAnalyticsPage() {
           <section className="space-y-4">
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
               <div className={`${metricCardClass} xl:col-span-4`}>
-                <div className="text-xs text-zinc-500">Pontos capturados (home)</div>
+                <div className="text-xs text-zinc-500">Pontos capturados ({heatmapDeviceTab})</div>
                 <div className="mt-2 text-2xl text-zinc-100">{heatmapTotal}</div>
               </div>
               <div className={`${metricCardClass} xl:col-span-4`}>
                 <div className="text-xs text-zinc-500">Células com atividade</div>
-                <div className="mt-2 text-2xl text-zinc-100">{heatmap.cells.length}</div>
+                <div className="mt-2 text-2xl text-zinc-100">{heatmapFallback.cells.length}</div>
               </div>
               <div className={`${metricCardClass} xl:col-span-4`}>
                 <div className="text-xs text-zinc-500">Última atualização</div>
@@ -758,18 +778,50 @@ export default function AdminAnalyticsPage() {
             <div className={`${panelCardClass} overflow-hidden`}>
               <div className={panelTitleClass}>Heatmap de mouse (home)</div>
               <div className="mt-1 text-xs text-zinc-500">
-                Preview em viewport desktop para leitura fiel da navegação.
+                Visualização por dispositivo com escala fria/quente.
               </div>
-              <div className="mt-4 overflow-x-auto rounded-lg border border-zinc-800">
-                <div className="relative h-[740px] min-w-[1180px] bg-zinc-950/90">
+              <div className="mt-3 inline-flex rounded-md border border-zinc-800 bg-zinc-950/50 p-1">
+                <button
+                  type="button"
+                  onClick={() => setHeatmapDeviceTab("desktop")}
+                  className={`cursor-pointer rounded px-3 py-1.5 text-sm transition ${
+                    heatmapDeviceTab === "desktop"
+                      ? "bg-zinc-100 text-zinc-900"
+                      : "text-zinc-300 hover:bg-zinc-900"
+                  }`}
+                >
+                  Desktop
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHeatmapDeviceTab("mobile")}
+                  className={`cursor-pointer rounded px-3 py-1.5 text-sm transition ${
+                    heatmapDeviceTab === "mobile"
+                      ? "bg-zinc-100 text-zinc-900"
+                      : "text-zinc-300 hover:bg-zinc-900"
+                  }`}
+                >
+                  Mobile
+                </button>
+              </div>
+              <div
+                className={`mt-4 rounded-lg border border-zinc-800 ${
+                  heatmapDeviceTab === "desktop" ? "w-full" : "mx-auto w-full max-w-sm"
+                }`}
+              >
+                <div
+                  className={`relative overflow-hidden bg-zinc-950/90 ${
+                    heatmapDeviceTab === "desktop" ? "aspect-[16/9]" : "aspect-[9/19]"
+                  }`}
+                >
                   <iframe
                     src="/"
-                    title="Prévia da home desktop"
+                    title={`Prévia da home ${heatmapDeviceTab}`}
                     className="pointer-events-none absolute inset-0 h-full w-full opacity-60 saturate-0"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/5 to-zinc-950/55" />
-                  {heatmap.cells.map((cell) => {
-                    const ratio = heatmap.max ? cell.value / heatmap.max : 0;
+                  {heatmapFallback.cells.map((cell) => {
+                    const ratio = heatmapFallback.max ? cell.value / heatmapFallback.max : 0;
                     return (
                       <div
                         key={cell.key}
@@ -792,6 +844,11 @@ export default function AdminAnalyticsPage() {
                   </div>
                 </div>
               </div>
+              {!heatmap.cells.length && heatmapCombined.cells.length ? (
+                <div className="mt-2 text-xs text-zinc-500">
+                  Sem base separada por dispositivo ainda; exibindo dados gerais coletados anteriormente.
+                </div>
+              ) : null}
             </div>
           </section>
         )}

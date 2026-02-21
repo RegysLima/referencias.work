@@ -31,6 +31,10 @@ type Summary = {
     dismiss: number;
   };
   heatmapHome?: Record<string, number>;
+  heatmapHomeByDevice?: {
+    desktop: Record<string, number>;
+    mobile: Record<string, number>;
+  };
   lastUpdated?: string | null;
 };
 
@@ -112,6 +116,12 @@ function normalizeSearchQuery(value: string | undefined) {
     .replace(/\s+/g, " ")
     .slice(0, 120);
   return cleaned;
+}
+
+function normalizeDevice(value: string | undefined): "desktop" | "mobile" {
+  const cleaned = (value || "").toLowerCase().trim();
+  if (cleaned === "mobile") return "mobile";
+  return "desktop";
 }
 
 function clamp01(value: number) {
@@ -199,6 +209,10 @@ export async function POST(req: Request) {
       dismiss: 0,
     },
     heatmapHome: {},
+    heatmapHomeByDevice: {
+      desktop: {},
+      mobile: {},
+    },
   };
   const current = normalizeSummaryLangs(currentRaw);
   current.byType = current.byType || {};
@@ -209,11 +223,20 @@ export async function POST(req: Request) {
   current.byDayNoResultQuery = current.byDayNoResultQuery || {};
   current.donation = current.donation || { cardView: 0, pixClick: 0, paypalClick: 0, dismiss: 0 };
   current.heatmapHome = current.heatmapHome || {};
+  current.heatmapHomeByDevice = current.heatmapHomeByDevice || {
+    desktop: {},
+    mobile: {},
+  };
+  current.heatmapHomeByDevice.desktop = current.heatmapHomeByDevice.desktop || {};
+  current.heatmapHomeByDevice.mobile = current.heatmapHomeByDevice.mobile || {};
 
   if (type === "mouse_move_home" && path === "/") {
     const bucket = resolveHeatmapBucket(body);
+    const device = normalizeDevice(body.device);
     if (bucket) {
       current.heatmapHome[bucket] = (current.heatmapHome[bucket] || 0) + 1;
+      current.heatmapHomeByDevice[device][bucket] =
+        (current.heatmapHomeByDevice[device][bucket] || 0) + 1;
       current.lastUpdated = new Date().toISOString();
       await kv.set(KV_KEY, current);
     }
