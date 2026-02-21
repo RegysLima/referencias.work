@@ -384,6 +384,11 @@ async function syncApprovedProspectsToReferences(prospects: ProspectItem[]) {
   let changed = false;
 
   for (const item of approved) {
+    const prospectUrl = (item.homepageUrl || (item.domain ? `https://${item.domain}` : "")).trim();
+    const prospectKey = normalizeUrlKey(prospectUrl);
+    if (!prospectKey || prospectKey === "https://") continue;
+    if (existingUrlKeys.has(prospectKey)) continue;
+
     const candidate = await enrichProspect(item);
     const key = normalizeUrlKey(candidate.url);
     if (!key || key === "https://") continue;
@@ -401,7 +406,6 @@ async function syncApprovedProspectsToReferences(prospects: ProspectItem[]) {
 
 export async function GET() {
   const db = await readProspectsDb();
-  await syncApprovedProspectsToReferences(db.items);
   return NextResponse.json(db);
 }
 
