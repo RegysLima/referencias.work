@@ -948,6 +948,35 @@ export default function AdminPage() {
     return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
   }, [items]);
 
+  const locationPairs = useMemo(() => {
+    const countryToCities = new Map<string, Set<string>>();
+    const cityToCountries = new Map<string, Set<string>>();
+
+    for (const it of items) {
+      const rows = normalizeLocations(it.locations, it.country, it.city, true);
+      for (const row of rows) {
+        const country = normalizeCountryValue(row?.country ?? null);
+        const city = normalizeCityValue(row?.city ?? null);
+        if (!country || !city) continue;
+
+        const countryKey = normalizeSearchText(country);
+        const cityKey = normalizeSearchText(city);
+
+        if (!countryToCities.has(countryKey)) {
+          countryToCities.set(countryKey, new Set<string>());
+        }
+        countryToCities.get(countryKey)?.add(city);
+
+        if (!cityToCountries.has(cityKey)) {
+          cityToCountries.set(cityKey, new Set<string>());
+        }
+        cityToCountries.get(cityKey)?.add(country);
+      }
+    }
+
+    return { countryToCities, cityToCountries };
+  }, [items]);
+
   function updateItem(id: string, patch: Partial<RefItem>) {
     setItems((prev) =>
       prev.map((i) => {
@@ -1024,6 +1053,22 @@ export default function AdminPage() {
         );
       })
       .slice(0, 8);
+  }
+
+  function getScopedCountryOptions(cityValue: string) {
+    const city = normalizeCityValue(cityValue || null);
+    if (!city) return countryOptions;
+    const set = locationPairs.cityToCountries.get(normalizeSearchText(city));
+    if (!set || !set.size) return countryOptions;
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }
+
+  function getScopedCityOptions(countryValue: string) {
+    const country = normalizeCountryValue(countryValue || null);
+    if (!country) return cityOptions;
+    const set = locationPairs.countryToCities.get(normalizeSearchText(country));
+    if (!set || !set.size) return cityOptions;
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
   }
 
   function commitCountryDraft(id: string, value: string) {
@@ -2264,9 +2309,12 @@ export default function AdminPage() {
                                 }, 120);
                               }}
                               onKeyDown={(e) => {
+                                const scopedCountryOptions = getScopedCountryOptions(
+                                  cityDraft[i.id] ?? i.city ?? ""
+                                );
                                 const suggestions = getLocationSuggestions(
                                   countryDraft[i.id] ?? i.country ?? "",
-                                  countryOptions,
+                                  scopedCountryOptions,
                                   normalizeCountryValue
                                 );
                                 if (e.key === "ArrowDown") {
@@ -2318,12 +2366,12 @@ export default function AdminPage() {
                               <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
                                 {getLocationSuggestions(
                                   countryDraft[i.id] ?? i.country ?? "",
-                                  countryOptions,
+                                  getScopedCountryOptions(cityDraft[i.id] ?? i.city ?? ""),
                                   normalizeCountryValue
                                 ).length ? (
                                   getLocationSuggestions(
                                     countryDraft[i.id] ?? i.country ?? "",
-                                    countryOptions,
+                                    getScopedCountryOptions(cityDraft[i.id] ?? i.city ?? ""),
                                     normalizeCountryValue
                                   ).map((option, idx) => (
                                     <button
@@ -2380,9 +2428,12 @@ export default function AdminPage() {
                                 }, 120);
                               }}
                               onKeyDown={(e) => {
+                                const scopedCityOptions = getScopedCityOptions(
+                                  countryDraft[i.id] ?? i.country ?? ""
+                                );
                                 const suggestions = getLocationSuggestions(
                                   cityDraft[i.id] ?? i.city ?? "",
-                                  cityOptions,
+                                  scopedCityOptions,
                                   normalizeCityValue
                                 );
                                 if (e.key === "ArrowDown") {
@@ -2434,12 +2485,12 @@ export default function AdminPage() {
                               <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
                                 {getLocationSuggestions(
                                   cityDraft[i.id] ?? i.city ?? "",
-                                  cityOptions,
+                                  getScopedCityOptions(countryDraft[i.id] ?? i.country ?? ""),
                                   normalizeCityValue
                                 ).length ? (
                                   getLocationSuggestions(
                                     cityDraft[i.id] ?? i.city ?? "",
-                                    cityOptions,
+                                    getScopedCityOptions(countryDraft[i.id] ?? i.country ?? ""),
                                     normalizeCityValue
                                   ).map((option, idx) => (
                                     <button
@@ -2479,9 +2530,19 @@ export default function AdminPage() {
                           return (
                             <div
                               key={`${i.id}-location-${rowIndex}`}
-                              className="sm:col-span-2 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start"
+                              className="sm:col-span-2"
                             >
-                              <div>
+                              <div className="mb-1 flex justify-end">
+                                <button
+                                  type="button"
+                                  onMouseDown={(e) => e.preventDefault()}
+                                  onClick={() => removeLocationRow(i.id, rowIndex)}
+                                  className="text-[11px] text-zinc-500 underline hover:text-zinc-300"
+                                >
+                                  remover
+                                </button>
+                              </div>
+                              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:items-start">
                                 <div className="relative">
                                   <input
                                     value={locationDraft[countryFieldKey] ?? row?.country ?? ""}
@@ -2515,9 +2576,12 @@ export default function AdminPage() {
                                       }, 120);
                                     }}
                                     onKeyDown={(e) => {
+                                      const scopedCountryOptions = getScopedCountryOptions(
+                                        locationDraft[cityFieldKey] ?? row?.city ?? ""
+                                      );
                                       const suggestions = getLocationSuggestions(
                                         locationDraft[countryFieldKey] ?? row?.country ?? "",
-                                        countryOptions,
+                                        scopedCountryOptions,
                                         normalizeCountryValue
                                       );
                                       if (e.key === "ArrowDown") {
@@ -2569,12 +2633,16 @@ export default function AdminPage() {
                                     <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
                                       {getLocationSuggestions(
                                         locationDraft[countryFieldKey] ?? row?.country ?? "",
-                                        countryOptions,
+                                        getScopedCountryOptions(
+                                          locationDraft[cityFieldKey] ?? row?.city ?? ""
+                                        ),
                                         normalizeCountryValue
                                       ).length ? (
                                         getLocationSuggestions(
                                           locationDraft[countryFieldKey] ?? row?.country ?? "",
-                                          countryOptions,
+                                          getScopedCountryOptions(
+                                            locationDraft[cityFieldKey] ?? row?.city ?? ""
+                                          ),
                                           normalizeCountryValue
                                         ).map((option, optionIdx) => (
                                           <button
@@ -2608,8 +2676,6 @@ export default function AdminPage() {
                                     </div>
                                   ) : null}
                                 </div>
-                              </div>
-                              <div>
                                 <div className="relative">
                                   <input
                                     value={locationDraft[cityFieldKey] ?? row?.city ?? ""}
@@ -2643,9 +2709,12 @@ export default function AdminPage() {
                                       }, 120);
                                     }}
                                     onKeyDown={(e) => {
+                                      const scopedCityOptions = getScopedCityOptions(
+                                        locationDraft[countryFieldKey] ?? row?.country ?? ""
+                                      );
                                       const suggestions = getLocationSuggestions(
                                         locationDraft[cityFieldKey] ?? row?.city ?? "",
-                                        cityOptions,
+                                        scopedCityOptions,
                                         normalizeCityValue
                                       );
                                       if (e.key === "ArrowDown") {
@@ -2697,12 +2766,16 @@ export default function AdminPage() {
                                     <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
                                       {getLocationSuggestions(
                                         locationDraft[cityFieldKey] ?? row?.city ?? "",
-                                        cityOptions,
+                                        getScopedCityOptions(
+                                          locationDraft[countryFieldKey] ?? row?.country ?? ""
+                                        ),
                                         normalizeCityValue
                                       ).length ? (
                                         getLocationSuggestions(
                                           locationDraft[cityFieldKey] ?? row?.city ?? "",
-                                          cityOptions,
+                                          getScopedCityOptions(
+                                            locationDraft[countryFieldKey] ?? row?.country ?? ""
+                                          ),
                                           normalizeCityValue
                                         ).map((option, optionIdx) => (
                                           <button
@@ -2737,15 +2810,6 @@ export default function AdminPage() {
                                   ) : null}
                                 </div>
                               </div>
-                              <div className="pt-2 sm:pt-2">
-                                <button
-                                  type="button"
-                                  onClick={() => removeLocationRow(i.id, rowIndex)}
-                                  className="text-[11px] text-zinc-500 underline hover:text-zinc-300"
-                                >
-                                  remover
-                                </button>
-                              </div>
                             </div>
                           );
                         })}
@@ -2753,6 +2817,7 @@ export default function AdminPage() {
                         <div className="sm:col-span-2">
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => addLocationRow(i.id)}
                             className="mb-2 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
                           >
