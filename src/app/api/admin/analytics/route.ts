@@ -39,6 +39,11 @@ type Summary = {
     desktop: Record<string, number>;
     mobile: Record<string, number>;
   };
+  heatmapHomeV2?: Record<string, number>;
+  heatmapHomeByDeviceV2?: {
+    desktop: Record<string, number>;
+    mobile: Record<string, number>;
+  };
   normalizeFilters?: NormalizeFiltersStatus | null;
   lastUpdated?: string | null;
 };
@@ -115,6 +120,11 @@ function normalizeSummaryLangs(summary: Summary): Summary {
       desktop: {},
       mobile: {},
     },
+    heatmapHomeV2: summary.heatmapHomeV2 || {},
+    heatmapHomeByDeviceV2: summary.heatmapHomeByDeviceV2 || {
+      desktop: {},
+      mobile: {},
+    },
   };
 }
 
@@ -148,6 +158,11 @@ export async function GET() {
       },
       heatmapHome: {},
       heatmapHomeByDevice: {
+        desktop: {},
+        mobile: {},
+      },
+      heatmapHomeV2: {},
+      heatmapHomeByDeviceV2: {
         desktop: {},
         mobile: {},
       },

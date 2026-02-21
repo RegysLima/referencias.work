@@ -37,6 +37,11 @@ type Summary = {
     desktop: Record<string, number>;
     mobile: Record<string, number>;
   };
+  heatmapHomeV2?: Record<string, number>;
+  heatmapHomeByDeviceV2?: {
+    desktop: Record<string, number>;
+    mobile: Record<string, number>;
+  };
   lastUpdated?: string | null;
 };
 
@@ -225,6 +230,11 @@ export async function POST(req: Request) {
       desktop: {},
       mobile: {},
     },
+    heatmapHomeV2: {},
+    heatmapHomeByDeviceV2: {
+      desktop: {},
+      mobile: {},
+    },
   };
   const current = normalizeSummaryLangs(currentRaw);
   current.byType = current.byType || {};
@@ -241,11 +251,21 @@ export async function POST(req: Request) {
   };
   current.heatmapHomeByDevice.desktop = current.heatmapHomeByDevice.desktop || {};
   current.heatmapHomeByDevice.mobile = current.heatmapHomeByDevice.mobile || {};
+  current.heatmapHomeV2 = current.heatmapHomeV2 || {};
+  current.heatmapHomeByDeviceV2 = current.heatmapHomeByDeviceV2 || {
+    desktop: {},
+    mobile: {},
+  };
+  current.heatmapHomeByDeviceV2.desktop = current.heatmapHomeByDeviceV2.desktop || {};
+  current.heatmapHomeByDeviceV2.mobile = current.heatmapHomeByDeviceV2.mobile || {};
 
   if (type === "mouse_move_home" && path === "/") {
     const bucket = resolveHeatmapBucket(body);
     const device = normalizeDevice(body.device);
     if (bucket) {
+      current.heatmapHomeV2[bucket] = (current.heatmapHomeV2[bucket] || 0) + 1;
+      current.heatmapHomeByDeviceV2[device][bucket] =
+        (current.heatmapHomeByDeviceV2[device][bucket] || 0) + 1;
       current.heatmapHome[bucket] = (current.heatmapHome[bucket] || 0) + 1;
       current.heatmapHomeByDevice[device][bucket] =
         (current.heatmapHomeByDevice[device][bucket] || 0) + 1;

@@ -34,6 +34,11 @@ type Summary = {
     desktop: Record<string, number>;
     mobile: Record<string, number>;
   };
+  heatmapHomeV2?: Record<string, number>;
+  heatmapHomeByDeviceV2?: {
+    desktop: Record<string, number>;
+    mobile: Record<string, number>;
+  };
   normalizeFilters?: {
     ranAt: string;
     total: number;
@@ -70,6 +75,11 @@ const EMPTY: Summary = {
   },
   heatmapHome: {},
   heatmapHomeByDevice: {
+    desktop: {},
+    mobile: {},
+  },
+  heatmapHomeV2: {},
+  heatmapHomeByDeviceV2: {
     desktop: {},
     mobile: {},
   },
@@ -446,23 +456,17 @@ export default function AdminAnalyticsPage() {
     )}`;
   }, [range, rangeDays]);
   const heatmapDesktop = useMemo(
-    () => parseHeatmapCells(summary.heatmapHomeByDevice?.desktop || {}),
-    [summary.heatmapHomeByDevice]
+    () => parseHeatmapCells(summary.heatmapHomeByDeviceV2?.desktop || {}),
+    [summary.heatmapHomeByDeviceV2]
   );
   const heatmapMobile = useMemo(
-    () => parseHeatmapCells(summary.heatmapHomeByDevice?.mobile || {}),
-    [summary.heatmapHomeByDevice]
-  );
-  const heatmapCombined = useMemo(
-    () => parseHeatmapCells(summary.heatmapHome || {}),
-    [summary.heatmapHome]
+    () => parseHeatmapCells(summary.heatmapHomeByDeviceV2?.mobile || {}),
+    [summary.heatmapHomeByDeviceV2]
   );
   const heatmap = heatmapDeviceTab === "desktop" ? heatmapDesktop : heatmapMobile;
-  const heatmapFallback =
-    !heatmap.cells.length && heatmapCombined.cells.length ? heatmapCombined : heatmap;
   const heatmapTotal = useMemo(
-    () => heatmapFallback.cells.reduce((acc, cell) => acc + cell.value, 0),
-    [heatmapFallback.cells]
+    () => heatmap.cells.reduce((acc, cell) => acc + cell.value, 0),
+    [heatmap.cells]
   );
 
   function setView(next: "dashboard" | "heatmap") {
@@ -813,7 +817,7 @@ export default function AdminAnalyticsPage() {
               </div>
               <div className={`${metricCardClass} xl:col-span-4`}>
                 <div className="text-xs text-zinc-500">Células com atividade</div>
-                <div className="mt-2 text-2xl text-zinc-100">{heatmapFallback.cells.length}</div>
+                <div className="mt-2 text-2xl text-zinc-100">{heatmap.cells.length}</div>
               </div>
               <div className={`${metricCardClass} xl:col-span-4`}>
                 <div className="text-xs text-zinc-500">Última atualização</div>
@@ -876,8 +880,8 @@ export default function AdminAnalyticsPage() {
                     className="pointer-events-none absolute inset-0 h-full w-full opacity-60 saturate-0"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/10 to-zinc-950/60" />
-                  {heatmapFallback.cells.map((cell) => {
-                    const ratio = heatmapFallback.max ? cell.value / heatmapFallback.max : 0;
+                  {heatmap.cells.map((cell) => {
+                    const ratio = heatmap.max ? cell.value / heatmap.max : 0;
                     return (
                       <div
                         key={cell.key}
@@ -900,9 +904,9 @@ export default function AdminAnalyticsPage() {
                   Quente
                 </div>
               </div>
-              {!heatmap.cells.length && heatmapCombined.cells.length ? (
+              {!heatmap.cells.length ? (
                 <div className="mt-2 text-xs text-zinc-500">
-                  Sem base separada por dispositivo ainda; exibindo dados gerais coletados anteriormente.
+                  Sem dados na base nova ainda. Navegue na home para iniciar a coleta precisa.
                 </div>
               ) : null}
             </div>
