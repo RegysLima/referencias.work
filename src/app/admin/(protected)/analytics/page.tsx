@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+const HEATMAP_COLS = 24;
+const HEATMAP_ROWS = 120;
 
 type Summary = {
   total: number;
@@ -778,7 +780,7 @@ export default function AdminAnalyticsPage() {
             <div className={`${panelCardClass} overflow-hidden`}>
               <div className={panelTitleClass}>Heatmap de mouse (home)</div>
               <div className="mt-1 text-xs text-zinc-500">
-                Visualização por dispositivo com escala fria/quente.
+                Mapa vertical estilo sessão completa, com largura desktop estável.
               </div>
               <div className="mt-3 inline-flex rounded-md border border-zinc-800 bg-zinc-950/50 p-1">
                 <button
@@ -804,14 +806,15 @@ export default function AdminAnalyticsPage() {
                   Mobile
                 </button>
               </div>
-              <div
-                className={`mt-4 rounded-lg border border-zinc-800 ${
-                  heatmapDeviceTab === "desktop" ? "w-full" : "mx-auto w-full max-w-sm"
-                }`}
-              >
+              <div className="mt-2 flex items-center justify-end text-[11px] text-zinc-500">
+                Role verticalmente para explorar a página completa
+              </div>
+              <div className="mt-2 h-[75vh] overflow-y-auto overflow-x-hidden rounded-lg border border-zinc-800 bg-zinc-950/90">
                 <div
-                  className={`relative overflow-hidden bg-zinc-950/90 ${
-                    heatmapDeviceTab === "desktop" ? "aspect-[16/9]" : "aspect-[9/19]"
+                  className={`relative mx-auto overflow-hidden ${
+                    heatmapDeviceTab === "desktop"
+                      ? "h-[3300px] w-full max-w-[1220px]"
+                      : "h-[3000px] w-full max-w-[390px]"
                   }`}
                 >
                   <iframe
@@ -819,7 +822,7 @@ export default function AdminAnalyticsPage() {
                     title={`Prévia da home ${heatmapDeviceTab}`}
                     className="pointer-events-none absolute inset-0 h-full w-full opacity-60 saturate-0"
                   />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/5 to-zinc-950/55" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/10 to-zinc-950/60" />
                   {heatmapFallback.cells.map((cell) => {
                     const ratio = heatmapFallback.max ? cell.value / heatmapFallback.max : 0;
                     return (
@@ -827,21 +830,21 @@ export default function AdminAnalyticsPage() {
                         key={cell.key}
                         className="absolute"
                         style={{
-                          left: `${(cell.x / 24) * 100}%`,
-                          top: `${(cell.y / 14) * 100}%`,
-                          width: `${100 / 24}%`,
-                          height: `${100 / 14}%`,
+                          left: `${(cell.x / HEATMAP_COLS) * 100}%`,
+                          top: `${(cell.y / HEATMAP_ROWS) * 100}%`,
+                          width: `${100 / HEATMAP_COLS}%`,
+                          height: `${100 / HEATMAP_ROWS}%`,
                           background: getHeatColor(ratio),
                         }}
                         title={`${cell.value} movimentos`}
                       />
                     );
                   })}
-                  <div className="pointer-events-none absolute bottom-4 right-4 rounded-md border border-zinc-700/80 bg-zinc-950/85 px-3 py-1.5 text-[11px] text-zinc-300">
-                    Frio
-                    <span className="mx-1 inline-block h-2 w-20 align-middle bg-gradient-to-r from-blue-500 via-cyan-400 via-yellow-400 to-red-500" />
-                    Quente
-                  </div>
+                </div>
+                <div className="pointer-events-none sticky bottom-4 ml-auto mr-4 mt-[-36px] w-fit rounded-md border border-zinc-700/80 bg-zinc-950/85 px-3 py-1.5 text-[11px] text-zinc-300">
+                  Frio
+                  <span className="mx-1 inline-block h-2 w-20 align-middle bg-gradient-to-r from-blue-500 via-cyan-400 via-yellow-400 to-red-500" />
+                  Quente
                 </div>
               </div>
               {!heatmap.cells.length && heatmapCombined.cells.length ? (

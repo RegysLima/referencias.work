@@ -20,6 +20,8 @@ type EventPayload = {
   y?: number;
   vw?: number;
   vh?: number;
+  sy?: number;
+  dh?: number;
 };
 
 const SESSION_KEY = "rw_session_id";

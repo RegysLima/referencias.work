@@ -5,6 +5,8 @@ const KV_KEY = "analytics:summary";
 const KV_ENABLED = Boolean(
   process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN,
 );
+const HEATMAP_COLS = 24;
+const HEATMAP_ROWS = 120;
 
 type Summary = {
   total: number;
@@ -136,19 +138,23 @@ function resolveHeatmapBucket(body: {
   y?: number;
   vw?: number;
   vh?: number;
+  sy?: number;
+  dh?: number;
 }) {
-  const cols = 24;
-  const rows = 14;
   const x = Number(body?.x);
   const y = Number(body?.y);
   const vw = Number(body?.vw);
   const vh = Number(body?.vh);
+  const sy = Number(body?.sy);
+  const dh = Number(body?.dh);
   if (![x, y, vw, vh].every(Number.isFinite) || vw <= 0 || vh <= 0) return null;
 
   const nx = clamp01(x / vw);
-  const ny = clamp01(y / vh);
-  const cx = Math.min(cols - 1, Math.max(0, Math.floor(nx * cols)));
-  const cy = Math.min(rows - 1, Math.max(0, Math.floor(ny * rows)));
+  const rawPageY = Number.isFinite(sy) ? y + Math.max(0, sy) : y;
+  const pageHeight = Number.isFinite(dh) && dh > 0 ? dh : vh;
+  const ny = clamp01(rawPageY / pageHeight);
+  const cx = Math.min(HEATMAP_COLS - 1, Math.max(0, Math.floor(nx * HEATMAP_COLS)));
+  const cy = Math.min(HEATMAP_ROWS - 1, Math.max(0, Math.floor(ny * HEATMAP_ROWS)));
   return `${cx}:${cy}`;
 }
 
@@ -177,6 +183,8 @@ export async function POST(req: Request) {
     y?: number;
     vw?: number;
     vh?: number;
+    sy?: number;
+    dh?: number;
   };
   const type = normalizeType((body?.type || "page").toString());
   const path = (body?.path || "/").toString().slice(0, 200);

@@ -49,6 +49,16 @@ export default function AnalyticsTracker() {
 
       const vw = Math.max(window.innerWidth || 0, 1);
       const vh = Math.max(window.innerHeight || 0, 1);
+      const sy = Math.max(window.scrollY || window.pageYOffset || 0, 0);
+      const root = document.documentElement;
+      const body = document.body;
+      const dh = Math.max(
+        root?.scrollHeight || 0,
+        body?.scrollHeight || 0,
+        root?.offsetHeight || 0,
+        body?.offsetHeight || 0,
+        vh
+      );
       lastAt = now;
       lastX = event.clientX;
       lastY = event.clientY;
@@ -60,6 +70,8 @@ export default function AnalyticsTracker() {
         y: event.clientY,
         vw,
         vh,
+        sy,
+        dh,
       });
     };
 
