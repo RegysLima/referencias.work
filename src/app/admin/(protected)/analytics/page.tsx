@@ -266,6 +266,7 @@ function getInteractionLabel(type: string) {
     filter_apply: "Aplicar filtro",
     donation_card_view: "Card de apoio (view)",
     donation_card_dismiss: "Card de apoio (fechar)",
+    donation_card_minimize: "Card de apoio (minimizar)",
     donation_pix_click: "Apoio via Pix",
     donation_paypal_click: "Apoio via PayPal",
     donation_cta_click: "CTA de apoio",

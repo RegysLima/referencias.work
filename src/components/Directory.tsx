@@ -500,7 +500,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [pixCopied, setPixCopied] = useState(false);
   const [pixModalOpen, setPixModalOpen] = useState(false);
   const [supportCardVisible, setSupportCardVisible] = useState(false);
-  const [supportCardDismissed, setSupportCardDismissed] = useState(false);
+  const [supportCardDismissed] = useState(false);
   const [hideSupportCardBySection, setHideSupportCardBySection] = useState(false);
   const supportSectionRef = useRef<HTMLElement | null>(null);
   const donationViewTrackedRef = useRef(false);
@@ -693,8 +693,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }
 
   function dismissSupportCard() {
-    sendAnalyticsEvent({ type: "donation_card_dismiss", lang });
-    setSupportCardDismissed(true);
+    sendAnalyticsEvent({ type: "donation_card_minimize", lang });
     setSupportCardVisible(false);
   }
 
@@ -1809,14 +1808,15 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               <button
                 onClick={dismissSupportCard}
                 className={[
-                  "text-sm underline underline-offset-2",
+                  "inline-flex h-7 w-7 items-center justify-center border text-lg leading-none",
                   theme === "dark"
-                    ? "text-[#3f3f46] hover:text-[#111111]"
-                    : "text-zinc-300 hover:text-zinc-100",
+                    ? "border-zinc-400/60 text-[#3f3f46] hover:border-[#111111] hover:text-[#111111]"
+                    : "border-zinc-400/50 text-zinc-300 hover:border-zinc-100 hover:text-zinc-100",
                 ].join(" ")}
-                aria-label="Fechar card de apoio"
+                aria-label="Minimizar card de apoio"
+                title="Minimizar"
               >
-                Fechar
+                −
               </button>
             </div>
 
