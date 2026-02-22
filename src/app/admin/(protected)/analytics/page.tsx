@@ -272,6 +272,7 @@ function getInteractionLabel(type: string) {
     donation_trigger_ref: "Abertura por clique em referência",
     donation_trigger_load_more: "Abertura por carregar mais",
     donation_trigger_session: "Abertura por tempo de sessão",
+    donation_pix_modal_open: "Abrir modal Pix",
     pix_copy_code: "Copiar código Pix",
     search: "Busca",
     search_no_results: "Busca sem resultado",

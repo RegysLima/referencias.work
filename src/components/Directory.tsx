@@ -472,6 +472,11 @@ const MACRO_MENU = ["all", "Studios", "Designers", "Illustrators", "Photographer
 const PIX_CODE =
   "00020126580014BR.GOV.BCB.PIX0136d52e1499-3171-46ca-aa76-e02272dc624a5204000053039865802BR5925Francysregys Rodrigues de6009SAO PAULO62140510pFvdvHdqLY6304C9A4";
 
+function getPixQrCodeUrl() {
+  const data = encodeURIComponent(PIX_CODE);
+  return `https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=12&data=${data}`;
+}
+
 export default function Directory({ items }: { items: AnyItem[] }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -493,6 +498,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [visibleCount, setVisibleCount] = useState(10);
   const [toast, setToast] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
+  const [pixModalOpen, setPixModalOpen] = useState(false);
   const [supportCardVisible, setSupportCardVisible] = useState(false);
   const [supportCardDismissed, setSupportCardDismissed] = useState(false);
   const [hideSupportCardBySection, setHideSupportCardBySection] = useState(false);
@@ -589,6 +595,15 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }, [pixCopied]);
 
   useEffect(() => {
+    if (!pixModalOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPixModalOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [pixModalOpen]);
+
+  useEffect(() => {
     if (supportCardDismissed) return;
 
     const onScroll = () => {
@@ -666,6 +681,15 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     } catch {
       showToast("Não foi possível copiar");
     }
+  }
+
+  function openPixSupport() {
+    if (isMobile) {
+      copyPixCode();
+      return;
+    }
+    sendAnalyticsEvent({ type: "donation_pix_modal_open", lang });
+    setPixModalOpen(true);
   }
 
   function dismissSupportCard() {
@@ -1653,10 +1677,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <div className="flex flex-col items-center gap-4 sm:border-r sm:border-zinc-200 sm:pr-10">
               <div className="text-xs uppercase tracking-[0.18em] text-zinc-900">Em reais via pix</div>
               <button
-                onClick={copyPixCode}
+                onClick={openPixSupport}
                 className="btn cursor-pointer px-5 py-2 text-[16px] tracking-[0.02em]"
               >
-                {pixCopied ? "Código copiado" : "Copiar código Pix"}
+                {isMobile ? (pixCopied ? "Código copiado" : "Copiar código Pix") : "Abrir QR Code Pix"}
               </button>
             </div>
 
@@ -1799,7 +1823,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             <div className="mt-4 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <button
-                  onClick={copyPixCode}
+                  onClick={openPixSupport}
                   className={[
                     "cursor-pointer rounded-none border px-4 py-3 text-base tracking-[0.02em] transition",
                     theme === "dark"
@@ -1807,7 +1831,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                       : "border-zinc-500 bg-zinc-50 text-zinc-950 hover:bg-white",
                   ].join(" ")}
                 >
-                  {pixCopied ? "Pix copiado ✓" : "Pix"}
+                  {isMobile ? (pixCopied ? "Pix copiado ✓" : "Pix") : "Pix QR"}
                 </button>
                 <form action="https://www.paypal.com/donate" method="post" target="_top">
                   <input type="hidden" name="hosted_button_id" value="E9XXLCKPSMR3E" />
@@ -1825,6 +1849,51 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   </button>
                 </form>
               </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {pixModalOpen ? (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/65 p-4"
+          onClick={() => setPixModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-[420px] border border-zinc-800 bg-zinc-950 p-5 text-zinc-100"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-xs uppercase tracking-[0.18em] text-zinc-400">Pix</div>
+                <div className="mt-1 text-base">
+                  {lang === "en"
+                    ? "Scan the QR code or copy the Pix code."
+                    : lang === "es"
+                    ? "Escanea el QR o copia el código Pix."
+                    : "Escaneie o QR code ou copie o código Pix."}
+                </div>
+              </div>
+              <button
+                onClick={() => setPixModalOpen(false)}
+                className="border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:border-zinc-400 hover:text-zinc-100"
+              >
+                Fechar
+              </button>
+            </div>
+
+            <div className="mt-4 border border-zinc-800 bg-white p-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={getPixQrCodeUrl()} alt="QR Code Pix" className="h-auto w-full" />
+            </div>
+
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={copyPixCode}
+                className="border border-zinc-500 bg-zinc-100 px-4 py-2 text-sm text-zinc-950 hover:bg-white"
+              >
+                {pixCopied ? "Código copiado ✓" : "Copiar código Pix"}
+              </button>
             </div>
           </div>
         </div>
