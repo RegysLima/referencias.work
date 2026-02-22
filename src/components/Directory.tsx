@@ -1743,7 +1743,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         <button
           type="button"
           onClick={() => openSupportCardBy("cta")}
-          className="fixed bottom-5 right-5 z-40 border border-zinc-300 bg-white/95 px-4 py-2 text-sm text-zinc-900 shadow-sm backdrop-blur transition hover:border-zinc-900 lg:text-[15px]"
+          className={[
+            "fixed bottom-5 right-5 z-40 border px-4 py-2 text-sm shadow-sm backdrop-blur transition lg:text-[15px]",
+            theme === "dark"
+              ? "border-zinc-500 bg-zinc-950/90 text-zinc-100 hover:border-zinc-200"
+              : "border-zinc-300 bg-white/95 text-zinc-900 hover:border-zinc-900",
+          ].join(" ")}
         >
           {lang === "en" ? "Support project" : lang === "es" ? "Apoyar proyecto" : "Apoiar projeto"}
         </button>
@@ -1792,18 +1797,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             </div>
 
             <div className="mt-4 space-y-3">
-              <p
-                className={[
-                  "text-sm leading-relaxed",
-                  theme === "dark" ? "text-[#1f2937]" : "text-zinc-200",
-                ].join(" ")}
-              >
-                {lang === "en"
-                  ? "Contribute with Pix or PayPal to keep referencias.work active."
-                  : lang === "es"
-                  ? "Contribuye con Pix o PayPal para mantener referencias.work activo."
-                  : "Contribua com Pix ou PayPal para manter o referencias.work ativo."}
-              </p>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={copyPixCode}
