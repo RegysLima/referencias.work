@@ -28,6 +28,12 @@ type Summary = {
   byDaySearchQuery?: Record<string, Record<string, number>>;
   byNoResultQuery?: Record<string, number>;
   byDayNoResultQuery?: Record<string, Record<string, number>>;
+  byCountry?: Record<string, number>;
+  byCity?: Record<string, number>;
+  byDevice?: Record<string, number>;
+  byDayCountry?: Record<string, Record<string, number>>;
+  byDayCity?: Record<string, Record<string, number>>;
+  byDayDevice?: Record<string, Record<string, number>>;
   donation?: {
     cardView: number;
     pixClick: number;
@@ -109,6 +115,12 @@ function normalizeSummaryLangs(summary: Summary): Summary {
     byDaySearchQuery: summary.byDaySearchQuery || {},
     byNoResultQuery: summary.byNoResultQuery || {},
     byDayNoResultQuery: summary.byDayNoResultQuery || {},
+    byCountry: summary.byCountry || {},
+    byCity: summary.byCity || {},
+    byDevice: summary.byDevice || {},
+    byDayCountry: summary.byDayCountry || {},
+    byDayCity: summary.byDayCity || {},
+    byDayDevice: summary.byDayDevice || {},
     donation: summary.donation || {
       cardView: 0,
       pixClick: 0,
@@ -150,6 +162,12 @@ export async function GET() {
       byDaySearchQuery: {},
       byNoResultQuery: {},
       byDayNoResultQuery: {},
+      byCountry: {},
+      byCity: {},
+      byDevice: {},
+      byDayCountry: {},
+      byDayCity: {},
+      byDayDevice: {},
       donation: {
         cardView: 0,
         pixClick: 0,

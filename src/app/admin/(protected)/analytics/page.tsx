@@ -23,6 +23,12 @@ type Summary = {
   byDaySearchQuery?: Record<string, Record<string, number>>;
   byNoResultQuery?: Record<string, number>;
   byDayNoResultQuery?: Record<string, Record<string, number>>;
+  byCountry?: Record<string, number>;
+  byCity?: Record<string, number>;
+  byDevice?: Record<string, number>;
+  byDayCountry?: Record<string, Record<string, number>>;
+  byDayCity?: Record<string, Record<string, number>>;
+  byDayDevice?: Record<string, Record<string, number>>;
   donation?: {
     cardView: number;
     pixClick: number;
@@ -67,6 +73,12 @@ const EMPTY: Summary = {
   byDaySearchQuery: {},
   byNoResultQuery: {},
   byDayNoResultQuery: {},
+  byCountry: {},
+  byCity: {},
+  byDevice: {},
+  byDayCountry: {},
+  byDayCity: {},
+  byDayDevice: {},
   donation: {
     cardView: 0,
     pixClick: 0,
@@ -188,22 +200,10 @@ function sumByDayType(summary: Summary, days: string[]) {
   return result;
 }
 
-function sumByDaySearchQuery(summary: Summary, days: string[]) {
+function sumByDayMap(source: Record<string, Record<string, number>> | undefined, days: string[]) {
   const result: Record<string, number> = {};
   for (const day of days) {
-    const row = summary.byDaySearchQuery?.[day];
-    if (!row) continue;
-    for (const [key, count] of Object.entries(row)) {
-      result[key] = (result[key] || 0) + count;
-    }
-  }
-  return result;
-}
-
-function sumByDayNoResultQuery(summary: Summary, days: string[]) {
-  const result: Record<string, number> = {};
-  for (const day of days) {
-    const row = summary.byDayNoResultQuery?.[day];
+    const row = source?.[day];
     if (!row) continue;
     for (const [key, count] of Object.entries(row)) {
       result[key] = (result[key] || 0) + count;
@@ -393,24 +393,29 @@ export default function AdminAnalyticsPage() {
     return sumByDayType(summary, rangeDays);
   }, [summary, range, rangeDays]);
 
-  const filteredSearchQueries = useMemo(() => {
-    if (range === "all") return summary.bySearchQuery || {};
-    return sumByDaySearchQuery(summary, rangeDays);
-  }, [summary, range, rangeDays]);
+  const filteredCountries = useMemo(() => {
+    if (range === "all") return summary.byCountry || {};
+    return sumByDayMap(summary.byDayCountry, rangeDays);
+  }, [summary.byCountry, summary.byDayCountry, range, rangeDays]);
+
+  const filteredCities = useMemo(() => {
+    if (range === "all") return summary.byCity || {};
+    return sumByDayMap(summary.byDayCity, rangeDays);
+  }, [summary.byCity, summary.byDayCity, range, rangeDays]);
+
+  const filteredDevices = useMemo(() => {
+    if (range === "all") return summary.byDevice || {};
+    return sumByDayMap(summary.byDayDevice, rangeDays);
+  }, [summary.byDevice, summary.byDayDevice, range, rangeDays]);
 
   const refRows = useMemo(() => toRows(filteredRefs).slice(0, 10), [filteredRefs]);
-  const searchRows = useMemo(
-    () => toRows(filteredSearchQueries).slice(0, 10),
-    [filteredSearchQueries]
-  );
-  const filteredNoResultSearchQueries = useMemo(() => {
-    if (range === "all") return summary.byNoResultQuery || {};
-    return sumByDayNoResultQuery(summary, rangeDays);
-  }, [summary, range, rangeDays]);
-  const noResultSearchRows = useMemo(
-    () => toRows(filteredNoResultSearchQueries).slice(0, 10),
-    [filteredNoResultSearchQueries]
-  );
+  const countryRows = useMemo(() => toRows(filteredCountries).slice(0, 10), [filteredCountries]);
+  const cityRows = useMemo(() => toRows(filteredCities).slice(0, 10), [filteredCities]);
+  const desktopAccess = filteredDevices.desktop || 0;
+  const mobileAccess = filteredDevices.mobile || 0;
+  const deviceKnownTotal = desktopAccess + mobileAccess;
+  const desktopShare = deviceKnownTotal ? ((desktopAccess / deviceKnownTotal) * 100).toFixed(1) : "0.0";
+  const mobileShare = deviceKnownTotal ? ((mobileAccess / deviceKnownTotal) * 100).toFixed(1) : "0.0";
   const interactionRows = useMemo(
     () => {
       const base = Object.entries(filteredTypes).filter(([type]) => type !== "page" && type !== "ref");
@@ -432,7 +437,6 @@ export default function AdminAnalyticsPage() {
   const donationClickRate = donationViews
     ? (((pixClicks + paypalClicks) / donationViews) * 100).toFixed(1)
     : "0.0";
-  const searchTotalInRange = filteredTypes.search || summary.searchTotal || 0;
   const tickDays = useMemo(() => {
     const len = rangeDays.length;
     if (!len) return [];
@@ -679,10 +683,6 @@ export default function AdminAnalyticsPage() {
           </div>
         </div>
         <div className={`${metricCardClass} xl:col-span-3`}>
-          <div className="text-xs text-zinc-500">Buscas no período</div>
-          <div className="mt-2 text-2xl text-zinc-100">{searchTotalInRange}</div>
-        </div>
-        <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Views do card de apoio</div>
           <div className="mt-2 text-2xl text-zinc-100">{donationViews}</div>
         </div>
@@ -696,6 +696,16 @@ export default function AdminAnalyticsPage() {
         <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Taxa clique no apoio</div>
           <div className="mt-2 text-2xl text-zinc-100">{donationClickRate}%</div>
+        </div>
+        <div className={`${metricCardClass} xl:col-span-3`}>
+          <div className="text-xs text-zinc-500">Acessos desktop</div>
+          <div className="mt-2 text-2xl text-zinc-100">{desktopAccess}</div>
+          <div className="mt-1 text-xs text-zinc-500">{desktopShare}% dos dispositivos</div>
+        </div>
+        <div className={`${metricCardClass} xl:col-span-3`}>
+          <div className="text-xs text-zinc-500">Acessos mobile</div>
+          <div className="mt-2 text-2xl text-zinc-100">{mobileAccess}</div>
+          <div className="mt-1 text-xs text-zinc-500">{mobileShare}% dos dispositivos</div>
         </div>
       </div>
 
@@ -767,13 +777,13 @@ export default function AdminAnalyticsPage() {
             )}
           </div>
         </div>
-        <div className={`${panelCardClass} xl:col-span-6`}>
-          <div className={panelTitleClass}>Top buscas</div>
+        <div className={`${panelCardClass} xl:col-span-4`}>
+          <div className={panelTitleClass}>Países de acesso</div>
           <div className="mt-4 space-y-2 text-sm text-zinc-300">
-            {searchRows.length ? (
-              searchRows.map(([query, count], idx) => (
-                <div key={`${query}-${idx}`} className="flex items-center justify-between">
-                  <span className="truncate">{query}</span>
+            {countryRows.length ? (
+              countryRows.map(([country, count], idx) => (
+                <div key={`${country}-${idx}`} className="flex items-center justify-between">
+                  <span className="truncate">{country}</span>
                   <span className="text-zinc-500">{count}</span>
                 </div>
               ))
@@ -782,14 +792,13 @@ export default function AdminAnalyticsPage() {
             )}
           </div>
         </div>
-
-        <div className={`${panelCardClass} xl:col-span-3`}>
-          <div className={panelTitleClass}>Buscas sem resultado</div>
+        <div className={`${panelCardClass} xl:col-span-4`}>
+          <div className={panelTitleClass}>Cidades de acesso</div>
           <div className="mt-4 space-y-2 text-sm text-zinc-300">
-            {noResultSearchRows.length ? (
-              noResultSearchRows.map(([query, count], idx) => (
-                <div key={`${query}-${idx}`} className="flex items-center justify-between">
-                  <span className="truncate">{query}</span>
+            {cityRows.length ? (
+              cityRows.map(([city, count], idx) => (
+                <div key={`${city}-${idx}`} className="flex items-center justify-between">
+                  <span className="truncate">{city}</span>
                   <span className="text-zinc-500">{count}</span>
                 </div>
               ))
@@ -798,7 +807,7 @@ export default function AdminAnalyticsPage() {
             )}
           </div>
         </div>
-        <div className={`${panelCardClass} xl:col-span-3`}>
+        <div className={`${panelCardClass} xl:col-span-4`}>
           <div className={panelTitleClass}>Eventos de interação</div>
           <div className="mt-4 space-y-2 text-sm text-zinc-300">
             {interactionRows.length ? (

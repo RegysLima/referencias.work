@@ -26,6 +26,12 @@ type Summary = {
   byDaySearchQuery?: Record<string, Record<string, number>>;
   byNoResultQuery?: Record<string, number>;
   byDayNoResultQuery?: Record<string, Record<string, number>>;
+  byCountry?: Record<string, number>;
+  byCity?: Record<string, number>;
+  byDevice?: Record<string, number>;
+  byDayCountry?: Record<string, Record<string, number>>;
+  byDayCity?: Record<string, Record<string, number>>;
+  byDayDevice?: Record<string, Record<string, number>>;
   donation?: {
     cardView: number;
     pixClick: number;
@@ -131,6 +137,50 @@ function normalizeDevice(value: string | undefined): "desktop" | "mobile" {
   return "desktop";
 }
 
+function decodeHeaderValue(value: string | null) {
+  if (!value) return "";
+  try {
+    return decodeURIComponent(value).trim();
+  } catch {
+    return value.trim();
+  }
+}
+
+function normalizeGeoLabel(value: string, fallback: string) {
+  const cleaned = (value || "")
+    .replace(/\+/g, " ")
+    .replace(/\s+/g, " ")
+    .replace(/[^\p{L}\p{N}\s.'-]/gu, "")
+    .trim();
+  return cleaned || fallback;
+}
+
+function detectDeviceFromRequest(req: Request, fallbackDevice?: string) {
+  if (fallbackDevice) return normalizeDevice(fallbackDevice);
+  const ua = (req.headers.get("user-agent") || "").toLowerCase();
+  if (!ua) return "desktop";
+  if (
+    ua.includes("mobile") ||
+    ua.includes("android") ||
+    ua.includes("iphone") ||
+    ua.includes("ipad")
+  ) {
+    return "mobile";
+  }
+  return "desktop";
+}
+
+function detectGeoFromRequest(req: Request) {
+  const country =
+    normalizeGeoLabel(
+      decodeHeaderValue(req.headers.get("x-vercel-ip-country-region") || req.headers.get("x-vercel-ip-country-name")),
+      ""
+    ) ||
+    normalizeGeoLabel(decodeHeaderValue(req.headers.get("x-vercel-ip-country")), "Desconhecido");
+  const city = normalizeGeoLabel(decodeHeaderValue(req.headers.get("x-vercel-ip-city")), "Desconhecido");
+  return { country, city };
+}
+
 function clamp01(value: number) {
   if (!Number.isFinite(value)) return 0;
   if (value < 0) return 0;
@@ -219,6 +269,12 @@ export async function POST(req: Request) {
     byDaySearchQuery: {},
     byNoResultQuery: {},
     byDayNoResultQuery: {},
+    byCountry: {},
+    byCity: {},
+    byDevice: {},
+    byDayCountry: {},
+    byDayCity: {},
+    byDayDevice: {},
     donation: {
       cardView: 0,
       pixClick: 0,
@@ -243,6 +299,12 @@ export async function POST(req: Request) {
   current.byDaySearchQuery = current.byDaySearchQuery || {};
   current.byNoResultQuery = current.byNoResultQuery || {};
   current.byDayNoResultQuery = current.byDayNoResultQuery || {};
+  current.byCountry = current.byCountry || {};
+  current.byCity = current.byCity || {};
+  current.byDevice = current.byDevice || {};
+  current.byDayCountry = current.byDayCountry || {};
+  current.byDayCity = current.byDayCity || {};
+  current.byDayDevice = current.byDayDevice || {};
   current.donation = current.donation || { cardView: 0, pixClick: 0, paypalClick: 0, dismiss: 0 };
   current.heatmapHome = current.heatmapHome || {};
   current.heatmapHomeByDevice = current.heatmapHomeByDevice || {
@@ -276,6 +338,8 @@ export async function POST(req: Request) {
   }
 
   const day = todayKey();
+  const geo = detectGeoFromRequest(req);
+  const device = detectDeviceFromRequest(req, body?.device);
   current.byType[type] = (current.byType[type] || 0) + 1;
   current.byDayType[day] = current.byDayType[day] || {};
   current.byDayType[day][type] = (current.byDayType[day][type] || 0) + 1;
@@ -330,6 +394,23 @@ export async function POST(req: Request) {
     current.byDayPathLang[day][path] = current.byDayPathLang[day][path] || {};
     current.byDayPathLang[day][path][lang] =
       (current.byDayPathLang[day][path][lang] || 0) + 1;
+
+    if (type === "page") {
+      current.byCountry[geo.country] = (current.byCountry[geo.country] || 0) + 1;
+      current.byCity[geo.city] = (current.byCity[geo.city] || 0) + 1;
+      current.byDevice[device] = (current.byDevice[device] || 0) + 1;
+
+      current.byDayCountry[day] = current.byDayCountry[day] || {};
+      current.byDayCity[day] = current.byDayCity[day] || {};
+      current.byDayDevice[day] = current.byDayDevice[day] || {};
+
+      current.byDayCountry[day][geo.country] =
+        (current.byDayCountry[day][geo.country] || 0) + 1;
+      current.byDayCity[day][geo.city] =
+        (current.byDayCity[day][geo.city] || 0) + 1;
+      current.byDayDevice[day][device] =
+        (current.byDayDevice[day][device] || 0) + 1;
+    }
   }
   current.lastUpdated = new Date().toISOString();
 
