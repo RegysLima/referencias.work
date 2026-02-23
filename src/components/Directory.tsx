@@ -503,6 +503,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [supportCardDismissed] = useState(false);
   const [hideSupportCardBySection, setHideSupportCardBySection] = useState(false);
   const supportSectionRef = useRef<HTMLElement | null>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
   const donationViewTrackedRef = useRef(false);
   const refClicksCountRef = useRef(0);
   const loadMoreClicksCountRef = useRef(0);
@@ -604,6 +605,25 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   }, [pixModalOpen]);
 
   useEffect(() => {
+    if (!isMobile) return;
+    if (typeof window === "undefined" || !window.visualViewport) return;
+
+    const handleViewportResize = () => {
+      const el = searchInputRef.current;
+      if (!el) return;
+      if (document.activeElement !== el) return;
+      window.setTimeout(() => {
+        el.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
+      }, 50);
+    };
+
+    window.visualViewport.addEventListener("resize", handleViewportResize);
+    return () => {
+      window.visualViewport?.removeEventListener("resize", handleViewportResize);
+    };
+  }, [isMobile]);
+
+  useEffect(() => {
     if (supportCardDismissed) return;
 
     const onScroll = () => {
@@ -670,6 +690,18 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   function showToast(message: string) {
     setToast(message);
+  }
+
+  function focusSearchOnMobile() {
+    if (!isMobile) return;
+    const el = searchInputRef.current;
+    if (!el) return;
+    window.setTimeout(() => {
+      el.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
+    }, 60);
+    window.setTimeout(() => {
+      el.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
+    }, 260);
   }
 
   async function copyPixCode() {
@@ -1211,8 +1243,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               {ui.filters.search}
             </div>
             <input
+              ref={searchInputRef}
               value={q}
               onChange={(e) => setQ(e.target.value)}
+              onFocus={focusSearchOnMobile}
               placeholder={ui.filters.search.toLowerCase()}
               className="mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none placeholder:text-zinc-400"
             />
