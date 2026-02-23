@@ -477,10 +477,16 @@ function getPixQrCodeUrl() {
   return `https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=12&data=${data}`;
 }
 
-export default function Directory({ items }: { items: AnyItem[] }) {
+export default function Directory({
+  items,
+  initialLang = "en",
+}: {
+  items: AnyItem[];
+  initialLang?: Lang;
+}) {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const [lang, setLang] = useState<Lang>("pt");
+  const [lang, setLang] = useState<Lang>(initialLang);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [q, setQ] = useState("");
   const [macroKey, setMacroKey] = useState<string>(ALL_KEY);
@@ -523,11 +529,11 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     const params = new URLSearchParams(window.location.search);
     const fromUrl = params.get("lang");
     const stored = window.localStorage.getItem("rw_lang");
-    const initial = (fromUrl || stored || "pt") as Lang;
+    const initial = (fromUrl || stored || initialLang || "en") as Lang;
     if (initial === "pt" || initial === "en" || initial === "es") {
       setLang(initial);
     }
-  }, []);
+  }, [initialLang]);
 
   useEffect(() => {
     window.localStorage.setItem("rw_lang", lang);
