@@ -492,6 +492,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [isMobileCollapsed, setIsMobileCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [mobileHasScroll, setMobileHasScroll] = useState(false);
 
   const [seed, setSeed] = useState<number | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
@@ -502,6 +503,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [pixModalOpen, setPixModalOpen] = useState(false);
   const [supportCardVisible, setSupportCardVisible] = useState(false);
   const [supportCardDismissed] = useState(false);
+  const [supportMobileLockedAfterMinimize, setSupportMobileLockedAfterMinimize] = useState(false);
   const [hideSupportCardBySection, setHideSupportCardBySection] = useState(false);
   const supportSectionRef = useRef<HTMLElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -567,10 +569,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     if (!isMobile) {
       setIsMobileCollapsed(false);
       setMobileMenuOpen(false);
+      setMobileHasScroll(false);
       return;
     }
     let lastY = window.scrollY;
     const onScroll = () => {
+      setMobileHasScroll(window.scrollY > 16);
       if (searchFocused) return;
       const y = window.scrollY;
       if (y > 80 && y >= lastY) {
@@ -629,10 +633,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     if (supportCardDismissed) return;
 
     const onScroll = () => {
-      if (isMobile && window.scrollY > 1600) {
-        setSupportCardVisible(true);
-      }
-
       const supportSection = supportSectionRef.current;
       if (!supportSection) return;
       const rect = supportSection.getBoundingClientRect();
@@ -646,6 +646,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   useEffect(() => {
     if (supportCardDismissed || supportCardVisible) return;
+    if (isMobile) return;
 
     const startedAt = Date.now();
     let cancelled = false;
@@ -673,7 +674,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
       window.clearInterval(interval);
       window.removeEventListener("scroll", onScroll);
     };
-  }, [lang, supportCardDismissed, supportCardVisible]);
+  }, [isMobile, lang, supportCardDismissed, supportCardVisible]);
 
   useEffect(() => {
     if (hideMobileMenus && filtersOpen) {
@@ -732,11 +733,18 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   function dismissSupportCard() {
     sendAnalyticsEvent({ type: "donation_card_minimize", lang });
+    if (isMobile) {
+      setSupportMobileLockedAfterMinimize(true);
+    }
     setSupportCardVisible(false);
   }
 
   function openSupportCardBy(reason: "ref" | "load_more" | "cta") {
     if (supportCardDismissed) return;
+    if (isMobile) {
+      if (reason === "ref") return;
+      if (reason === "load_more" && supportMobileLockedAfterMinimize) return;
+    }
     if (reason === "ref" && !supportTriggerRef.current.byRef) {
       supportTriggerRef.current.byRef = true;
       sendAnalyticsEvent({ type: "donation_trigger_ref", lang });
@@ -747,6 +755,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     }
     if (reason === "cta") {
       sendAnalyticsEvent({ type: "donation_cta_click", lang });
+      if (isMobile) setSupportMobileLockedAfterMinimize(false);
     }
     setSupportCardVisible(true);
   }
@@ -758,10 +767,19 @@ export default function Directory({ items }: { items: AnyItem[] }) {
       macro,
     });
 
-    refClicksCountRef.current += 1;
-    if (refClicksCountRef.current >= 3) {
-      openSupportCardBy("ref");
+    if (!isMobile) {
+      refClicksCountRef.current += 1;
+      if (refClicksCountRef.current >= 3) {
+        openSupportCardBy("ref");
+      }
     }
+  }
+
+  function scrollToTopForFilters() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setIsMobileCollapsed(false);
+    setMobileMenuOpen(true);
+    setFiltersOpen(true);
   }
 
   function handleClear() {
@@ -1225,11 +1243,21 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             </div>
 
             <button
-              onClick={() => setFiltersOpen((v) => !v)}
+              onClick={() => {
+                if (isMobile && mobileHasScroll) {
+                  scrollToTopForFilters();
+                  return;
+                }
+                setFiltersOpen((v) => !v);
+              }}
               className="inline-flex whitespace-nowrap pt-2 text-[14px] sm:text-[16px] text-zinc-950 shrink-0"
               aria-expanded={filtersOpen}
             >
-              {filtersOpen ? `- ${ui.filters.toggle}` : `+ ${ui.filters.toggle}`}
+              {isMobile && mobileHasScroll
+                ? (lang === "en" ? "Top" : lang === "es" ? "Ir arriba" : "Voltar ao topo")
+                : filtersOpen
+                ? `- ${ui.filters.toggle}`
+                : `+ ${ui.filters.toggle}`}
             </button>
           </div>
         </div>
@@ -1678,8 +1706,12 @@ export default function Directory({ items }: { items: AnyItem[] }) {
                   value: String(visibleCount),
                 });
                 setVisibleCount((n) => Math.min(n + 5, Math.max(0, total - 1)));
-                loadMoreClicksCountRef.current += 1;
-                if (loadMoreClicksCountRef.current >= 2) openSupportCardBy("load_more");
+                if (isMobile) {
+                  openSupportCardBy("load_more");
+                } else {
+                  loadMoreClicksCountRef.current += 1;
+                  if (loadMoreClicksCountRef.current >= 2) openSupportCardBy("load_more");
+                }
               }}
               className="btn cursor-pointer px-6 py-3 text-[16px] tracking-[0.02em]"
             >
