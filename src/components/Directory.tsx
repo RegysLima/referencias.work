@@ -492,7 +492,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [isMobileCollapsed, setIsMobileCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
-  const [mobileHasScroll, setMobileHasScroll] = useState(false);
 
   const [seed, setSeed] = useState<number | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
@@ -569,12 +568,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     if (!isMobile) {
       setIsMobileCollapsed(false);
       setMobileMenuOpen(false);
-      setMobileHasScroll(false);
       return;
     }
     let lastY = window.scrollY;
     const onScroll = () => {
-      setMobileHasScroll(window.scrollY > 16);
       if (searchFocused) return;
       const y = window.scrollY;
       if (y > 80 && y >= lastY) {
@@ -773,13 +770,6 @@ export default function Directory({ items }: { items: AnyItem[] }) {
         openSupportCardBy("ref");
       }
     }
-  }
-
-  function scrollToTopForFilters() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    setIsMobileCollapsed(false);
-    setMobileMenuOpen(true);
-    setFiltersOpen(true);
   }
 
   function handleClear() {
@@ -1243,21 +1233,11 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             </div>
 
             <button
-              onClick={() => {
-                if (isMobile && mobileHasScroll) {
-                  scrollToTopForFilters();
-                  return;
-                }
-                setFiltersOpen((v) => !v);
-              }}
+              onClick={() => setFiltersOpen((v) => !v)}
               className="inline-flex whitespace-nowrap pt-2 text-[14px] sm:text-[16px] text-zinc-950 shrink-0"
               aria-expanded={filtersOpen}
             >
-              {isMobile && mobileHasScroll
-                ? (lang === "en" ? "Top" : lang === "es" ? "Ir arriba" : "Voltar ao topo")
-                : filtersOpen
-                ? `- ${ui.filters.toggle}`
-                : `+ ${ui.filters.toggle}`}
+              {filtersOpen ? `- ${ui.filters.toggle}` : `+ ${ui.filters.toggle}`}
             </button>
           </div>
         </div>
@@ -1287,6 +1267,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             />
           </div>
 
+          {!isMobile ? (
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-400">
               {ui.filters.category}
@@ -1314,6 +1295,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               ))}
             </select>
           </div>
+          ) : null}
 
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-400">
@@ -1342,6 +1324,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
             </select>
           </div>
 
+          {!isMobile ? (
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-400">
               {ui.filters.areaSecondary}
@@ -1368,7 +1351,9 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               ))}
             </select>
           </div>
+          ) : null}
 
+          {!isMobile ? (
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-400">
               {ui.filters.country}
@@ -1396,7 +1381,9 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               ))}
             </select>
           </div>
+          ) : null}
 
+          {!isMobile ? (
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-400">
               {ui.filters.city}
@@ -1424,6 +1411,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               ))}
             </select>
           </div>
+          ) : null}
 
           <div className="flex items-center justify-between gap-4 lg:justify-end">
             <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400">
