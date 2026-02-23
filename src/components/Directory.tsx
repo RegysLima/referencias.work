@@ -491,6 +491,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileCollapsed, setIsMobileCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
 
   const [seed, setSeed] = useState<number | null>(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
@@ -570,6 +571,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     }
     let lastY = window.scrollY;
     const onScroll = () => {
+      if (searchFocused) return;
       const y = window.scrollY;
       if (y > 80 && y >= lastY) {
         setIsMobileCollapsed(true);
@@ -581,7 +583,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [isMobile]);
+  }, [isMobile, searchFocused]);
 
   useEffect(() => {
     if (!toast) return;
@@ -694,6 +696,10 @@ export default function Directory({ items }: { items: AnyItem[] }) {
 
   function focusSearchOnMobile() {
     if (!isMobile) return;
+    setSearchFocused(true);
+    setIsMobileCollapsed(false);
+    setMobileMenuOpen(true);
+    setFiltersOpen(true);
     const el = searchInputRef.current;
     if (!el) return;
     window.setTimeout(() => {
@@ -1232,7 +1238,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
       {/* filtros */}
       <div
         className={[
-          "sticky top-[84px] z-30 overflow-hidden border-b backdrop-blur transition-[max-height,opacity,padding] duration-300",
+          "z-30 overflow-hidden border-b backdrop-blur transition-[max-height,opacity,padding] duration-300 lg:sticky lg:top-[84px]",
           theme === "dark" ? "border-zinc-800 bg-zinc-950/85" : "border-zinc-200 bg-white/85",
           filtersOpen ? "max-h-[520px] pb-6 pt-8 opacity-100" : "max-h-0 pb-0 pt-0 opacity-0",
         ].join(" ")}
@@ -1247,6 +1253,7 @@ export default function Directory({ items }: { items: AnyItem[] }) {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               onFocus={focusSearchOnMobile}
+              onBlur={() => setSearchFocused(false)}
               placeholder={ui.filters.search.toLowerCase()}
               className="mt-2 w-full border-b border-zinc-300 bg-transparent pb-2 text-[15px] outline-none placeholder:text-zinc-400"
             />
