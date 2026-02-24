@@ -57,7 +57,7 @@ const BR_STATE_CODES = new Set([
   "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
   "RS", "RO", "RR", "SC", "SP", "SE", "TO",
 ]);
-const REGION_NAMES =
+const COUNTRY_DISPLAY =
   typeof Intl !== "undefined" && typeof Intl.DisplayNames !== "undefined"
     ? new Intl.DisplayNames(["pt-BR", "en"], { type: "region" })
     : null;
@@ -172,12 +172,17 @@ function normalizeCountryLabel(value: string) {
 
   if (BR_STATE_CODES.has(upper)) return "Brasil";
 
-  if (/^[A-Z]{2}$/.test(upper) && REGION_NAMES) {
-    const label = REGION_NAMES.of(upper);
-    if (label && label !== upper) return normalizeGeoLabel(label, "Desconhecido");
-  }
-
   return cleaned;
+}
+
+function countryFromCode(code: string) {
+  const upper = (code || "").toUpperCase().trim();
+  if (!upper) return "";
+  if (COUNTRY_DISPLAY && /^[A-Z]{2}$/.test(upper)) {
+    const label = COUNTRY_DISPLAY.of(upper);
+    if (label && label !== upper) return normalizeGeoLabel(label, upper);
+  }
+  return upper;
 }
 
 function normalizeCountryMap(input: Record<string, number> | undefined) {
@@ -217,7 +222,7 @@ function detectDeviceFromRequest(req: Request, fallbackDevice?: string) {
 function detectGeoFromRequest(req: Request) {
   const countryName = decodeHeaderValue(req.headers.get("x-vercel-ip-country-name"));
   const countryCode = decodeHeaderValue(req.headers.get("x-vercel-ip-country"));
-  const country = normalizeCountryLabel(countryName || countryCode || "Desconhecido");
+  const country = normalizeCountryLabel(countryName || countryFromCode(countryCode) || "Desconhecido");
   const city = normalizeGeoLabel(decodeHeaderValue(req.headers.get("x-vercel-ip-city")), "Desconhecido");
   return { country, city };
 }

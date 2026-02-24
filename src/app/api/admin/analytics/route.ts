@@ -60,10 +60,6 @@ const BR_STATE_CODES = new Set([
   "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
   "RS", "RO", "RR", "SC", "SP", "SE", "TO",
 ]);
-const REGION_NAMES =
-  typeof Intl !== "undefined" && typeof Intl.DisplayNames !== "undefined"
-    ? new Intl.DisplayNames(["pt-BR", "en"], { type: "region" })
-    : null;
 
 function normalizeLang(value: string | undefined): AnalyticsLang {
   const cleaned = (value || "")
@@ -117,11 +113,6 @@ function normalizeCountryLabel(value: string) {
   const upper = cleaned.toUpperCase();
 
   if (BR_STATE_CODES.has(upper)) return "Brasil";
-
-  if (/^[A-Z]{2}$/.test(upper) && REGION_NAMES) {
-    const label = REGION_NAMES.of(upper);
-    if (label && label !== upper) return label;
-  }
 
   return cleaned;
 }
