@@ -1066,9 +1066,10 @@ export default function Directory({
 
   const ordered = useMemo(() => {
     if (tokenizeSearchQuery(q).length) return filtered;
+    if (areaPrimaryKey !== ALL_KEY) return filtered;
     if (!seed) return filtered;
     return seededShuffle(filtered, seed);
-  }, [filtered, seed, q]);
+  }, [filtered, seed, q, areaPrimaryKey]);
 
   const total = ordered.length;
 
