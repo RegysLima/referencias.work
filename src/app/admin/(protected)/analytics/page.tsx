@@ -219,6 +219,8 @@ function LineChart({
   data: { label: string; value: number }[];
   height?: number;
 }) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const max = Math.max(1, ...data.map((d) => d.value));
   const step = data.length > 1 ? 100 / (data.length - 1) : 100;
   const padding = 2;
@@ -233,30 +235,98 @@ function LineChart({
   const areaPath = points.length
     ? `M 0,${height} L ${points.join(" L ")} L 100,${height} Z`
     : "";
+  const activeIndex = hoverIndex ?? null;
+  const active = activeIndex !== null ? data[activeIndex] : null;
+  const previous = activeIndex !== null && activeIndex > 0 ? data[activeIndex - 1] : null;
+  const delta = active && previous ? active.value - previous.value : 0;
+  const deltaPct =
+    previous && previous.value > 0 && active
+      ? ((delta / previous.value) * 100).toFixed(1)
+      : null;
+  const activeX = activeIndex !== null && data.length > 1 ? (activeIndex / (data.length - 1)) * 100 : 0;
+  const activeY =
+    activeIndex !== null ? baseY - ((data[activeIndex]?.value || 0) / max) * innerHeight : baseY;
+
+  function setHoverFromClientX(clientX: number) {
+    const rect = wrapperRef.current?.getBoundingClientRect();
+    if (!rect || !data.length) return;
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    const nextIndex = Math.round(ratio * (data.length - 1));
+    setHoverIndex(nextIndex);
+  }
 
   return (
-    <svg
-      viewBox={`0 0 100 ${height}`}
-      preserveAspectRatio="none"
-      className="h-28 w-full"
+    <div
+      ref={wrapperRef}
+      className="relative"
+      onMouseMove={(e) => setHoverFromClientX(e.clientX)}
+      onMouseLeave={() => setHoverIndex(null)}
+      onTouchStart={(e) => setHoverFromClientX(e.touches[0].clientX)}
+      onTouchMove={(e) => setHoverFromClientX(e.touches[0].clientX)}
+      onTouchEnd={() => setHoverIndex(null)}
     >
-      <defs>
-        <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0000CD" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="#0000CD" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      {areaPath ? <path d={areaPath} fill="url(#lineFill)" /> : null}
-      {path ? (
-        <path
-          d={path}
-          fill="none"
-          stroke="#0000CD"
-          strokeWidth="1.8"
-          vectorEffect="non-scaling-stroke"
-        />
+      <svg
+        viewBox={`0 0 100 ${height}`}
+        preserveAspectRatio="none"
+        className="h-28 w-full"
+      >
+        <defs>
+          <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0000CD" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#0000CD" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {areaPath ? <path d={areaPath} fill="url(#lineFill)" /> : null}
+        {path ? (
+          <path
+            d={path}
+            fill="none"
+            stroke="#0000CD"
+            strokeWidth="1.8"
+            vectorEffect="non-scaling-stroke"
+          />
+        ) : null}
+        {active ? (
+          <>
+            <line
+              x1={activeX}
+              y1={padding}
+              x2={activeX}
+              y2={baseY}
+              stroke="rgba(113,113,122,0.7)"
+              strokeWidth="0.8"
+              strokeDasharray="2 2"
+              vectorEffect="non-scaling-stroke"
+            />
+            <circle
+              cx={activeX}
+              cy={activeY}
+              r="1.8"
+              fill="#0b0b0f"
+              stroke="#22d3ee"
+              strokeWidth="0.9"
+              vectorEffect="non-scaling-stroke"
+            />
+          </>
+        ) : null}
+      </svg>
+
+      {active ? (
+        <div className="pointer-events-none absolute left-2 top-2 rounded-none border border-zinc-700 bg-zinc-950/95 px-2 py-1 text-[11px] text-zinc-200">
+          <div>{formatDateBR(active.label)}</div>
+          <div className="mt-0.5 text-zinc-100">{active.value} visitas</div>
+          <div className="mt-0.5">
+            {deltaPct !== null
+              ? delta > 0
+                ? `Alta ${deltaPct}%`
+                : delta < 0
+                ? `Queda ${Math.abs(Number(deltaPct)).toFixed(1)}%`
+                : "Estável 0.0%"
+              : "Sem base anterior"}
+          </div>
+        </div>
       ) : null}
-    </svg>
+    </div>
   );
 }
 
