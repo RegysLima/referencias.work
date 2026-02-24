@@ -962,6 +962,7 @@ export default function Directory({
   const filtered = useMemo(() => {
     const queryTokens = tokenizeSearchQuery(q);
     const normalizedQuery = normalizeSearchText(q);
+    const hasPrimaryAreaPriority = areaPrimaryKey !== ALL_KEY;
 
     const base = visibleItems.filter((it) => {
       const m = getMacro(it);
@@ -990,7 +991,15 @@ export default function Directory({
       return true;
     });
 
-    if (!queryTokens.length) return base;
+    if (!queryTokens.length) {
+      if (!hasPrimaryAreaPriority) return base;
+      return [...base].sort((a, b) => {
+        const aPrimary = getAreaKeyFromLabel(getPrimaryArea(a)) === areaPrimaryKey ? 1 : 0;
+        const bPrimary = getAreaKeyFromLabel(getPrimaryArea(b)) === areaPrimaryKey ? 1 : 0;
+        if (aPrimary !== bPrimary) return bPrimary - aPrimary;
+        return getName(a).localeCompare(getName(b));
+      });
+    }
 
     const ranked = base
       .map((it) => {
@@ -1038,6 +1047,14 @@ export default function Directory({
 
         if (normalizedQuery && name.includes(normalizedQuery)) score += 90;
         if (normalizedQuery && url.includes(normalizedQuery)) score += 45;
+        if (hasPrimaryAreaPriority) {
+          const primaryMatch = getAreaKeyFromLabel(primaryAreaRaw) === areaPrimaryKey;
+          const secondaryMatch = secondaryAreasRaw
+            .map((s) => getAreaKeyFromLabel(s))
+            .includes(areaPrimaryKey);
+          if (primaryMatch) score += 30;
+          else if (secondaryMatch) score += 10;
+        }
 
         return { it, score };
       })
