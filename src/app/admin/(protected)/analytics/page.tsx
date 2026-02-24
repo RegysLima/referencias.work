@@ -435,11 +435,6 @@ export default function AdminAnalyticsPage() {
     [rangeDays, summary, pathFilter, langFilter]
   );
 
-  const totalInRange = useMemo(
-    () => daySeries.reduce((acc, d) => acc + d.value, 0),
-    [daySeries]
-  );
-
   const last7Days = useMemo(() => getLastDays(7), []);
   const last30Days = useMemo(() => getLastDays(30), []);
   const last7Total = useMemo(
@@ -704,10 +699,6 @@ export default function AdminAnalyticsPage() {
         <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Últimos 30 dias</div>
           <div className="mt-2 text-2xl text-zinc-100">{last30Total}</div>
-        </div>
-        <div className={`${metricCardClass} xl:col-span-3`}>
-          <div className="text-xs text-zinc-500">Visitas no filtro</div>
-          <div className="mt-2 text-2xl text-zinc-100">{totalInRange}</div>
         </div>
         <div className={`${metricCardClass} xl:col-span-3`}>
           <div className="text-xs text-zinc-500">Cliques em referências</div>
