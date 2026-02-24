@@ -574,28 +574,23 @@ export default function AdminAnalyticsPage() {
                   <select
                     value={range}
                     onChange={(e) => setRange(e.target.value)}
-                    className="cursor-pointer appearance-none rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                    className="h-10 cursor-pointer appearance-none rounded-none border border-zinc-800 bg-zinc-950 pl-3 pr-10 text-sm text-zinc-100"
                   >
                     <option value="7">Últimos 7 dias</option>
                     <option value="30">Últimos 30 dias</option>
                     <option value="90">Últimos 90 dias</option>
                     <option value="all">Todo o período</option>
                   </select>
-                  <svg
-                    aria-hidden="true"
-                    className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                  >
-                    <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
+                    ▾
+                  </span>
                 </div>
 
                 <div className="relative">
                   <select
                     value={pathFilter}
                     onChange={(e) => setPathFilter(e.target.value)}
-                    className="cursor-pointer appearance-none rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                    className="h-10 cursor-pointer appearance-none rounded-none border border-zinc-800 bg-zinc-950 pl-3 pr-10 text-sm text-zinc-100"
                   >
                     {pathOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -603,21 +598,16 @@ export default function AdminAnalyticsPage() {
                       </option>
                     ))}
                   </select>
-                  <svg
-                    aria-hidden="true"
-                    className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                  >
-                    <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
+                    ▾
+                  </span>
                 </div>
 
                 <div className="relative">
                   <select
                     value={langFilter}
                     onChange={(e) => setLangFilter(e.target.value)}
-                    className="cursor-pointer appearance-none rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 pr-10 text-sm"
+                    className="h-10 cursor-pointer appearance-none rounded-none border border-zinc-800 bg-zinc-950 pl-3 pr-10 text-sm text-zinc-100"
                   >
                     {langOptions.map((lang) => (
                       <option key={lang} value={lang}>
@@ -625,14 +615,9 @@ export default function AdminAnalyticsPage() {
                       </option>
                     ))}
                   </select>
-                  <svg
-                    aria-hidden="true"
-                    className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                  >
-                    <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
+                    ▾
+                  </span>
                 </div>
               </div>
             </div>
