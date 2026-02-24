@@ -517,6 +517,7 @@ export default function AdminPage() {
   const [autoSaveActive, setAutoSaveActive] = useState(false);
   const [checkingThumbs, setCheckingThumbs] = useState(false);
   const [brokenThumbs, setBrokenThumbs] = useState<Record<string, boolean>>({});
+  const [brokenThumbReasons, setBrokenThumbReasons] = useState<Record<string, string>>({});
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<{
     open: boolean;
@@ -652,7 +653,19 @@ export default function AdminPage() {
     return map;
   }, [items]);
 
-  function setBrokenThumbState(id: string, broken: boolean) {
+  const filterCounts = useMemo(() => {
+    const noImage = items.filter((i) => !hasValue(i.thumbnailUrl ?? null)).length;
+    const unreviewed = items.filter((i) => !i.reviewedAt).length;
+    const duplicates = items.filter((i) => {
+      const k = normalizeUrl(i.url);
+      return Boolean(k && (duplicateMap.get(k) ?? 0) >= 2);
+    }).length;
+    const needsReview = items.filter((i) => hasActiveReviewFlags(i)).length;
+    const broken = Object.keys(brokenThumbs).length;
+    return { noImage, unreviewed, duplicates, needsReview, broken };
+  }, [items, duplicateMap, brokenThumbs]);
+
+  function setBrokenThumbState(id: string, broken: boolean, reason = "render_error") {
     setBrokenThumbs((prev) => {
       const current = prev[id] === true;
       if (broken) {
@@ -665,69 +678,85 @@ export default function AdminPage() {
       delete next[id];
       return next;
     });
+    setBrokenThumbReasons((prev) => {
+      if (broken) {
+        if (prev[id] === reason) return prev;
+        return { ...prev, [id]: reason };
+      }
+      if (!(id in prev)) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   }
 
   async function checkBrokenImages() {
     const candidates = items
       .filter((i) => (i.thumbnailUrl || "").trim())
       .map((i) => ({ id: i.id, url: (i.thumbnailUrl || "").trim() }));
-    const imageCandidates = candidates.filter(
-      (item) => !isVideoUrl(item.url) && !isVimeoUrl(item.url)
-    );
 
-    if (!imageCandidates.length) {
-      showToast("Nenhuma imagem para verificar");
+    const mediaCandidates = candidates.filter((item) => !isVimeoUrl(item.url));
+
+    if (!mediaCandidates.length) {
+      showToast("Nenhuma mídia para verificar");
       return;
     }
 
     setCheckingThumbs(true);
     setBrokenThumbs({});
-    showToast("Verificando imagens…");
+    setBrokenThumbReasons({});
+    showToast("Verificando mídias…");
 
-    const queue = [...imageCandidates];
-    const next = async (): Promise<{ id: string; ok: boolean } | null> => {
-      const item = queue.shift();
-      if (!item) return null;
-      return new Promise((resolve) => {
-        const img = new Image();
-        const cleanup = () => {
-          img.onload = null;
-          img.onerror = null;
-        };
-        img.onload = () => {
-          cleanup();
-          resolve({ id: item.id, ok: true });
-        };
-        img.onerror = () => {
-          cleanup();
-          resolve({ id: item.id, ok: false });
-        };
-        img.referrerPolicy = "no-referrer";
-        img.decoding = "async";
-        img.src = item.url;
-      });
-    };
-
-    const CONCURRENCY = 6;
-    let brokenCount = 0;
+    const batchSize = 50;
     const checkedState: Record<string, boolean> = {};
-    const workers = Array.from({ length: CONCURRENCY }, async () => {
-      while (queue.length) {
-        const result = await next();
-        if (!result) break;
-        checkedState[result.id] = !result.ok;
-        if (!result.ok) brokenCount += 1;
-      }
-    });
+    const reasonsState: Record<string, string> = {};
+    let brokenCount = 0;
 
-    await Promise.all(workers);
+    for (let i = 0; i < mediaCandidates.length; i += batchSize) {
+      const chunk = mediaCandidates.slice(i, i + batchSize);
+      try {
+        const res = await fetch("/api/admin/check-images", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ items: chunk }),
+        });
+
+        if (!res.ok) {
+          for (const item of chunk) {
+            checkedState[item.id] = true;
+            reasonsState[item.id] = "check_failed";
+            brokenCount += 1;
+          }
+          continue;
+        }
+
+        const data = await res.json();
+        const results = Array.isArray(data?.results) ? data.results : [];
+        for (const result of results) {
+          const broken = !result?.ok;
+          checkedState[result.id] = broken;
+          if (broken) {
+            brokenCount += 1;
+            reasonsState[result.id] = result?.reason || "invalid_media";
+          }
+        }
+      } catch {
+        for (const item of chunk) {
+          checkedState[item.id] = true;
+          reasonsState[item.id] = "check_failed";
+          brokenCount += 1;
+        }
+      }
+    }
+
     setBrokenThumbs(checkedState);
+    setBrokenThumbReasons(reasonsState);
 
     setCheckingThumbs(false);
     showToast(
       brokenCount
-        ? `${brokenCount} imagem(ns) com problema`
-        : "Nenhuma imagem quebrada encontrada"
+        ? `${brokenCount} mídia(s) com problema`
+        : "Nenhuma mídia com problema encontrada"
     );
   }
 
@@ -1704,7 +1733,14 @@ export default function AdminPage() {
 
             <div className="mt-4 space-y-3">
               <label className="flex items-center justify-between text-sm text-zinc-300">
-                <span>Sem imagem</span>
+                <span className="inline-flex items-center gap-2">
+                  Sem imagem
+                  {filterCounts.noImage > 0 ? (
+                    <span className="rounded-none border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-300">
+                      {filterCounts.noImage}
+                    </span>
+                  ) : null}
+                </span>
                 <span className="relative inline-flex h-5 w-9">
                   <input
                     type="checkbox"
@@ -1718,7 +1754,14 @@ export default function AdminPage() {
               </label>
 
               <label className="flex items-center justify-between text-sm text-zinc-300">
-                <span>Não revisados</span>
+                <span className="inline-flex items-center gap-2">
+                  Não revisados
+                  {filterCounts.unreviewed > 0 ? (
+                    <span className="rounded-none border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-300">
+                      {filterCounts.unreviewed}
+                    </span>
+                  ) : null}
+                </span>
                 <span className="relative inline-flex h-5 w-9">
                   <input
                     type="checkbox"
@@ -1732,7 +1775,14 @@ export default function AdminPage() {
               </label>
 
               <label className="flex items-center justify-between text-sm text-zinc-300">
-                <span>URL Duplicadas</span>
+                <span className="inline-flex items-center gap-2">
+                  URL Duplicadas
+                  {filterCounts.duplicates > 0 ? (
+                    <span className="rounded-none border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-300">
+                      {filterCounts.duplicates}
+                    </span>
+                  ) : null}
+                </span>
                 <span className="relative inline-flex h-5 w-9">
                   <input
                     type="checkbox"
@@ -1746,7 +1796,14 @@ export default function AdminPage() {
               </label>
 
               <label className="flex items-center justify-between text-sm text-zinc-300">
-                <span>Revisar dúvidas</span>
+                <span className="inline-flex items-center gap-2">
+                  Revisar dúvidas
+                  {filterCounts.needsReview > 0 ? (
+                    <span className="rounded-none border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-300">
+                      {filterCounts.needsReview}
+                    </span>
+                  ) : null}
+                </span>
                 <span className="relative inline-flex h-5 w-9">
                   <input
                     type="checkbox"
@@ -1760,7 +1817,14 @@ export default function AdminPage() {
               </label>
 
               <label className="flex items-center justify-between text-sm text-zinc-300">
-                <span>Imagens quebradas</span>
+                <span className="inline-flex items-center gap-2">
+                  Mídias com problema
+                  {filterCounts.broken > 0 ? (
+                    <span className="rounded-none border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-300">
+                      {filterCounts.broken}
+                    </span>
+                  ) : null}
+                </span>
                 <span className="relative inline-flex h-5 w-9">
                   <input
                     type="checkbox"
@@ -1779,7 +1843,7 @@ export default function AdminPage() {
               disabled={checkingThumbs}
               className="mt-4 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700 disabled:opacity-60"
             >
-              {checkingThumbs ? "Verificando…" : "Verificar imagens"}
+              {checkingThumbs ? "Verificando…" : "Verificar mídias"}
             </button>
 
             <button
@@ -1888,8 +1952,11 @@ export default function AdminPage() {
                         </span>
 
                         {brokenThumb ? (
-                          <span className="rounded-none border border-red-700/60 bg-red-950/30 px-2 py-1 text-[11px] text-red-200">
-                            imagem quebrada
+                          <span
+                            className="rounded-none border border-red-700/60 bg-red-950/30 px-2 py-1 text-[11px] text-red-200"
+                            title={brokenThumbReasons[i.id] || "media_issue"}
+                          >
+                            mídia com problema
                           </span>
                         ) : null}
 

@@ -9,6 +9,14 @@ const MAX_ITEMS = 50;
 const TIMEOUT_MS = 8000;
 const CONCURRENCY = 6;
 
+function looksLikeVideoUrl(url: string) {
+  return /\.(mp4|webm|mov|m4v|ogv|m3u8)(\?|#|$)/i.test(url);
+}
+
+function looksLikeImageUrl(url: string) {
+  return /\.(png|jpe?g|webp|gif|avif|svg)(\?|#|$)/i.test(url);
+}
+
 function isHttpUrl(value: string) {
   try {
     const parsed = new URL(value);
@@ -32,15 +40,34 @@ async function fetchWithTimeout(url: string, init: RequestInit) {
   }
 }
 
+function isValidMediaContentType(contentType: string, url: string) {
+  const ct = (contentType || "").toLowerCase();
+  if (!ct) return looksLikeImageUrl(url) || looksLikeVideoUrl(url);
+  if (ct.startsWith("image/")) return true;
+  if (ct.startsWith("video/")) return true;
+  if (ct.includes("application/vnd.apple.mpegurl")) return true;
+  if (ct.includes("application/x-mpegurl")) return true;
+  return false;
+}
+
 async function checkUrl(url: string) {
   if (!isHttpUrl(url)) {
-    return { ok: false, status: 0 };
+    return { ok: false, status: 0, reason: "invalid_url" };
   }
 
   try {
     const head = await fetchWithTimeout(url, { method: "HEAD" });
+    const headType = head.headers.get("content-type") || "";
+    const headLength = Number(head.headers.get("content-length") || "0");
+
     if (head.status >= 200 && head.status < 400) {
-      return { ok: true, status: head.status };
+      if (!isValidMediaContentType(headType, url)) {
+        return { ok: false, status: head.status, reason: "invalid_content_type" };
+      }
+      if (Number.isFinite(headLength) && headLength === 0) {
+        return { ok: false, status: head.status, reason: "empty_file" };
+      }
+      return { ok: true, status: head.status, reason: "ok" };
     }
 
     if (head.status === 405 || head.status === 403) {
@@ -48,12 +75,23 @@ async function checkUrl(url: string) {
         method: "GET",
         headers: { Range: "bytes=0-0" },
       });
-      return { ok: get.status >= 200 && get.status < 400, status: get.status };
+      const getType = get.headers.get("content-type") || "";
+      const getLength = Number(get.headers.get("content-length") || "0");
+      if (!(get.status >= 200 && get.status < 400)) {
+        return { ok: false, status: get.status, reason: "http_error" };
+      }
+      if (!isValidMediaContentType(getType, url)) {
+        return { ok: false, status: get.status, reason: "invalid_content_type" };
+      }
+      if (Number.isFinite(getLength) && getLength === 0) {
+        return { ok: false, status: get.status, reason: "empty_file" };
+      }
+      return { ok: true, status: get.status, reason: "ok" };
     }
 
-    return { ok: false, status: head.status };
+    return { ok: false, status: head.status, reason: "http_error" };
   } catch {
-    return { ok: false, status: 0 };
+    return { ok: false, status: 0, reason: "request_failed" };
   }
 }
 
@@ -86,7 +124,7 @@ export async function POST(req: Request) {
 
   const results = await mapLimit(items, CONCURRENCY, async (item) => {
     const res = await checkUrl(item.url);
-    return { id: item.id, ok: res.ok, status: res.status };
+    return { id: item.id, ok: res.ok, status: res.status, reason: res.reason };
   });
 
   return NextResponse.json({ ok: true, results });
