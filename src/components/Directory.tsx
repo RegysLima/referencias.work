@@ -1066,7 +1066,29 @@ export default function Directory({
 
   const ordered = useMemo(() => {
     if (tokenizeSearchQuery(q).length) return filtered;
-    if (areaPrimaryKey !== ALL_KEY) return filtered;
+    if (areaPrimaryKey !== ALL_KEY) {
+      if (!seed) return filtered;
+      const primaryMatches: AnyItem[] = [];
+      const secondaryMatches: AnyItem[] = [];
+
+      for (const it of filtered) {
+        const pKey = getAreaKeyFromLabel(getPrimaryArea(it));
+        if (pKey === areaPrimaryKey) {
+          primaryMatches.push(it);
+          continue;
+        }
+        const sKeys = getSecondaryAreas(it).map((s) => getAreaKeyFromLabel(s));
+        if (sKeys.includes(areaPrimaryKey)) {
+          secondaryMatches.push(it);
+          continue;
+        }
+      }
+
+      return [
+        ...seededShuffle(primaryMatches, seed),
+        ...seededShuffle(secondaryMatches, seed + 1),
+      ];
+    }
     if (!seed) return filtered;
     return seededShuffle(filtered, seed);
   }, [filtered, seed, q, areaPrimaryKey]);
