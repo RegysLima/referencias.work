@@ -52,6 +52,15 @@ type Summary = {
 };
 
 type AnalyticsLang = "pt" | "es" | "en";
+const BR_STATE_CODES = new Set([
+  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA",
+  "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
+  "RS", "RO", "RR", "SC", "SP", "SE", "TO",
+]);
+const REGION_NAMES =
+  typeof Intl !== "undefined" && typeof Intl.DisplayNames !== "undefined"
+    ? new Intl.DisplayNames(["pt-BR", "en"], { type: "region" })
+    : null;
 
 function todayKey() {
   return new Date().toISOString().slice(0, 10);
@@ -110,6 +119,8 @@ function normalizeSummaryLangs(summary: Summary): Summary {
     byLang: normalizeLangMap(summary.byLang),
     byDayLang: normalizeByDayLang(summary.byDayLang),
     byDayPathLang: normalizeByDayPathLang(summary.byDayPathLang),
+    byCountry: normalizeCountryMap(summary.byCountry),
+    byDayCountry: normalizeByDayCountry(summary.byDayCountry),
   };
 }
 
@@ -155,6 +166,39 @@ function normalizeGeoLabel(value: string, fallback: string) {
   return cleaned || fallback;
 }
 
+function normalizeCountryLabel(value: string) {
+  const cleaned = normalizeGeoLabel(value, "Desconhecido");
+  const upper = cleaned.toUpperCase();
+
+  if (BR_STATE_CODES.has(upper)) return "Brasil";
+
+  if (/^[A-Z]{2}$/.test(upper) && REGION_NAMES) {
+    const label = REGION_NAMES.of(upper);
+    if (label && label !== upper) return normalizeGeoLabel(label, "Desconhecido");
+  }
+
+  return cleaned;
+}
+
+function normalizeCountryMap(input: Record<string, number> | undefined) {
+  const out: Record<string, number> = {};
+  for (const [key, count] of Object.entries(input || {})) {
+    const normalized = normalizeCountryLabel(key);
+    out[normalized] = (out[normalized] || 0) + (count || 0);
+  }
+  return out;
+}
+
+function normalizeByDayCountry(
+  input: Record<string, Record<string, number>> | undefined
+) {
+  const out: Record<string, Record<string, number>> = {};
+  for (const [day, row] of Object.entries(input || {})) {
+    out[day] = normalizeCountryMap(row);
+  }
+  return out;
+}
+
 function detectDeviceFromRequest(req: Request, fallbackDevice?: string) {
   if (fallbackDevice) return normalizeDevice(fallbackDevice);
   const ua = (req.headers.get("user-agent") || "").toLowerCase();
@@ -171,12 +215,9 @@ function detectDeviceFromRequest(req: Request, fallbackDevice?: string) {
 }
 
 function detectGeoFromRequest(req: Request) {
-  const country =
-    normalizeGeoLabel(
-      decodeHeaderValue(req.headers.get("x-vercel-ip-country-region") || req.headers.get("x-vercel-ip-country-name")),
-      ""
-    ) ||
-    normalizeGeoLabel(decodeHeaderValue(req.headers.get("x-vercel-ip-country")), "Desconhecido");
+  const countryName = decodeHeaderValue(req.headers.get("x-vercel-ip-country-name"));
+  const countryCode = decodeHeaderValue(req.headers.get("x-vercel-ip-country"));
+  const country = normalizeCountryLabel(countryName || countryCode || "Desconhecido");
   const city = normalizeGeoLabel(decodeHeaderValue(req.headers.get("x-vercel-ip-city")), "Desconhecido");
   return { country, city };
 }

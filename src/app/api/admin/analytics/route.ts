@@ -55,6 +55,15 @@ type Summary = {
 };
 
 type AnalyticsLang = "pt" | "es" | "en";
+const BR_STATE_CODES = new Set([
+  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA",
+  "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
+  "RS", "RO", "RR", "SC", "SP", "SE", "TO",
+]);
+const REGION_NAMES =
+  typeof Intl !== "undefined" && typeof Intl.DisplayNames !== "undefined"
+    ? new Intl.DisplayNames(["pt-BR", "en"], { type: "region" })
+    : null;
 
 function normalizeLang(value: string | undefined): AnalyticsLang {
   const cleaned = (value || "")
@@ -103,6 +112,39 @@ function normalizeByDayPathLang(
   return out;
 }
 
+function normalizeCountryLabel(value: string) {
+  const cleaned = (value || "").trim() || "Desconhecido";
+  const upper = cleaned.toUpperCase();
+
+  if (BR_STATE_CODES.has(upper)) return "Brasil";
+
+  if (/^[A-Z]{2}$/.test(upper) && REGION_NAMES) {
+    const label = REGION_NAMES.of(upper);
+    if (label && label !== upper) return label;
+  }
+
+  return cleaned;
+}
+
+function normalizeCountryMap(input: Record<string, number> | undefined) {
+  const out: Record<string, number> = {};
+  for (const [key, count] of Object.entries(input || {})) {
+    const normalized = normalizeCountryLabel(key);
+    out[normalized] = (out[normalized] || 0) + (count || 0);
+  }
+  return out;
+}
+
+function normalizeByDayCountry(
+  input: Record<string, Record<string, number>> | undefined
+) {
+  const out: Record<string, Record<string, number>> = {};
+  for (const [day, row] of Object.entries(input || {})) {
+    out[day] = normalizeCountryMap(row);
+  }
+  return out;
+}
+
 function normalizeSummaryLangs(summary: Summary): Summary {
   return {
     ...summary,
@@ -115,10 +157,10 @@ function normalizeSummaryLangs(summary: Summary): Summary {
     byDaySearchQuery: summary.byDaySearchQuery || {},
     byNoResultQuery: summary.byNoResultQuery || {},
     byDayNoResultQuery: summary.byDayNoResultQuery || {},
-    byCountry: summary.byCountry || {},
+    byCountry: normalizeCountryMap(summary.byCountry),
     byCity: summary.byCity || {},
     byDevice: summary.byDevice || {},
-    byDayCountry: summary.byDayCountry || {},
+    byDayCountry: normalizeByDayCountry(summary.byDayCountry),
     byDayCity: summary.byDayCity || {},
     byDayDevice: summary.byDayDevice || {},
     donation: summary.donation || {
