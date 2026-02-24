@@ -9,6 +9,7 @@ const KV_KEY = "analytics:summary";
 const KV_ENABLED = Boolean(
   process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN,
 );
+const GEO_SCHEMA_VERSION = 2;
 
 type Summary = {
   total: number;
@@ -50,6 +51,7 @@ type Summary = {
     desktop: Record<string, number>;
     mobile: Record<string, number>;
   };
+  geoSchemaVersion?: number;
   normalizeFilters?: NormalizeFiltersStatus | null;
   lastUpdated?: string | null;
 };
@@ -170,6 +172,19 @@ function normalizeSummaryLangs(summary: Summary): Summary {
       desktop: {},
       mobile: {},
     },
+    geoSchemaVersion: summary.geoSchemaVersion || 0,
+  };
+}
+
+function ensureGeoSchema(summary: Summary): Summary {
+  if ((summary.geoSchemaVersion || 0) >= GEO_SCHEMA_VERSION) return summary;
+  return {
+    ...summary,
+    byCountry: {},
+    byCity: {},
+    byDayCountry: {},
+    byDayCity: {},
+    geoSchemaVersion: GEO_SCHEMA_VERSION,
   };
 }
 
@@ -220,7 +235,7 @@ export async function GET() {
       normalizeFilters: null,
       lastUpdated: null,
     };
-  const summary = normalizeSummaryLangs(summaryRaw);
+  const summary = ensureGeoSchema(normalizeSummaryLangs(summaryRaw));
   const normalizeFilters =
     (await kv.get<NormalizeFiltersStatus>(NORMALIZE_FILTERS_STATUS_KEY)) || null;
   summary.normalizeFilters = normalizeFilters;

@@ -5,6 +5,7 @@ const KV_KEY = "analytics:summary";
 const KV_ENABLED = Boolean(
   process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN,
 );
+const GEO_SCHEMA_VERSION = 2;
 const HEATMAP_COLS = 24;
 const HEATMAP_ROWS = 120;
 
@@ -48,6 +49,7 @@ type Summary = {
     desktop: Record<string, number>;
     mobile: Record<string, number>;
   };
+  geoSchemaVersion?: number;
   lastUpdated?: string | null;
 };
 
@@ -121,6 +123,18 @@ function normalizeSummaryLangs(summary: Summary): Summary {
     byDayPathLang: normalizeByDayPathLang(summary.byDayPathLang),
     byCountry: normalizeCountryMap(summary.byCountry),
     byDayCountry: normalizeByDayCountry(summary.byDayCountry),
+  };
+}
+
+function ensureGeoSchema(summary: Summary): Summary {
+  if ((summary.geoSchemaVersion || 0) >= GEO_SCHEMA_VERSION) return summary;
+  return {
+    ...summary,
+    byCountry: {},
+    byCity: {},
+    byDayCountry: {},
+    byDayCity: {},
+    geoSchemaVersion: GEO_SCHEMA_VERSION,
   };
 }
 
@@ -338,7 +352,7 @@ export async function POST(req: Request) {
       mobile: {},
     },
   };
-  const current = normalizeSummaryLangs(currentRaw);
+  const current = ensureGeoSchema(normalizeSummaryLangs(currentRaw));
   current.byType = current.byType || {};
   current.byDayType = current.byDayType || {};
   current.bySearchQuery = current.bySearchQuery || {};
