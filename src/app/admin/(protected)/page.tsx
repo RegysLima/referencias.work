@@ -1718,18 +1718,23 @@ export default function AdminPage() {
               className="mt-3 w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none focus:border-zinc-600"
             />
 
-            <select
-              value={macroFilter}
-              onChange={(e) => setMacroFilter(e.target.value)}
-              className="mt-3 w-full rounded-none border border-zinc-800 bg-zinc-950 px-4 py-2 pr-12 text-sm outline-none focus:border-zinc-600"
-            >
-              <option value="Todos">Todas as categorias</option>
-              {MACROS.map((m) => (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              ))}
-            </select>
+            <div className="relative mt-3">
+              <select
+                value={macroFilter}
+                onChange={(e) => setMacroFilter(e.target.value)}
+                className="h-10 w-full appearance-none rounded-none border border-zinc-800 bg-zinc-950 pl-3 pr-10 text-sm text-zinc-100 outline-none focus:border-zinc-600"
+              >
+                <option value="Todos">Todas as categorias</option>
+                {MACROS.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
+                ▾
+              </span>
+            </div>
 
             <div className="mt-4 space-y-3">
               <label className="flex items-center justify-between text-sm text-zinc-300">
