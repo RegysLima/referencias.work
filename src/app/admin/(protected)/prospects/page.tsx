@@ -188,6 +188,11 @@ export default function AdminProspectsPage() {
     }
   }
 
+  function openProspectHomepage(item: ProspectsDB["items"][number]) {
+    if (!item.homepageUrl) return;
+    window.open(item.homepageUrl, "_blank", "noopener,noreferrer");
+  }
+
   const filteredItems = useMemo(() => {
     const base =
       statusFilter === "approved"
@@ -384,8 +389,19 @@ export default function AdminProspectsPage() {
               ref={(node) => {
                 rowRefs.current[item.id] = node;
               }}
+              role={item.homepageUrl ? "button" : undefined}
+              tabIndex={item.homepageUrl ? 0 : -1}
+              onClick={() => openProspectHomepage(item)}
+              onKeyDown={(e) => {
+                if (!item.homepageUrl) return;
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  openProspectHomepage(item);
+                }
+              }}
               className={[
                 "grid grid-cols-12 items-center gap-2 border-b border-zinc-900 px-3 py-3 text-sm text-zinc-200",
+                item.homepageUrl ? "cursor-pointer" : "",
                 "transition-all duration-200 ease-out",
                 exitingIds[item.id] ? "translate-x-2 scale-[0.99] opacity-0" : "translate-x-0 opacity-100",
               ].join(" ")}
@@ -405,23 +421,17 @@ export default function AdminProspectsPage() {
               <div className="col-span-2 text-xs text-zinc-300">{labelStatus(item.status)}</div>
 
               <div className="col-span-3 flex flex-wrap gap-2">
-                {item.homepageUrl ? (
-                  <a
-                    href={item.homepageUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex h-8 items-center rounded-none border border-zinc-500 px-3 text-xs font-medium text-zinc-100 hover:border-zinc-300"
-                  >
-                    Abrir
-                  </a>
-                ) : (
+                {!item.homepageUrl ? (
                   <span className="inline-flex h-8 items-center rounded-none border border-zinc-800 px-3 text-xs text-zinc-500">
                     Sem URL
                   </span>
-                )}
+                ) : null}
                 {item.status !== "approved" ? (
                   <button
-                    onClick={() => approveAndOpen(item)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void approveAndOpen(item);
+                    }}
                     className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
                   >
                     Aprovar
@@ -429,21 +439,30 @@ export default function AdminProspectsPage() {
                 ) : null}
                 {item.status !== "waiting" ? (
                   <button
-                    onClick={() => transitionAndPatch(item.id, { status: "waiting" })}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void transitionAndPatch(item.id, { status: "waiting" });
+                    }}
                     className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
                   >
                     Espera
                   </button>
                 ) : (
                   <button
-                    onClick={() => transitionAndPatch(item.id, { status: "new" })}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void transitionAndPatch(item.id, { status: "new" });
+                    }}
                     className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
                   >
                     Pendente
                   </button>
                 )}
                 <button
-                  onClick={() => transitionAndPatch(item.id, { status: "rejected" })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    void transitionAndPatch(item.id, { status: "rejected" });
+                  }}
                   className="h-8 rounded-none border border-zinc-700 px-3 text-xs text-zinc-200 hover:border-zinc-500"
                 >
                   Descartar
