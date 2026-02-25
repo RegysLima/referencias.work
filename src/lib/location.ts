@@ -1,11 +1,31 @@
 import { slugify } from "@/lib/i18n";
 
+function decodeHtmlEntities(value: string) {
+  return value
+    .replace(/&#x([0-9a-fA-F]+);?/g, (_, hex) => {
+      const code = Number.parseInt(hex, 16);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : "";
+    })
+    .replace(/&#([0-9]+);?/g, (_, dec) => {
+      const code = Number.parseInt(dec, 10);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : "";
+    })
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, "\"")
+    .replace(/&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">");
+}
+
 function cleanLocationValue(value: string) {
-  return (value || "")
+  return decodeHtmlEntities(value || "")
     .replace(/<[^>]+>/g, "")
+    .replace(/[\u0000-\u001F\u007F]+/g, " ")
     .replace(/[\u00A0\s]+/g, " ")
+    .replace(/^[\s"'`“”‘’«»‹›:;,.!?()[\]{}\-–—]+/g, "")
     .trim()
-    .replace(/[\s.,;:!\-–—]+$/g, "")
+    .replace(/[\s"'`“”‘’«»‹›:;,.!?()[\]{}\-–—]+$/g, "")
     .trim();
 }
 
@@ -45,6 +65,24 @@ const COUNTRY_ALIASES: Record<string, string> = {
 
   suica: "Suíça",
   switzerland: "Suíça",
+
+  // Estados/UFs comuns vindos de extrações inconsistentes
+  "sao paulo": "Brasil",
+  "rio de janeiro": "Brasil",
+  bahia: "Brasil",
+  ceara: "Brasil",
+  pernambuco: "Brasil",
+  parana: "Brasil",
+  "rio grande do sul": "Brasil",
+  "minas gerais": "Brasil",
+  sc: "Brasil",
+  sp: "Brasil",
+  rj: "Brasil",
+  rs: "Brasil",
+  pr: "Brasil",
+  mg: "Brasil",
+  ba: "Brasil",
+  ce: "Brasil",
 };
 
 const CITY_ALIASES: Record<string, string> = {
@@ -72,6 +110,8 @@ const CITY_ALIASES: Record<string, string> = {
 
   "sao paulo": "São Paulo",
   "sao paulo city": "São Paulo",
+  seoul: "Seoul",
+  seul: "Seoul",
 };
 
 export function canonicalCountry(value: string | null | undefined) {
@@ -82,7 +122,12 @@ export function canonicalCountry(value: string | null | undefined) {
 }
 
 export function canonicalCity(value: string | null | undefined) {
-  const cleaned = cleanLocationValue(value || "");
+  let cleaned = cleanLocationValue(value || "");
+  cleaned = cleaned
+    .replace(/\s*[|/]\s*.*/g, "")
+    .replace(/\s*[,;:]\s*.*/g, "")
+    .replace(/\s+[A-Z]{2,3}$/g, "")
+    .trim();
   if (!cleaned) return "";
   const alias = CITY_ALIASES[normalizeLocationKey(cleaned)];
   return alias || cleaned;

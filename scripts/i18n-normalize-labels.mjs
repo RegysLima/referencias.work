@@ -21,6 +21,24 @@ function writeJson(p, data) {
   fs.writeFileSync(p, JSON.stringify(data, null, 2), "utf-8");
 }
 
+function decodeHtmlEntities(value) {
+  return (value || "")
+    .replace(/&#x([0-9a-fA-F]+);?/g, (_, hex) => {
+      const code = Number.parseInt(hex, 16);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : "";
+    })
+    .replace(/&#([0-9]+);?/g, (_, dec) => {
+      const code = Number.parseInt(dec, 10);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : "";
+    })
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, "\"")
+    .replace(/&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">");
+}
+
 function isAllCaps(s) {
   const letters = s.replace(/[^A-Za-zÁÉÍÓÚÜÑÇÃÕÂÊÔÀÈÌÒÙÄËÏÖÜ]/g, "");
   return letters.length > 0 && letters === letters.toUpperCase();
@@ -47,7 +65,14 @@ function titleCase(input, lang) {
 }
 
 function normalizeLabel(lang, value) {
-  const v = (value ?? "").toString().trim();
+  const v = decodeHtmlEntities((value ?? "").toString())
+    .replace(/<[^>]+>/g, "")
+    .replace(/[\u0000-\u001F\u007F]+/g, " ")
+    .replace(/[\u00A0\s]+/g, " ")
+    .replace(/^[\s"'`“”‘’«»‹›:;,.!?{}\-\u2013\u2014]+/g, "")
+    .trim()
+    .replace(/[\s"'`“”‘’«»‹›:;,.!?{}\-\u2013\u2014]+$/g, "")
+    .trim();
   if (!v) return v;
   if (KEEP_UPPER.has(v)) return v;
   if (!isAllCaps(v)) return v;

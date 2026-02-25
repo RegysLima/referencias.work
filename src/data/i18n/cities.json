@@ -36,7 +36,7 @@
   },
   "auckland": {
     "pt": "Auckland",
-    "en": "Auckland.",
+    "en": "Auckland",
     "es": "Auckland"
   },
   "austin": {
@@ -121,7 +121,7 @@
   },
   "california": {
     "pt": "Califórnia",
-    "en": "Cal.",
+    "en": "Cal",
     "es": "California"
   },
   "catskills": {
@@ -215,8 +215,8 @@
     "es": "France"
   },
   "germany": {
-    "pt": "Germany. —",
-    "en": "Germany.",
+    "pt": "Germany",
+    "en": "Germany",
     "es": "Germany"
   },
   "glasgow": {
@@ -311,7 +311,7 @@
   },
   "lucerne": {
     "pt": "Lucerne",
-    "en": "<g id=\"24\"/><g id=\"166\"/><g id=\"169\">Lucerne</g>",
+    "en": "Lucerne",
     "es": "Lucerna"
   },
   "lyon": {
@@ -447,7 +447,7 @@
   "perugia": {
     "pt": "Perugia",
     "en": "Perugia",
-    "es": "«Perugia"
+    "es": "Perugia"
   },
   "port-macquarie": {
     "pt": "Port Macquarie",
@@ -456,13 +456,13 @@
   },
   "portland": {
     "pt": "Portland",
-    "en": "Portland:",
+    "en": "Portland",
     "es": "Portland"
   },
   "porto-alegre": {
     "pt": "Porto Alegre",
     "en": "Porto Alegre",
-    "es": "&#10;\t\tPorto Alegre"
+    "es": "Porto Alegre"
   },
   "praga": {
     "pt": "Praga",
@@ -511,7 +511,7 @@
   },
   "salamanca": {
     "pt": "Salamanca",
-    "en": "Salamanca.",
+    "en": "Salamanca",
     "es": "Salamanca"
   },
   "salvador": {
@@ -550,7 +550,7 @@
     "es": "Seattle"
   },
   "seoul": {
-    "pt": "Seoul",
+    "pt": "Seul",
     "en": "Seoul",
     "es": "Seúl"
   },
@@ -632,7 +632,7 @@
   "zagreb": {
     "pt": "Zagreb",
     "en": "Zagreb",
-    "es": "Zagreb»"
+    "es": "Zagreb"
   },
   "zurich": {
     "pt": "Zurich",
