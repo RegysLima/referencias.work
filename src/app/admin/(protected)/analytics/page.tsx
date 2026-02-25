@@ -246,6 +246,20 @@ function LineChart({
   const activeX = activeIndex !== null && data.length > 1 ? (activeIndex / (data.length - 1)) * 100 : 0;
   const activeY =
     activeIndex !== null ? baseY - ((data[activeIndex]?.value || 0) / max) * innerHeight : baseY;
+  const tooltipYPercent = Math.max(8, (activeY / height) * 100 - 10);
+  const tooltipAlignClass =
+    activeX < 16 ? "translate-x-0" : activeX > 84 ? "-translate-x-full" : "-translate-x-1/2";
+  const deltaLabel =
+    deltaPct !== null
+      ? delta > 0
+        ? `+${deltaPct}%`
+        : delta < 0
+        ? `-${Math.abs(Number(deltaPct)).toFixed(1)}%`
+        : "0.0%"
+      : "—";
+  const deltaToneClass =
+    deltaPct === null ? "text-zinc-400" : delta > 0 ? "text-emerald-400" : delta < 0 ? "text-red-400" : "text-zinc-300";
+  const deltaArrow = deltaPct === null ? "" : delta > 0 ? "▲" : delta < 0 ? "▼" : "•";
 
   function setHoverFromClientX(clientX: number) {
     const rect = wrapperRef.current?.getBoundingClientRect();
@@ -301,10 +315,10 @@ function LineChart({
             <circle
               cx={activeX}
               cy={activeY}
-              r="1.8"
-              fill="#0b0b0f"
-              stroke="#22d3ee"
-              strokeWidth="0.9"
+              r="2.3"
+              fill="#0000CD"
+              stroke="rgba(255,255,255,0.22)"
+              strokeWidth="0.5"
               vectorEffect="non-scaling-stroke"
             />
           </>
@@ -312,17 +326,16 @@ function LineChart({
       </svg>
 
       {active ? (
-        <div className="pointer-events-none absolute left-2 top-2 rounded-none border border-zinc-700 bg-zinc-950/95 px-2 py-1 text-[11px] text-zinc-200">
-          <div>{formatDateBR(active.label)}</div>
-          <div className="mt-0.5 text-zinc-100">{active.value} visitas</div>
-          <div className="mt-0.5">
-            {deltaPct !== null
-              ? delta > 0
-                ? `Alta ${deltaPct}%`
-                : delta < 0
-                ? `Queda ${Math.abs(Number(deltaPct)).toFixed(1)}%`
-                : "Estável 0.0%"
-              : "Sem base anterior"}
+        <div
+          className={`pointer-events-none absolute z-10 ${tooltipAlignClass} -translate-y-full rounded-none border border-zinc-700 bg-zinc-950/95 px-3 py-2 text-xs text-zinc-100`}
+          style={{ left: `${activeX}%`, top: `${tooltipYPercent}%` }}
+        >
+          <div className="whitespace-nowrap">
+            {formatDateBR(active.label)} <span className="mx-1 text-zinc-500">|</span> {active.value} visitas{" "}
+            <span className="mx-1 text-zinc-500">|</span>{" "}
+            <span className={deltaToneClass}>
+              {deltaLabel} {deltaArrow}
+            </span>
           </div>
         </div>
       ) : null}
