@@ -301,29 +301,25 @@ function LineChart({
           />
         ) : null}
         {active ? (
-          <>
-            <line
-              x1={activeX}
-              y1={padding}
-              x2={activeX}
-              y2={baseY}
-              stroke="rgba(113,113,122,0.7)"
-              strokeWidth="0.8"
-              strokeDasharray="2 2"
-              vectorEffect="non-scaling-stroke"
-            />
-            <circle
-              cx={activeX}
-              cy={activeY}
-              r="2.3"
-              fill="#0000CD"
-              stroke="rgba(255,255,255,0.22)"
-              strokeWidth="0.5"
-              vectorEffect="non-scaling-stroke"
-            />
-          </>
+          <line
+            x1={activeX}
+            y1={padding}
+            x2={activeX}
+            y2={baseY}
+            stroke="rgba(113,113,122,0.7)"
+            strokeWidth="0.8"
+            strokeDasharray="2 2"
+            vectorEffect="non-scaling-stroke"
+          />
         ) : null}
       </svg>
+
+      {active ? (
+        <span
+          className="pointer-events-none absolute z-[2] h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/25 bg-[#0000CD]"
+          style={{ left: `${activeX}%`, top: `${(activeY / height) * 100}%` }}
+        />
+      ) : null}
 
       {active ? (
         <div
