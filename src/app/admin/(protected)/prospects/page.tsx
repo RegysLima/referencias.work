@@ -401,7 +401,7 @@ export default function AdminProspectsPage() {
               }}
               className={[
                 "grid grid-cols-12 items-center gap-2 border-b border-zinc-900 px-3 py-3 text-sm text-zinc-200",
-                item.homepageUrl ? "cursor-pointer" : "",
+                item.homepageUrl ? "cursor-pointer hover:bg-zinc-900/40 focus:outline-none focus:ring-1 focus:ring-zinc-700" : "",
                 "transition-all duration-200 ease-out",
                 exitingIds[item.id] ? "translate-x-2 scale-[0.99] opacity-0" : "translate-x-0 opacity-100",
               ].join(" ")}
