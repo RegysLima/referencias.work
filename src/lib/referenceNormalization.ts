@@ -76,13 +76,19 @@ function canonAreaLabel(value: string | null | undefined) {
   return AREA_CANON_MAP[key] || raw;
 }
 
+function expandAreaTokens(value: string | null | undefined) {
+  return (value || "")
+    .split(/[\n\r,;|/]+/g)
+    .map((part) => canonAreaLabel(part))
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
 function normalizeSecondaryAreas(primary: string | null | undefined, secondary: string[] | undefined) {
   const primaryLabel = canonAreaLabel(primary);
   const primaryCanon = primaryLabel.toLowerCase();
   const base = (secondary || [])
-    .map((item) => canonAreaLabel(item))
-    .map((item) => item.trim())
-    .filter(Boolean);
+    .flatMap((item) => expandAreaTokens(item));
   const filtered = uniq(base).filter((item) => item.toLowerCase() !== primaryCanon);
   return filtered.slice(0, 4);
 }

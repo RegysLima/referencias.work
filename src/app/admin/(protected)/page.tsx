@@ -94,13 +94,19 @@ function canonAreaLabel(value: string) {
   return AREA_CANON_MAP[key] || raw;
 }
 
+function expandAreaTokens(value: string | null | undefined) {
+  return (value || "")
+    .split(/[\n\r,;|/]+/g)
+    .map((part) => canonAreaLabel(part))
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
 function normalizeSecondaryAreas(primary: string | null | undefined, secondary: string[] | undefined) {
   const primaryLabel = canonAreaLabel(primary ?? "");
   const primaryCanon = primaryLabel.toLowerCase();
   const base = (secondary ?? [])
-    .map((s) => canonAreaLabel(s))
-    .map((s) => s.trim())
-    .filter(Boolean);
+    .flatMap((s) => expandAreaTokens(s));
   const filtered = uniq(base).filter((s) => s.toLowerCase() !== primaryCanon);
   return filtered.slice(0, 4);
 }
@@ -1221,11 +1227,14 @@ export default function AdminPage() {
   }, [areaOptions]);
 
   function parseSecondaryFromInput(text: string) {
-    const segmented = (text || "")
-      .split(/[;,|]+/g)
-      .map((s) => normalizeAreaValue(s))
-      .filter(Boolean);
-    if (segmented.length) {
+    const hasExplicitSeparators = /[\n\r,;|/]/.test(text || "");
+    const segmented = hasExplicitSeparators
+      ? (text || "")
+          .split(/[\n\r,;|/]+/g)
+          .map((s) => normalizeAreaValue(s))
+          .filter(Boolean)
+      : [];
+    if (segmented.length && hasExplicitSeparators) {
       return { values: uniq(segmented), invalidCount: 0 };
     }
 
