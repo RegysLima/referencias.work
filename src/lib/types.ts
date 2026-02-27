@@ -9,6 +9,7 @@ export type Reference = {
   tags: string[];
   country: string | null;
   city: string | null;
+  locationNA?: boolean;
   locations?: Array<{
     country?: string | null;
     city?: string | null;

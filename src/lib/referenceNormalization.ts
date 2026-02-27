@@ -101,6 +101,16 @@ function normalizeCityValue(value: string | null | undefined) {
   return next || null;
 }
 
+function isNotApplicable(value: string | null | undefined) {
+  const normalized = (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+  return normalized === "n a" || normalized === "na" || normalized === "nao se aplica";
+}
+
 function normalizeLocations(
   input:
     | Array<{
@@ -134,6 +144,7 @@ function normalizeLocations(
 }
 
 function normalizeReviewFlags(item: Reference) {
+  if (item.locationNA) return undefined;
   if (!item.reviewFlags) return item.reviewFlags;
   const next = { ...item.reviewFlags };
   if (next.country && clean(item.country)) delete next.country;
@@ -146,9 +157,22 @@ export function normalizeReferenceItem(input: Reference): Reference {
   const macroType = normalizeMacro(input.macroType || input.type || "");
   const areaPrimary = canonAreaLabel(input.areaPrimary || "") || null;
   const areasSecondary = normalizeSecondaryAreas(areaPrimary, input.areasSecondary || []);
-  const locations = normalizeLocations(input.locations, input.country || null, input.city || null);
-  const country = locations[0]?.country ? normalizeCountryValue(locations[0].country || null) : null;
-  const city = locations[0]?.city ? normalizeCityValue(locations[0].city || null) : null;
+  const explicitNA = Boolean(input.locationNA);
+  const inferredNA = isNotApplicable(input.country) || isNotApplicable(input.city);
+  const locationNA = explicitNA || inferredNA;
+  const locations = locationNA
+    ? []
+    : normalizeLocations(input.locations, input.country || null, input.city || null);
+  const country = locationNA
+    ? "N/A"
+    : locations[0]?.country
+    ? normalizeCountryValue(locations[0].country || null)
+    : null;
+  const city = locationNA
+    ? "N/A"
+    : locations[0]?.city
+    ? normalizeCityValue(locations[0].city || null)
+    : null;
 
   const normalized: Reference = {
     ...input,
@@ -158,6 +182,7 @@ export function normalizeReferenceItem(input: Reference): Reference {
     tags: normalizeTags(areaPrimary, areasSecondary),
     country,
     city,
+    locationNA,
     locations,
     updatedAt: input.updatedAt || new Date().toISOString(),
   };

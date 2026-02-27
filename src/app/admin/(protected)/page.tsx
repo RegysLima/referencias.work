@@ -23,6 +23,7 @@ type RefItem = {
 
   country?: string | null;
   city?: string | null;
+  locationNA?: boolean;
   locations?: Array<{
     country?: string | null;
     city?: string | null;
@@ -388,12 +389,14 @@ function isEmptyPlaceholderReference(it: RefItem) {
 }
 
 function hasLocationData(it: RefItem) {
+  if (it.locationNA) return true;
   if (hasValue(it.country) || hasValue(it.city)) return true;
   const rows = it.locations || [];
   return rows.some((row) => hasValue(row?.country ?? null) || hasValue(row?.city ?? null));
 }
 
 function hasActiveReviewFlags(it: RefItem) {
+  if (it.locationNA) return false;
   if (!it.reviewFlags) return false;
   const needsCountry = Boolean(it.reviewFlags.country) && !hasLocationData(it);
   const needsCity = Boolean(it.reviewFlags.city) && !hasLocationData(it);
@@ -401,6 +404,12 @@ function hasActiveReviewFlags(it: RefItem) {
 }
 
 function normalizeReviewFlags(it: RefItem) {
+  if (it.locationNA) {
+    return {
+      ...it,
+      reviewFlags: undefined,
+    };
+  }
   if (!it.reviewFlags) return it;
   const nextFlags = { ...it.reviewFlags };
   if (nextFlags.country && hasLocationData(it)) delete nextFlags.country;
@@ -420,6 +429,16 @@ function normalizeCountryValue(value: string | null | undefined) {
 function normalizeCityValue(value: string | null | undefined) {
   const next = canonicalCity(value ?? "");
   return next || null;
+}
+
+function isNotApplicable(value: string | null | undefined) {
+  const normalized = (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+  return normalized === "n a" || normalized === "na" || normalized === "nao se aplica";
 }
 
 function normalizeLocations(
@@ -552,14 +571,25 @@ export default function AdminPage() {
       );
       const ap = (it.areaPrimary ?? "") as string;
       const as = normalizeSecondaryAreas(ap, (it.areasSecondary ?? []) as string[]);
-      const locations = normalizeLocations(it.locations, it.country ?? null, it.city ?? null);
+      const inferredNA = isNotApplicable(it.country ?? null) || isNotApplicable(it.city ?? null);
+      const locationNA = Boolean(it.locationNA) || inferredNA;
+      const locations = locationNA ? [] : normalizeLocations(it.locations, it.country ?? null, it.city ?? null);
       return {
         ...it,
         macroType,
         areasSecondary: as,
         tags: deriveTags(ap, as),
-        country: locations[0]?.country ? normalizeCountryValue(locations[0].country ?? null) : null,
-        city: locations[0]?.city ? normalizeCityValue(locations[0].city ?? null) : null,
+        country: locationNA
+          ? "N/A"
+          : locations[0]?.country
+          ? normalizeCountryValue(locations[0].country ?? null)
+          : null,
+        city: locationNA
+          ? "N/A"
+          : locations[0]?.city
+          ? normalizeCityValue(locations[0].city ?? null)
+          : null,
+        locationNA,
         locations,
       };
     });
@@ -982,11 +1012,13 @@ export default function AdminPage() {
     const cityToCountries = new Map<string, Set<string>>();
 
     for (const it of items) {
+      if (it.locationNA) continue;
       const rows = normalizeLocations(it.locations, it.country, it.city, true);
       for (const row of rows) {
         const country = normalizeCountryValue(row?.country ?? null);
         const city = normalizeCityValue(row?.city ?? null);
         if (!country || !city) continue;
+        if (isNotApplicable(country) || isNotApplicable(city)) continue;
 
         const countryKey = normalizeSearchText(country);
         const cityKey = normalizeSearchText(city);
@@ -1023,6 +1055,7 @@ export default function AdminPage() {
             "areasSecondary",
             "country",
             "city",
+            "locationNA",
             "thumbnailUrl",
             "thumbnailSource",
           ];
@@ -1039,13 +1072,23 @@ export default function AdminPage() {
         const as = normalizeSecondaryAreas(ap, (next.areasSecondary ?? []) as string[]);
         next.areasSecondary = as;
         next.tags = deriveTags(ap, as);
-        const locations = normalizeLocations(next.locations, next.country, next.city, true);
-        next.locations = locations;
-        const firstResolved =
-          locations.find((row) => Boolean(normalizeCountryValue(row?.country ?? null) || normalizeCityValue(row?.city ?? null))) ||
-          null;
-        next.country = firstResolved?.country ? normalizeCountryValue(firstResolved.country ?? null) : null;
-        next.city = firstResolved?.city ? normalizeCityValue(firstResolved.city ?? null) : null;
+        const explicitNA = Boolean(next.locationNA);
+        const inferredNA = isNotApplicable(next.country ?? null) || isNotApplicable(next.city ?? null);
+        next.locationNA = explicitNA || inferredNA;
+        if (next.locationNA) {
+          next.country = "N/A";
+          next.city = "N/A";
+          next.locations = [];
+        } else {
+          const locations = normalizeLocations(next.locations, next.country, next.city, true);
+          next.locations = locations;
+          const firstResolved =
+            locations.find(
+              (row) => Boolean(normalizeCountryValue(row?.country ?? null) || normalizeCityValue(row?.city ?? null))
+            ) || null;
+          next.country = firstResolved?.country ? normalizeCountryValue(firstResolved.country ?? null) : null;
+          next.city = firstResolved?.city ? normalizeCityValue(firstResolved.city ?? null) : null;
+        }
 
         // se estava "Salvo ✓", volta para idle quando muda algo
         setSaveState((s) => (s === "saved" ? "idle" : s));
@@ -1057,9 +1100,10 @@ export default function AdminPage() {
   }
 
   function normalizeAreaValue(value: string) {
-    const key = (value || "").trim().toLowerCase();
-    if (!key) return "";
-    return areaMap.get(key) || "";
+    const raw = (value || "").trim();
+    if (!raw) return "";
+    const key = raw.toLowerCase();
+    return areaMap.get(key) || canonAreaLabel(raw);
   }
 
   function getLocationSuggestions(
@@ -1101,10 +1145,11 @@ export default function AdminPage() {
   }
 
   function commitCountryDraft(id: string, value: string) {
+    const current = items.find((it) => it.id === id);
+    if (current?.locationNA) return;
     const normalized = normalizeCountryValue(value || null);
     const nextValue = normalized || "";
     setCountryDraft((prev) => ({ ...prev, [id]: nextValue }));
-    const current = items.find((it) => it.id === id);
     const rows = current?.locations ? [...current.locations] : [];
     const first = rows[0] || { country: null, city: current?.city ?? null };
     rows[0] = { ...first, country: normalized };
@@ -1112,14 +1157,34 @@ export default function AdminPage() {
   }
 
   function commitCityDraft(id: string, value: string) {
+    const current = items.find((it) => it.id === id);
+    if (current?.locationNA) return;
     const normalized = normalizeCityValue(value || null);
     const nextValue = normalized || "";
     setCityDraft((prev) => ({ ...prev, [id]: nextValue }));
-    const current = items.find((it) => it.id === id);
     const rows = current?.locations ? [...current.locations] : [];
     const first = rows[0] || { country: current?.country ?? null, city: null };
     rows[0] = { ...first, city: normalized };
     updateItem(id, { city: normalized, locations: rows });
+  }
+
+  function toggleLocationNotApplicable(id: string, enabled: boolean) {
+    if (enabled) {
+      setCountryDraft((prev) => ({ ...prev, [id]: "N/A" }));
+      setCityDraft((prev) => ({ ...prev, [id]: "N/A" }));
+      setLocationDraft((prev) => {
+        const copy = { ...prev };
+        for (const key of Object.keys(copy)) {
+          if (key.startsWith(`${id}:`)) delete copy[key];
+        }
+        return copy;
+      });
+      updateItem(id, { locationNA: true, country: "N/A", city: "N/A", locations: [] });
+      return;
+    }
+    setCountryDraft((prev) => ({ ...prev, [id]: "" }));
+    setCityDraft((prev) => ({ ...prev, [id]: "" }));
+    updateItem(id, { locationNA: false, country: null, city: null, locations: [] });
   }
 
   function getPrimaryAreaSuggestions(draftValue: string) {
@@ -1135,9 +1200,6 @@ export default function AdminPage() {
 
   function commitPrimaryAreaDraft(id: string, value: string) {
     const normalized = normalizeAreaValue(value || "");
-    if (!normalized && value.trim()) {
-      showToast("Área não encontrada na lista. Escolha uma sugestão.");
-    }
     const nextValue = normalized || "";
     setPrimaryAreaDraft((prev) => ({ ...prev, [id]: nextValue }));
     updateItem(id, { areaPrimary: nextValue });
@@ -1157,6 +1219,14 @@ export default function AdminPage() {
   }, [areaOptions]);
 
   function parseSecondaryFromInput(text: string) {
+    const segmented = (text || "")
+      .split(/[;,|]+/g)
+      .map((s) => normalizeAreaValue(s))
+      .filter(Boolean);
+    if (segmented.length) {
+      return { values: uniq(segmented), invalidCount: 0 };
+    }
+
     const normalizedText = normalizeSearchText(
       (text || "").replace(/[,;|]+/g, " ")
     );
@@ -1233,11 +1303,8 @@ export default function AdminPage() {
   }
 
   function applySecondaryAreas(id: string, primaryArea: string | null | undefined, draftValue: string) {
-    const { values, invalidCount } = parseSecondaryFromInput(draftValue);
+    const { values } = parseSecondaryFromInput(draftValue);
     const normalized = values.map((v) => normalizeAreaValue(v)).filter(Boolean);
-    if (invalidCount > 0) {
-      showToast("Algumas áreas secundárias não existem na lista.");
-    }
     const parsed = normalizeSecondaryAreas(primaryArea ?? "", normalized);
     setSecondaryDraft((prev) => ({ ...prev, [id]: parsed.join(", ") }));
     updateItem(id, { areasSecondary: parsed });
@@ -1249,6 +1316,7 @@ export default function AdminPage() {
     patch: { country?: string | null; city?: string | null }
   ) {
     const current = items.find((it) => it.id === id);
+    if (current?.locationNA) return;
     const rows = current?.locations ? [...current.locations] : [];
     const base = rows[rowIndex] || { country: null, city: null };
     rows[rowIndex] = {
@@ -1265,6 +1333,8 @@ export default function AdminPage() {
     field: "country" | "city",
     value: string
   ) {
+    const current = items.find((it) => it.id === id);
+    if (current?.locationNA) return;
     const normalized =
       field === "country"
         ? normalizeCountryValue(value || null)
@@ -1282,6 +1352,7 @@ export default function AdminPage() {
 
   function addLocationRow(id: string) {
     const current = items.find((it) => it.id === id);
+    if (current?.locationNA) return;
     const rows = current?.locations ? [...current.locations] : [];
     // index 0 é reservado para o país/cidade principal.
     // garante a linha base antes de adicionar uma linha extra visível.
@@ -1303,6 +1374,7 @@ export default function AdminPage() {
 
   function removeLocationRow(id: string, rowIndex: number) {
     const current = items.find((it) => it.id === id);
+    if (current?.locationNA) return;
     const rows = current?.locations ? [...current.locations] : [];
     if (rowIndex <= 0 || rowIndex >= rows.length) return;
     rows.splice(rowIndex, 1);
@@ -1329,6 +1401,7 @@ export default function AdminPage() {
       tags: [],
       country: null,
       city: null,
+      locationNA: false,
       locations: [],
       thumbnailUrl: null,
       thumbnailSource: "manual",
@@ -1879,6 +1952,7 @@ export default function AdminPage() {
               const k = normalizeUrl(i.url);
               const dup = k && (duplicateMap.get(k) ?? 0) >= 2;
               const brokenThumb = brokenThumbs[i.id];
+              const isLocationNA = Boolean(i.locationNA);
 
               return (
                 <div
@@ -2361,12 +2435,26 @@ export default function AdminPage() {
                           Dica: digite e use Tab/Setas/Enter para completar. Espaço separa categorias.
                         </div>
                       </div>
+                      <div className="flex items-center justify-between border border-zinc-800 bg-zinc-950/40 px-3 py-2 text-sm">
+                        <span className="text-zinc-300">Sem sede fixa (N/A)</span>
+                        <span className="relative inline-flex h-5 w-9">
+                          <input
+                            type="checkbox"
+                            checked={isLocationNA}
+                            onChange={(e) => toggleLocationNotApplicable(i.id, e.target.checked)}
+                            className="peer sr-only"
+                          />
+                          <span className="absolute inset-0 rounded-full bg-zinc-800 transition peer-checked:bg-white/90" />
+                          <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-zinc-200 transition peer-checked:translate-x-4 peer-checked:bg-black" />
+                        </span>
+                      </div>
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                           <label className="text-xs text-zinc-400">País</label>
                           <div className="relative mt-1">
                             <input
                               value={countryDraft[i.id] ?? i.country ?? ""}
+                              disabled={isLocationNA}
                               autoComplete="new-password"
                               autoCorrect="off"
                               spellCheck={false}
@@ -2437,9 +2525,12 @@ export default function AdminPage() {
                                   setCountrySuggestOpenId(null);
                                 }
                               }}
-                              className="w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                              className={[
+                                "w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm",
+                                isLocationNA ? "cursor-not-allowed opacity-60" : "",
+                              ].join(" ")}
                             />
-                            {countrySuggestOpenId === i.id ? (
+                            {!isLocationNA && countrySuggestOpenId === i.id ? (
                               <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-none border border-zinc-800 bg-zinc-950 shadow-xl">
                                 {getLocationSuggestions(
                                   countryDraft[i.id] ?? i.country ?? "",
@@ -2486,6 +2577,7 @@ export default function AdminPage() {
                           <div className="relative mt-1">
                             <input
                               value={cityDraft[i.id] ?? i.city ?? ""}
+                              disabled={isLocationNA}
                               autoComplete="new-password"
                               autoCorrect="off"
                               spellCheck={false}
@@ -2556,9 +2648,12 @@ export default function AdminPage() {
                                   setCitySuggestOpenId(null);
                                 }
                               }}
-                              className="w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                              className={[
+                                "w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm",
+                                isLocationNA ? "cursor-not-allowed opacity-60" : "",
+                              ].join(" ")}
                             />
-                            {citySuggestOpenId === i.id ? (
+                            {!isLocationNA && citySuggestOpenId === i.id ? (
                               <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-none border border-zinc-800 bg-zinc-950 shadow-xl">
                                 {getLocationSuggestions(
                                   cityDraft[i.id] ?? i.city ?? "",
@@ -2614,7 +2709,13 @@ export default function AdminPage() {
                                   type="button"
                                   onMouseDown={(e) => e.preventDefault()}
                                   onClick={() => removeLocationRow(i.id, rowIndex)}
-                                  className="text-[11px] text-zinc-500 underline hover:text-zinc-300"
+                                  disabled={isLocationNA}
+                                  className={[
+                                    "text-[11px] underline",
+                                    isLocationNA
+                                      ? "cursor-not-allowed text-zinc-600"
+                                      : "text-zinc-500 hover:text-zinc-300",
+                                  ].join(" ")}
                                 >
                                   remover
                                 </button>
@@ -2624,6 +2725,7 @@ export default function AdminPage() {
                                   <input
                                     value={locationDraft[countryFieldKey] ?? row?.country ?? ""}
                                     placeholder="País adicional"
+                                    disabled={isLocationNA}
                                     autoComplete="new-password"
                                     autoCorrect="off"
                                     spellCheck={false}
@@ -2704,9 +2806,12 @@ export default function AdminPage() {
                                         setLocationSuggestOpenKey(null);
                                       }
                                     }}
-                                    className="w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                                    className={[
+                                      "w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm",
+                                      isLocationNA ? "cursor-not-allowed opacity-60" : "",
+                                    ].join(" ")}
                                   />
-                                  {locationSuggestOpenKey === countryFieldKey ? (
+                                  {!isLocationNA && locationSuggestOpenKey === countryFieldKey ? (
                                     <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-none border border-zinc-800 bg-zinc-950 shadow-xl">
                                       {getLocationSuggestions(
                                         locationDraft[countryFieldKey] ?? row?.country ?? "",
@@ -2757,6 +2862,7 @@ export default function AdminPage() {
                                   <input
                                     value={locationDraft[cityFieldKey] ?? row?.city ?? ""}
                                     placeholder="Cidade adicional"
+                                    disabled={isLocationNA}
                                     autoComplete="new-password"
                                     autoCorrect="off"
                                     spellCheck={false}
@@ -2837,9 +2943,12 @@ export default function AdminPage() {
                                         setLocationSuggestOpenKey(null);
                                       }
                                     }}
-                                    className="w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm"
+                                    className={[
+                                      "w-full rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm",
+                                      isLocationNA ? "cursor-not-allowed opacity-60" : "",
+                                    ].join(" ")}
                                   />
-                                  {locationSuggestOpenKey === cityFieldKey ? (
+                                  {!isLocationNA && locationSuggestOpenKey === cityFieldKey ? (
                                     <div className="absolute z-20 mt-1 max-h-52 w-full overflow-auto rounded-none border border-zinc-800 bg-zinc-950 shadow-xl">
                                       {getLocationSuggestions(
                                         locationDraft[cityFieldKey] ?? row?.city ?? "",
@@ -2896,7 +3005,11 @@ export default function AdminPage() {
                             type="button"
                             onMouseDown={(e) => e.preventDefault()}
                             onClick={() => addLocationRow(i.id)}
-                            className="mb-2 rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm hover:border-zinc-700"
+                            disabled={isLocationNA}
+                            className={[
+                              "mb-2 rounded-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm",
+                              isLocationNA ? "cursor-not-allowed opacity-60" : "hover:border-zinc-700",
+                            ].join(" ")}
                           >
                             + Adicionar país e cidade
                           </button>
