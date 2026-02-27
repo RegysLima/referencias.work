@@ -354,12 +354,14 @@ function normalizeMacro(raw: string) {
 function buildAreaMap(items: RefItem[]) {
   const map = new Map<string, string>();
   for (const it of items) {
-    const p = (it.areaPrimary ?? "").trim();
-    if (p) map.set(p.toLowerCase(), p);
+    for (const p of expandAreaTokens(it.areaPrimary ?? "")) {
+      if (p) map.set(p.toLowerCase(), p);
+    }
     const s = it.areasSecondary ?? [];
     for (const a of s) {
-      const v = (a ?? "").trim();
-      if (v) map.set(v.toLowerCase(), v);
+      for (const v of expandAreaTokens(a ?? "")) {
+        if (v) map.set(v.toLowerCase(), v);
+      }
     }
   }
   return map;
@@ -577,8 +579,9 @@ export default function AdminPage() {
       const macroType = normalizeMacro(
         getStringField(it, "macroType") || getStringField(it, "macro")
       );
-      const ap = (it.areaPrimary ?? "") as string;
-      const as = normalizeSecondaryAreas(ap, (it.areasSecondary ?? []) as string[]);
+      const primaryTokens = expandAreaTokens((it.areaPrimary ?? "") as string);
+      const ap = primaryTokens[0] ?? "";
+      const as = normalizeSecondaryAreas(ap, [...primaryTokens.slice(1), ...((it.areasSecondary ?? []) as string[])]);
       const inferredNA = isNotApplicable(it.country ?? null) || isNotApplicable(it.city ?? null);
       const locationNA = Boolean(it.locationNA) || inferredNA;
       const locations = locationNA ? [] : normalizeLocations(it.locations, it.country ?? null, it.city ?? null);
@@ -1075,9 +1078,10 @@ export default function AdminPage() {
         // normaliza macroType sempre que mexer (evita “Studio” solto)
         next.macroType = normalizeMacro(next.macroType);
 
-        const ap = canonAreaLabel((next.areaPrimary ?? "") as string);
+        const primaryTokens = expandAreaTokens((next.areaPrimary ?? "") as string);
+        const ap = primaryTokens[0] ?? "";
         next.areaPrimary = ap || "";
-        const as = normalizeSecondaryAreas(ap, (next.areasSecondary ?? []) as string[]);
+        const as = normalizeSecondaryAreas(ap, [...primaryTokens.slice(1), ...((next.areasSecondary ?? []) as string[])]);
         next.areasSecondary = as;
         next.tags = deriveTags(ap, as);
         const explicitNA = Boolean(next.locationNA);
@@ -1207,10 +1211,16 @@ export default function AdminPage() {
   }
 
   function commitPrimaryAreaDraft(id: string, value: string) {
-    const normalized = normalizeAreaValue(value || "");
+    const pieces = expandAreaTokens(value || "").map((part) => normalizeAreaValue(part)).filter(Boolean);
+    const normalized = pieces[0] || normalizeAreaValue(value || "");
+    const extras = pieces.slice(1);
     const nextValue = normalized || "";
     setPrimaryAreaDraft((prev) => ({ ...prev, [id]: nextValue }));
-    updateItem(id, { areaPrimary: nextValue });
+    const current = items.find((it) => it.id === id);
+    const nextSecondary = extras.length
+      ? normalizeSecondaryAreas(nextValue, [...extras, ...(current?.areasSecondary || [])])
+      : current?.areasSecondary;
+    updateItem(id, { areaPrimary: nextValue, ...(nextSecondary ? { areasSecondary: nextSecondary } : {}) });
   }
 
   const areaOptionIndex = useMemo(() => {

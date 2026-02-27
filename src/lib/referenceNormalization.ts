@@ -76,12 +76,16 @@ function canonAreaLabel(value: string | null | undefined) {
   return AREA_CANON_MAP[key] || raw;
 }
 
-function expandAreaTokens(value: string | null | undefined) {
+function splitAreaCandidates(value: string | null | undefined) {
   return (value || "")
     .split(/[\n\r,;|/]+/g)
     .map((part) => canonAreaLabel(part))
     .map((part) => part.trim())
     .filter(Boolean);
+}
+
+function expandAreaTokens(value: string | null | undefined) {
+  return splitAreaCandidates(value);
 }
 
 function normalizeSecondaryAreas(primary: string | null | undefined, secondary: string[] | undefined) {
@@ -161,8 +165,9 @@ function normalizeReviewFlags(item: Reference) {
 
 export function normalizeReferenceItem(input: Reference): Reference {
   const macroType = normalizeMacro(input.macroType || input.type || "");
-  const areaPrimary = canonAreaLabel(input.areaPrimary || "") || null;
-  const areasSecondary = normalizeSecondaryAreas(areaPrimary, input.areasSecondary || []);
+  const primaryTokens = splitAreaCandidates(input.areaPrimary || "");
+  const areaPrimary = primaryTokens[0] || null;
+  const areasSecondary = normalizeSecondaryAreas(areaPrimary, [...primaryTokens.slice(1), ...(input.areasSecondary || [])]);
   const explicitNA = Boolean(input.locationNA);
   const inferredNA = isNotApplicable(input.country) || isNotApplicable(input.city);
   const locationNA = explicitNA || inferredNA;
