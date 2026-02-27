@@ -792,7 +792,7 @@ export default function AdminPage() {
       return Boolean(k && (duplicateMap.get(k) ?? 0) >= 2);
     }).length;
     const needsReview = items.filter((i) => hasActiveReviewFlags(i)).length;
-    const broken = Object.keys(brokenThumbs).length;
+    const broken = Object.values(brokenThumbs).filter(Boolean).length;
     return { noImage, unreviewed, duplicates, needsReview, broken };
   }, [items, duplicateMap, brokenThumbs]);
 
@@ -865,8 +865,8 @@ export default function AdminPage() {
         const results = Array.isArray(data?.results) ? data.results : [];
         for (const result of results) {
           const broken = !result?.ok;
-          checkedState[result.id] = broken;
           if (broken) {
+            checkedState[result.id] = true;
             brokenCount += 1;
             reasonsState[result.id] = result?.reason || "invalid_media";
           }
