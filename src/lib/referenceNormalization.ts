@@ -133,9 +133,14 @@ function splitCompoundAreaByCatalog(value: string | null | undefined, catalog: s
     .map((label) => {
       const key = areaLabelKey(label);
       const tokens = key.split(/\s+/).filter(Boolean);
-      return { label: canonAreaLabel(label), tokens };
+      return { label: canonAreaLabel(label), tokens, key };
     })
-    .filter((entry) => entry.tokens.length > 0)
+    .filter((entry) => {
+      if (entry.tokens.length === 0) return false;
+      // Evita "auto-match" de rótulos compostos inválidos presentes no catálogo.
+      if (words.length > 1 && entry.key === normalized) return false;
+      return true;
+    })
     .sort((a, b) => b.tokens.length - a.tokens.length);
 
   const out: string[] = [];
