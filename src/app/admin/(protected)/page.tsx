@@ -68,6 +68,21 @@ const AREA_CANON_MAP: Record<string, string> = {
   ux: "Digital",
 };
 
+const AREA_FALLBACK_CATALOG = [
+  "Branding",
+  "Design Gráfico",
+  "Tipografia",
+  "Embalagem",
+  "Digital",
+  "Editorial",
+  "Ilustração",
+  "Fotografia",
+  "Motion",
+  "3D",
+  "Direção de Arte",
+  "Identidade Visual",
+];
+
 function uniq(arr: string[]) {
   const out: string[] = [];
   const seen = new Set<string>();
@@ -94,12 +109,77 @@ function canonAreaLabel(value: string) {
   return AREA_CANON_MAP[key] || raw;
 }
 
+function areaLabelKey(value: string) {
+  return (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
 function expandAreaTokens(value: string | null | undefined) {
   return (value || "")
     .split(/[\n\r,;|/]+/g)
     .map((part) => canonAreaLabel(part))
     .map((part) => part.trim())
     .filter(Boolean);
+}
+
+function buildAreaCatalog(items: RefItem[]) {
+  const values: string[] = [...AREA_FALLBACK_CATALOG];
+  for (const it of items) {
+    values.push(...expandAreaTokens(it.areaPrimary ?? ""));
+    for (const s of it.areasSecondary || []) {
+      values.push(...expandAreaTokens(s));
+    }
+  }
+  return uniq(values);
+}
+
+function splitCompoundAreaByCatalog(value: string | null | undefined, catalog: string[]) {
+  const source = (value || "").trim();
+  if (!source) return [];
+  if (/[\n\r,;|/]/.test(source)) return expandAreaTokens(source);
+
+  const normalized = areaLabelKey(source);
+  if (!normalized) return [];
+  const words = normalized.split(/\s+/).filter(Boolean);
+  if (words.length <= 1) return [canonAreaLabel(source)];
+
+  const entries = uniq(catalog)
+    .map((label) => {
+      const key = areaLabelKey(label);
+      const tokens = key.split(/\s+/).filter(Boolean);
+      return { label: canonAreaLabel(label), tokens };
+    })
+    .filter((entry) => entry.tokens.length > 0)
+    .sort((a, b) => b.tokens.length - a.tokens.length);
+
+  const out: string[] = [];
+  let i = 0;
+  while (i < words.length) {
+    let match: { label: string; len: number } | null = null;
+    for (const entry of entries) {
+      if (entry.tokens.length > words.length - i) continue;
+      let ok = true;
+      for (let j = 0; j < entry.tokens.length; j += 1) {
+        if (entry.tokens[j] !== words[i + j]) {
+          ok = false;
+          break;
+        }
+      }
+      if (ok) {
+        match = { label: entry.label, len: entry.tokens.length };
+        break;
+      }
+    }
+    if (!match) return [canonAreaLabel(source)];
+    out.push(match.label);
+    i += match.len;
+  }
+
+  return out.length >= 2 ? out : [canonAreaLabel(source)];
 }
 
 function normalizeSecondaryAreas(primary: string | null | undefined, secondary: string[] | undefined) {
@@ -352,17 +432,10 @@ function normalizeMacro(raw: string) {
 }
 
 function buildAreaMap(items: RefItem[]) {
+  const catalog = buildAreaCatalog(items);
   const map = new Map<string, string>();
-  for (const it of items) {
-    for (const p of expandAreaTokens(it.areaPrimary ?? "")) {
-      if (p) map.set(p.toLowerCase(), p);
-    }
-    const s = it.areasSecondary ?? [];
-    for (const a of s) {
-      for (const v of expandAreaTokens(a ?? "")) {
-        if (v) map.set(v.toLowerCase(), v);
-      }
-    }
+  for (const label of catalog) {
+    if (label) map.set(label.toLowerCase(), label);
   }
   return map;
 }
@@ -575,13 +648,17 @@ export default function AdminPage() {
 
   const hydrateItems = useCallback((loaded: RefItem[], options?: { autoFix?: boolean }) => {
     // normaliza macroType (corrige “Studio” etc) ao carregar
+    const catalog = buildAreaCatalog(loaded);
     const normalized = loaded.map((it) => {
       const macroType = normalizeMacro(
         getStringField(it, "macroType") || getStringField(it, "macro")
       );
-      const primaryTokens = expandAreaTokens((it.areaPrimary ?? "") as string);
+      const primaryTokens = splitCompoundAreaByCatalog((it.areaPrimary ?? "") as string, catalog);
       const ap = primaryTokens[0] ?? "";
-      const as = normalizeSecondaryAreas(ap, [...primaryTokens.slice(1), ...((it.areasSecondary ?? []) as string[])]);
+      const secondaryTokens = ((it.areasSecondary ?? []) as string[]).flatMap((entry) =>
+        splitCompoundAreaByCatalog(entry, catalog)
+      );
+      const as = normalizeSecondaryAreas(ap, [...primaryTokens.slice(1), ...secondaryTokens]);
       const inferredNA = isNotApplicable(it.country ?? null) || isNotApplicable(it.city ?? null);
       const locationNA = Boolean(it.locationNA) || inferredNA;
       const locations = locationNA ? [] : normalizeLocations(it.locations, it.country ?? null, it.city ?? null);
@@ -1051,7 +1128,9 @@ export default function AdminPage() {
 
   function updateItem(id: string, patch: Partial<RefItem>) {
     setItems((prev) =>
-      prev.map((i) => {
+      {
+        const catalog = buildAreaCatalog(prev);
+        return prev.map((i) => {
         if (i.id !== id) return i;
 
         const next: RefItem = { ...i, ...patch, updatedAt: new Date().toISOString() };
@@ -1078,10 +1157,13 @@ export default function AdminPage() {
         // normaliza macroType sempre que mexer (evita “Studio” solto)
         next.macroType = normalizeMacro(next.macroType);
 
-        const primaryTokens = expandAreaTokens((next.areaPrimary ?? "") as string);
+        const primaryTokens = splitCompoundAreaByCatalog((next.areaPrimary ?? "") as string, catalog);
         const ap = primaryTokens[0] ?? "";
         next.areaPrimary = ap || "";
-        const as = normalizeSecondaryAreas(ap, [...primaryTokens.slice(1), ...((next.areasSecondary ?? []) as string[])]);
+        const secondaryTokens = ((next.areasSecondary ?? []) as string[]).flatMap((entry) =>
+          splitCompoundAreaByCatalog(entry, catalog)
+        );
+        const as = normalizeSecondaryAreas(ap, [...primaryTokens.slice(1), ...secondaryTokens]);
         next.areasSecondary = as;
         next.tags = deriveTags(ap, as);
         const explicitNA = Boolean(next.locationNA);
@@ -1107,7 +1189,8 @@ export default function AdminPage() {
         setSaveMessage((m) => (saveState === "saved" ? "" : m));
 
         return normalizeReviewFlags(next);
-      })
+      });
+    }
     );
   }
 
@@ -1211,7 +1294,10 @@ export default function AdminPage() {
   }
 
   function commitPrimaryAreaDraft(id: string, value: string) {
-    const pieces = expandAreaTokens(value || "").map((part) => normalizeAreaValue(part)).filter(Boolean);
+    const catalog = buildAreaCatalog(items);
+    const pieces = splitCompoundAreaByCatalog(value || "", catalog)
+      .map((part) => normalizeAreaValue(part))
+      .filter(Boolean);
     const normalized = pieces[0] || normalizeAreaValue(value || "");
     const extras = pieces.slice(1);
     const nextValue = normalized || "";

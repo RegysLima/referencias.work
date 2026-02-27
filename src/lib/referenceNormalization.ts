@@ -25,6 +25,21 @@ const AREA_CANON_MAP: Record<string, string> = {
   ux: "Digital",
 };
 
+const AREA_FALLBACK_CATALOG = [
+  "Branding",
+  "Design Gráfico",
+  "Tipografia",
+  "Embalagem",
+  "Digital",
+  "Editorial",
+  "Ilustração",
+  "Fotografia",
+  "Motion",
+  "3D",
+  "Direção de Arte",
+  "Identidade Visual",
+];
+
 function clean(value: string | null | undefined) {
   return (value || "").trim();
 }
@@ -76,12 +91,77 @@ function canonAreaLabel(value: string | null | undefined) {
   return AREA_CANON_MAP[key] || raw;
 }
 
+function areaLabelKey(value: string | null | undefined) {
+  return clean(value)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
 function splitAreaCandidates(value: string | null | undefined) {
   return (value || "")
     .split(/[\n\r,;|/]+/g)
     .map((part) => canonAreaLabel(part))
     .map((part) => part.trim())
     .filter(Boolean);
+}
+
+function buildAreaCatalog(items: Reference[]) {
+  const values: string[] = [...AREA_FALLBACK_CATALOG];
+  for (const it of items) {
+    values.push(...splitAreaCandidates(it.areaPrimary || ""));
+    for (const s of it.areasSecondary || []) {
+      values.push(...splitAreaCandidates(s));
+    }
+  }
+  return uniq(values);
+}
+
+function splitCompoundAreaByCatalog(value: string | null | undefined, catalog: string[]) {
+  const source = clean(value);
+  if (!source) return [];
+  if (/[\n\r,;|/]/.test(source)) return splitAreaCandidates(source);
+
+  const normalized = areaLabelKey(source);
+  if (!normalized) return [];
+  const words = normalized.split(/\s+/).filter(Boolean);
+  if (words.length <= 1) return [canonAreaLabel(source)];
+
+  const entries = uniq(catalog)
+    .map((label) => {
+      const key = areaLabelKey(label);
+      const tokens = key.split(/\s+/).filter(Boolean);
+      return { label: canonAreaLabel(label), tokens };
+    })
+    .filter((entry) => entry.tokens.length > 0)
+    .sort((a, b) => b.tokens.length - a.tokens.length);
+
+  const out: string[] = [];
+  let i = 0;
+  while (i < words.length) {
+    let match: { label: string; len: number } | null = null;
+    for (const entry of entries) {
+      if (entry.tokens.length > words.length - i) continue;
+      let ok = true;
+      for (let j = 0; j < entry.tokens.length; j += 1) {
+        if (entry.tokens[j] !== words[i + j]) {
+          ok = false;
+          break;
+        }
+      }
+      if (ok) {
+        match = { label: entry.label, len: entry.tokens.length };
+        break;
+      }
+    }
+    if (!match) return [canonAreaLabel(source)];
+    out.push(match.label);
+    i += match.len;
+  }
+
+  return out.length >= 2 ? out : [canonAreaLabel(source)];
 }
 
 function expandAreaTokens(value: string | null | undefined) {
@@ -163,11 +243,14 @@ function normalizeReviewFlags(item: Reference) {
   return next;
 }
 
-export function normalizeReferenceItem(input: Reference): Reference {
+export function normalizeReferenceItem(input: Reference, areaCatalog: string[]): Reference {
   const macroType = normalizeMacro(input.macroType || input.type || "");
-  const primaryTokens = splitAreaCandidates(input.areaPrimary || "");
+  const primaryTokens = splitCompoundAreaByCatalog(input.areaPrimary || "", areaCatalog);
   const areaPrimary = primaryTokens[0] || null;
-  const areasSecondary = normalizeSecondaryAreas(areaPrimary, [...primaryTokens.slice(1), ...(input.areasSecondary || [])]);
+  const secondaryTokens = (input.areasSecondary || []).flatMap((entry) =>
+    splitCompoundAreaByCatalog(entry, areaCatalog)
+  );
+  const areasSecondary = normalizeSecondaryAreas(areaPrimary, [...primaryTokens.slice(1), ...secondaryTokens]);
   const explicitNA = Boolean(input.locationNA);
   const inferredNA = isNotApplicable(input.country) || isNotApplicable(input.city);
   const locationNA = explicitNA || inferredNA;
@@ -204,10 +287,11 @@ export function normalizeReferenceItem(input: Reference): Reference {
 
 export function normalizeReferenceDb(db: ReferenceDB) {
   const beforeItems = Array.isArray(db.items) ? db.items : [];
+  const areaCatalog = buildAreaCatalog(beforeItems);
   let changedItems = 0;
 
   const items = beforeItems.map((item) => {
-    const normalized = normalizeReferenceItem(item);
+    const normalized = normalizeReferenceItem(item, areaCatalog);
     if (JSON.stringify(item) !== JSON.stringify(normalized)) changedItems += 1;
     return normalized;
   });
