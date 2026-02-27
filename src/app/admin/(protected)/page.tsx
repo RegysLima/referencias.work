@@ -543,6 +543,8 @@ export default function AdminPage() {
     itemId: string | null;
     name: string;
   }>({ open: false, itemId: null, name: "" });
+  const reviewBadgeClass =
+    "inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1.5 text-[11px] font-medium text-black";
 
   // toast simples (feedback)
   const [toast, setToast] = useState<string>("");
@@ -1814,7 +1816,7 @@ export default function AdminPage() {
                 <span className="inline-flex items-center gap-2">
                   Sem imagem
                   {filterCounts.noImage > 0 ? (
-                    <span className="rounded-none border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-300">
+                    <span className={reviewBadgeClass}>
                       {filterCounts.noImage}
                     </span>
                   ) : null}
@@ -1835,7 +1837,7 @@ export default function AdminPage() {
                 <span className="inline-flex items-center gap-2">
                   Não revisados
                   {filterCounts.unreviewed > 0 ? (
-                    <span className="rounded-none border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-300">
+                    <span className={reviewBadgeClass}>
                       {filterCounts.unreviewed}
                     </span>
                   ) : null}
@@ -1856,7 +1858,7 @@ export default function AdminPage() {
                 <span className="inline-flex items-center gap-2">
                   URL Duplicadas
                   {filterCounts.duplicates > 0 ? (
-                    <span className="rounded-none border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-300">
+                    <span className={reviewBadgeClass}>
                       {filterCounts.duplicates}
                     </span>
                   ) : null}
@@ -1877,7 +1879,7 @@ export default function AdminPage() {
                 <span className="inline-flex items-center gap-2">
                   Revisar dúvidas
                   {filterCounts.needsReview > 0 ? (
-                    <span className="rounded-none border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-300">
+                    <span className={reviewBadgeClass}>
                       {filterCounts.needsReview}
                     </span>
                   ) : null}
@@ -1898,7 +1900,7 @@ export default function AdminPage() {
                 <span className="inline-flex items-center gap-2">
                   Mídias com problema
                   {filterCounts.broken > 0 ? (
-                    <span className="rounded-none border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-300">
+                    <span className={reviewBadgeClass}>
                       {filterCounts.broken}
                     </span>
                   ) : null}
