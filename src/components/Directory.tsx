@@ -1239,12 +1239,20 @@ export default function Directory({
                 : "max-h-40 opacity-100 mt-4 lg:mt-0",
             ].join(" ")}
           >
-            <Link
-              href={`/sobre?lang=${lang}`}
-              className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap text-zinc-400 hover:text-zinc-700"
-            >
-              {lang === "en" ? "About" : "Sobre"}
-            </Link>
+            <nav className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap">
+              <Link href={`/sobre?lang=${lang}`} className="text-zinc-400 hover:text-zinc-700">
+                {lang === "en" ? "About" : "Sobre"}
+              </Link>
+              <span className="text-zinc-400">, </span>
+              <a
+                href="https://www.instagram.com/referencias.work/"
+                target="_blank"
+                rel="noreferrer"
+                className="text-zinc-400 hover:text-zinc-700"
+              >
+                Instagram
+              </a>
+            </nav>
 
             <div className="pt-2 text-[14px] sm:text-[16px] whitespace-nowrap">
               {(["pt", "es", "en"] as Lang[]).map((code, idx) => (
