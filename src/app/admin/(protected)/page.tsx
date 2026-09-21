@@ -317,15 +317,27 @@ function getDownloadName(url: string, fallback: string) {
   return `${fallback}.jpg`;
 }
 
-function VideoThumb({ src, className }: { src: string; className: string }) {
+function VideoThumb({
+  src,
+  className,
+  onReady,
+  onFailure,
+}: {
+  src: string;
+  className: string;
+  onReady?: () => void;
+  onFailure?: () => void;
+}) {
   const [failed, setFailed] = useState(false);
   const fallback = getVimeoFallbackSrc(src);
+
   if (failed && fallback) {
     return (
       <iframe
         src={fallback}
         title=""
         allow="autoplay; fullscreen; picture-in-picture"
+        onLoad={onReady}
         className={`${className} pointer-events-none absolute inset-0 block`}
         style={{ width: "100%", height: "100%", display: "block" }}
       />
@@ -343,7 +355,11 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       disablePictureInPicture
       controlsList="nofullscreen nodownload noplaybackrate noremoteplayback"
       tabIndex={-1}
-      onError={() => setFailed(true)}
+      onLoadedData={onReady}
+      onError={() => {
+        setFailed(true);
+        if (!fallback) onFailure?.();
+      }}
       onClick={(e) => e.preventDefault()}
       onMouseDown={(e) => e.preventDefault()}
       onPointerDown={(e) => e.preventDefault()}
@@ -362,6 +378,54 @@ function VideoThumb({ src, className }: { src: string; className: string }) {
       }}
     />
   );
+}
+
+function checkVideoInBrowser(url: string, timeoutMs = 8000) {
+  return new Promise<{ ok: boolean; reason: string }>((resolve) => {
+    const video = document.createElement("video");
+    let settled = false;
+
+    const finish = (ok: boolean, reason: string) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      video.onloadedmetadata = null;
+      video.onerror = null;
+      video.removeAttribute("src");
+      video.load();
+      resolve({ ok, reason });
+    };
+
+    const timer = window.setTimeout(() => finish(false, "video_timeout"), timeoutMs);
+    video.muted = true;
+    video.preload = "metadata";
+    video.onloadedmetadata = () => finish(true, "ok");
+    video.onerror = () => finish(false, "video_error");
+    video.src = url;
+    video.load();
+  });
+}
+
+async function mapWithConcurrency<T, R>(
+  values: T[],
+  concurrency: number,
+  fn: (value: T) => Promise<R>
+) {
+  const results: R[] = new Array(values.length);
+  let nextIndex = 0;
+
+  async function worker() {
+    while (nextIndex < values.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      results[currentIndex] = await fn(values[currentIndex]);
+    }
+  }
+
+  await Promise.all(
+    Array.from({ length: Math.min(concurrency, values.length) }, () => worker())
+  );
+  return results;
 }
 
 function VideoFramePreview({ src, className }: { src: string; className: string }) {
@@ -792,7 +856,7 @@ export default function AdminPage() {
       return Boolean(k && (duplicateMap.get(k) ?? 0) >= 2);
     }).length;
     const needsReview = items.filter((i) => hasActiveReviewFlags(i)).length;
-    const broken = Object.values(brokenThumbs).filter(Boolean).length;
+    const broken = items.filter((i) => brokenThumbs[i.id] === true).length;
     return { noImage, unreviewed, duplicates, needsReview, broken };
   }, [items, duplicateMap, brokenThumbs]);
 
@@ -826,9 +890,14 @@ export default function AdminPage() {
       .filter((i) => (i.thumbnailUrl || "").trim())
       .map((i) => ({ id: i.id, url: (i.thumbnailUrl || "").trim() }));
 
-    const mediaCandidates = candidates.filter((item) => !isVimeoUrl(item.url));
+    const videoCandidates = candidates.filter(
+      (item) => isVideoUrl(item.url) && !isVimeoUrl(item.url)
+    );
+    const serverCandidates = candidates.filter(
+      (item) => !isVideoUrl(item.url) && !isVimeoUrl(item.url)
+    );
 
-    if (!mediaCandidates.length) {
+    if (!videoCandidates.length && !serverCandidates.length) {
       showToast("Nenhuma mídia para verificar");
       return;
     }
@@ -843,8 +912,8 @@ export default function AdminPage() {
     const reasonsState: Record<string, string> = {};
     let brokenCount = 0;
 
-    for (let i = 0; i < mediaCandidates.length; i += batchSize) {
-      const chunk = mediaCandidates.slice(i, i + batchSize);
+    for (let i = 0; i < serverCandidates.length; i += batchSize) {
+      const chunk = serverCandidates.slice(i, i + batchSize);
       try {
         const res = await fetch("/api/admin/check-images", {
           method: "POST",
@@ -877,6 +946,18 @@ export default function AdminPage() {
           reasonsState[item.id] = "check_failed";
           brokenCount += 1;
         }
+      }
+    }
+
+    const videoResults = await mapWithConcurrency(videoCandidates, 6, async (item) => ({
+      id: item.id,
+      ...(await checkVideoInBrowser(item.url)),
+    }));
+    for (const result of videoResults) {
+      if (!result.ok) {
+        checkedState[result.id] = true;
+        reasonsState[result.id] = result.reason;
+        brokenCount += 1;
       }
     }
 
@@ -1140,6 +1221,9 @@ export default function AdminPage() {
   }, [items]);
 
   function updateItem(id: string, patch: Partial<RefItem>) {
+    if (Object.prototype.hasOwnProperty.call(patch, "thumbnailUrl")) {
+      setBrokenThumbState(id, false);
+    }
     setItems((prev) =>
       {
         const catalog = buildAreaCatalog(prev);
@@ -2089,7 +2173,10 @@ export default function AdminPage() {
                       {i.thumbnailUrl ? (
                         isVideoUrl(i.thumbnailUrl) ? (
                           <VideoThumb
+                            key={i.thumbnailUrl}
                             src={i.thumbnailUrl}
+                            onReady={() => setBrokenThumbState(i.id, false)}
+                            onFailure={() => setBrokenThumbState(i.id, true, "render_error")}
                             className="h-full w-full object-cover transition group-hover:scale-[1.01]"
                           />
                         ) : isVimeoUrl(i.thumbnailUrl) ? (
