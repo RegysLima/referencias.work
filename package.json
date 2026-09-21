@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "node --import tsx --test tests/**/*.test.ts",
     "import:xlsx": "node scripts/import-xlsx.mjs",
     "enrich:thumbs": "node scripts/enrich-thumbnails.mjs",
     "enrich:location": "node scripts/enrich-location.mjs",
@@ -28,6 +29,7 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "resend": "^6.28.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
@@ -38,6 +40,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

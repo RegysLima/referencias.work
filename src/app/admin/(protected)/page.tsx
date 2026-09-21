@@ -39,6 +39,17 @@ type RefItem = {
   reviewFlags?: {
     country?: boolean;
     city?: boolean;
+    media?: boolean;
+  };
+  mediaReview?: {
+    outcome: "replaced" | "missing";
+    previousUrl: string;
+    replacementUrl: string | null;
+    sourcePageUrl: string | null;
+    reason: string;
+    detectedAt: string;
+    notifiedAt?: string | null;
+    reviewedAt?: string | null;
   };
 };
 
@@ -554,25 +565,18 @@ function hasLocationData(it: RefItem) {
 }
 
 function hasActiveReviewFlags(it: RefItem) {
-  if (it.locationNA) return false;
   if (!it.reviewFlags) return false;
-  const needsCountry = Boolean(it.reviewFlags.country) && !hasLocationData(it);
-  const needsCity = Boolean(it.reviewFlags.city) && !hasLocationData(it);
-  return needsCountry || needsCity;
+  const needsCountry = !it.locationNA && Boolean(it.reviewFlags.country) && !hasLocationData(it);
+  const needsCity = !it.locationNA && Boolean(it.reviewFlags.city) && !hasLocationData(it);
+  return needsCountry || needsCity || Boolean(it.reviewFlags.media);
 }
 
 function normalizeReviewFlags(it: RefItem) {
-  if (it.locationNA) {
-    return {
-      ...it,
-      reviewFlags: undefined,
-    };
-  }
   if (!it.reviewFlags) return it;
   const nextFlags = { ...it.reviewFlags };
-  if (nextFlags.country && hasLocationData(it)) delete nextFlags.country;
-  if (nextFlags.city && hasLocationData(it)) delete nextFlags.city;
-  const hasAny = Boolean(nextFlags.country || nextFlags.city);
+  if (it.locationNA || (nextFlags.country && hasLocationData(it))) delete nextFlags.country;
+  if (it.locationNA || (nextFlags.city && hasLocationData(it))) delete nextFlags.city;
+  const hasAny = Boolean(nextFlags.country || nextFlags.city || nextFlags.media);
   return {
     ...it,
     reviewFlags: hasAny ? nextFlags : undefined,
@@ -804,6 +808,12 @@ export default function AdminPage() {
     if (options?.autoFix && (cleaned.length < normalized.length || hadDuplicateIds)) {
       setAutoSavePending(true);
       showToast("Cards inválidos corrigidos.");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("review") === "media") {
+      setOnlyNeedsReview(true);
     }
   }, []);
 
@@ -1720,7 +1730,21 @@ export default function AdminPage() {
   }
 
   function markReviewed(id: string) {
-    updateItem(id, { reviewedAt: new Date().toISOString(), hidden: false });
+    const current = items.find((item) => item.id === id);
+    const reviewedAt = new Date().toISOString();
+    const reviewFlags = current?.reviewFlags ? { ...current.reviewFlags } : undefined;
+    if (reviewFlags) delete reviewFlags.media;
+    updateItem(id, {
+      reviewedAt,
+      hidden: false,
+      reviewFlags:
+        reviewFlags && (reviewFlags.country || reviewFlags.city || reviewFlags.media)
+          ? reviewFlags
+          : undefined,
+      mediaReview: current?.mediaReview
+        ? { ...current.mediaReview, reviewedAt }
+        : current?.mediaReview,
+    });
     setAutoSavePending(true);
   }
 
@@ -3273,6 +3297,38 @@ export default function AdminPage() {
                             Download
                           </button>
                         </div>
+                        {i.reviewFlags?.media && i.mediaReview ? (
+                          <div className="mt-3 border-t border-zinc-800 pt-3 text-xs text-zinc-400">
+                            <div className="text-zinc-200">
+                              {i.mediaReview.outcome === "replaced"
+                                ? "Mídia substituída automaticamente."
+                                : "Nenhuma substituição automática foi encontrada."}
+                            </div>
+                            <div className="mt-1">Motivo: {i.mediaReview.reason}</div>
+                            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+                              {i.mediaReview.previousUrl ? (
+                                <a
+                                  href={i.mediaReview.previousUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-zinc-300 underline decoration-zinc-600 underline-offset-4 hover:text-white"
+                                >
+                                  Abrir mídia anterior
+                                </a>
+                              ) : null}
+                              {i.mediaReview.sourcePageUrl ? (
+                                <a
+                                  href={i.mediaReview.sourcePageUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-zinc-300 underline decoration-zinc-600 underline-offset-4 hover:text-white"
+                                >
+                                  Abrir projeto de origem
+                                </a>
+                              ) : null}
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
 
                       <div className="text-xs text-zinc-500">

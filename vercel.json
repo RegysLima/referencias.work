@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/normalize-filters",
       "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/media-health",
+      "schedule": "0 7 * * *"
     }
   ]
 }

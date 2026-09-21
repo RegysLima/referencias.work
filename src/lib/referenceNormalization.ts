@@ -239,12 +239,11 @@ function normalizeLocations(
 }
 
 function normalizeReviewFlags(item: Reference) {
-  if (item.locationNA) return undefined;
   if (!item.reviewFlags) return item.reviewFlags;
   const next = { ...item.reviewFlags };
-  if (next.country && clean(item.country)) delete next.country;
-  if (next.city && clean(item.city)) delete next.city;
-  if (!next.country && !next.city) return undefined;
+  if (item.locationNA || (next.country && clean(item.country))) delete next.country;
+  if (item.locationNA || (next.city && clean(item.city))) delete next.city;
+  if (!next.country && !next.city && !next.media) return undefined;
   return next;
 }
 

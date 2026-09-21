@@ -22,6 +22,17 @@ export type Reference = {
   reviewFlags?: {
     country?: boolean;
     city?: boolean;
+    media?: boolean;
+  };
+  mediaReview?: {
+    outcome: "replaced" | "missing";
+    previousUrl: string;
+    replacementUrl: string | null;
+    sourcePageUrl: string | null;
+    reason: string;
+    detectedAt: string;
+    notifiedAt?: string | null;
+    reviewedAt?: string | null;
   };
 };
 
