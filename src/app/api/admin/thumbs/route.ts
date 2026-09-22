@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { discoverMediaCandidates } from "@/lib/mediaDiscovery";
+import { discoverMediaCandidatesDetailed } from "@/lib/mediaDiscovery";
 
 export const maxDuration = 120;
 
@@ -8,9 +8,17 @@ export async function GET(req: Request) {
   const referenceUrl = searchParams.get("url") || "";
 
   try {
-    const candidates = await discoverMediaCandidates(referenceUrl);
-    return NextResponse.json({ candidates: candidates.map((candidate) => candidate.url) });
+    const result = await discoverMediaCandidatesDetailed(referenceUrl);
+    return NextResponse.json({
+      candidates: result.candidates.map((candidate) => candidate.url),
+      details: result.candidates,
+      discovery: {
+        strategy: result.strategy,
+        browserAttempted: result.browserAttempted,
+        browserError: result.browserError || null,
+      },
+    });
   } catch {
-    return NextResponse.json({ candidates: [] }, { status: 400 });
+    return NextResponse.json({ candidates: [], details: [] }, { status: 400 });
   }
 }

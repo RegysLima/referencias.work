@@ -129,9 +129,12 @@ export async function runMediaMaintenance(options: RunMediaMaintenanceOptions) {
     const broken = healthResults.filter((result) => !result.health.ok);
     brokenReferences = broken.length;
 
-    const outcomes = await mapWithConcurrency(broken, 6, async ({ item, health }) => {
+    const outcomes = await mapWithConcurrency(broken, 6, async ({ item, health }, index) => {
       const previousUrl = item.thumbnailUrl || "";
-      const replacement = await discoverReplacementMedia(item.url, excludedMediaUrls(item));
+      const replacement = await discoverReplacementMedia(item.url, excludedMediaUrls(item), {
+        // Keep the nightly run inside the free browser allowance and function duration.
+        browserFallback: index < 4,
+      });
       if (replacement) {
         const verification = await checkRemoteMedia(replacement.url, { timeoutMs: 6500 });
         if (verification.ok) {

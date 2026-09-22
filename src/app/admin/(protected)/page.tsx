@@ -657,6 +657,21 @@ type ThumbModalState = {
   loading: boolean;
   error: string;
   candidates: string[];
+  details: Record<
+    string,
+    {
+      sourcePageUrl?: string;
+      sourceKind?: "project" | "listing" | "generic";
+      collector?: string;
+      mediaType?: "image" | "video";
+      score?: number;
+    }
+  >;
+  discovery: {
+    strategy: "static" | "browserbase" | "kernel";
+    browserAttempted: boolean;
+    browserError?: "not-configured" | "session-failed" | null;
+  } | null;
 };
 
 const ADMIN_PAGE_SIZE = 20;
@@ -727,6 +742,8 @@ export default function AdminPage() {
     loading: false,
     error: "",
     candidates: [],
+    details: {},
+    discovery: null,
   });
 
   const hydrateItems = useCallback((loaded: RefItem[], options?: { autoFix?: boolean }) => {
@@ -1794,6 +1811,8 @@ export default function AdminPage() {
       loading: true,
       error: "",
       candidates: [],
+      details: {},
+      discovery: null,
     });
 
     try {
@@ -1809,11 +1828,20 @@ export default function AdminPage() {
 
       const data = await res.json();
       const candidates: string[] = Array.isArray(data?.candidates) ? data.candidates : [];
+      const details = Array.isArray(data?.details)
+        ? Object.fromEntries(
+            data.details
+              .filter((candidate: { url?: unknown }) => typeof candidate?.url === "string")
+              .map((candidate: { url: string }) => [candidate.url, candidate])
+          )
+        : {};
 
       setThumbModal((s) => ({
         ...s,
         loading: false,
         candidates,
+        details,
+        discovery: data?.discovery || null,
         error: candidates.length ? "" : "Nenhuma mídia encontrada nas páginas de projetos/works/portfolio.",
       }));
     } catch {
@@ -1826,7 +1854,16 @@ export default function AdminPage() {
   }
 
   function closeThumbPicker() {
-    setThumbModal({ open: false, itemId: null, baseUrl: "", loading: false, error: "", candidates: [] });
+    setThumbModal({
+      open: false,
+      itemId: null,
+      baseUrl: "",
+      loading: false,
+      error: "",
+      candidates: [],
+      details: {},
+      discovery: null,
+    });
   }
 
   function pickThumb(url: string) {
@@ -1915,7 +1952,13 @@ export default function AdminPage() {
                 <div className="text-sm text-zinc-400">Escolher thumbnail</div>
                 <div className="mt-1 truncate text-base font-medium">{thumbModal.baseUrl}</div>
                 <div className="mt-1 text-xs text-zinc-500">
-                  Buscando imagens e vídeos em páginas típicas de projetos/works/portfolio.
+                  {thumbModal.discovery?.strategy === "kernel"
+                    ? "Busca profunda concluída com navegador protegido."
+                    : thumbModal.discovery?.strategy === "browserbase"
+                      ? "Busca profunda concluída em navegador remoto."
+                    : thumbModal.discovery?.browserAttempted
+                      ? "Busca HTML e navegador remoto concluídas."
+                      : "Buscando imagens e vídeos em páginas de projetos e portfólios."}
                 </div>
               </div>
 
@@ -1984,6 +2027,17 @@ export default function AdminPage() {
                         )}
                       </div>
                       <div className="p-2">
+                        {thumbModal.details[src] ? (
+                          <div className="mb-1 flex items-center gap-1.5 text-[10px] uppercase text-zinc-500">
+                            <span>
+                              {thumbModal.details[src].sourceKind === "project"
+                                ? "Projeto"
+                                : "Listagem"}
+                            </span>
+                            <span aria-hidden="true">·</span>
+                            <span>{thumbModal.details[src].collector || "HTML"}</span>
+                          </div>
+                        ) : null}
                         <div className="truncate text-[11px] text-zinc-400">{src}</div>
                       </div>
                     </div>
