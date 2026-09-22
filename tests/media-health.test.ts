@@ -74,5 +74,12 @@ test("distinguishes reviewable replacements from broken or missing media", () =>
     hasStoredMediaProblem({ thumbnailUrl: null, mediaReview: { outcome: "missing" } }),
     true
   );
+  assert.equal(
+    hasStoredMediaProblem({
+      thumbnailUrl: "https://cdn.example.com/manually-fixed.mp4",
+      mediaReview: { outcome: "missing" },
+    }),
+    false
+  );
   assert.equal(hasStoredMediaProblem({ thumbnailUrl: "", mediaReview: undefined }), true);
 });

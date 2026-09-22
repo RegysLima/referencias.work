@@ -18,7 +18,7 @@ export function hasStoredMediaProblem(input: {
   thumbnailUrl?: string | null;
   mediaReview?: { outcome?: "replaced" | "missing" } | null;
 }) {
-  return !input.thumbnailUrl?.trim() || input.mediaReview?.outcome === "missing";
+  return !input.thumbnailUrl?.trim();
 }
 
 export function isRecognizedVideoUrl(url: string) {
