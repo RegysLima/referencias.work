@@ -813,7 +813,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("review") === "media") {
-      setOnlyNeedsReview(true);
+      setOnlyBrokenImages(true);
     }
   }, []);
 
@@ -866,7 +866,9 @@ export default function AdminPage() {
       return Boolean(k && (duplicateMap.get(k) ?? 0) >= 2);
     }).length;
     const needsReview = items.filter((i) => hasActiveReviewFlags(i)).length;
-    const broken = items.filter((i) => brokenThumbs[i.id] === true).length;
+    const broken = items.filter(
+      (i) => brokenThumbs[i.id] === true || i.reviewFlags?.media === true
+    ).length;
     return { noImage, unreviewed, duplicates, needsReview, broken };
   }, [items, duplicateMap, brokenThumbs]);
 
@@ -1041,7 +1043,7 @@ export default function AdminPage() {
     const base = items.filter((i) => {
       if (macroFilter !== "Todos" && i.macroType !== macroFilter) return false;
       if (onlyNoImage && i.thumbnailUrl) return false;
-      if (onlyBrokenImages && !brokenThumbs[i.id]) return false;
+      if (onlyBrokenImages && !brokenThumbs[i.id] && !i.reviewFlags?.media) return false;
       if (onlyUnreviewed && i.reviewedAt) return false;
       if (onlyNeedsReview && !hasActiveReviewFlags(i)) return false;
 
@@ -2179,7 +2181,7 @@ export default function AdminPage() {
               const isOpen = openId === i.id;
               const k = normalizeUrl(i.url);
               const dup = k && (duplicateMap.get(k) ?? 0) >= 2;
-              const brokenThumb = brokenThumbs[i.id];
+              const brokenThumb = Boolean(brokenThumbs[i.id] || i.reviewFlags?.media);
               const isLocationNA = Boolean(i.locationNA);
 
               return (
@@ -2264,7 +2266,7 @@ export default function AdminPage() {
                         {brokenThumb ? (
                           <span
                             className="rounded-none border border-red-700/60 bg-red-950/30 px-2 py-1 text-[11px] text-red-200"
-                            title={brokenThumbReasons[i.id] || "media_issue"}
+                            title={brokenThumbReasons[i.id] || i.mediaReview?.reason || "media_issue"}
                           >
                             mídia com problema
                           </span>
