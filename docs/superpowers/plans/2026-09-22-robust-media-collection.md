@@ -62,5 +62,5 @@
 
 - [x] Run tests, lint, TypeScript, and production build.
 - [x] Run live discovery against the reviewed portfolio corpus, including Nomad.
-- [ ] Deploy through `main`, wait for Vercel `Ready`, and smoke-test the production admin API.
+- [x] Deploy through `main`, wait for Vercel `Ready`, and smoke-test the production admin API.
 - [x] Confirm Browserbase and Kernel usage stays bounded for their configured free plans.
