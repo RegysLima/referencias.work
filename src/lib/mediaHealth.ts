@@ -14,6 +14,13 @@ type MediaResponseMetadata = {
 
 const DEFAULT_TIMEOUT_MS = 7000;
 
+export function hasStoredMediaProblem(input: {
+  thumbnailUrl?: string | null;
+  mediaReview?: { outcome?: "replaced" | "missing" } | null;
+}) {
+  return !input.thumbnailUrl?.trim() || input.mediaReview?.outcome === "missing";
+}
+
 export function isRecognizedVideoUrl(url: string) {
   return /\.(mp4|webm|mov|m4v|ogv|m3u8)(\?|#|$)/i.test(url);
 }

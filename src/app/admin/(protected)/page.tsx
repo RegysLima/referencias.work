@@ -10,6 +10,7 @@ import {
   useTransition,
 } from "react";
 import { canonicalCity, canonicalCountry } from "@/lib/location";
+import { hasStoredMediaProblem } from "@/lib/mediaHealth";
 
 type RefItem = {
   id: string;
@@ -671,6 +672,7 @@ export default function AdminPage() {
   const [onlyUnreviewed, setOnlyUnreviewed] = useState(false);
   const [onlyDuplicates, setOnlyDuplicates] = useState(false);
   const [onlyNeedsReview, setOnlyNeedsReview] = useState(false);
+  const [onlyMediaReview, setOnlyMediaReview] = useState(false);
   const [onlyBrokenImages, setOnlyBrokenImages] = useState(false);
   const [macroFilter, setMacroFilter] = useState<string>("Todos");
   const [currentPage, setCurrentPage] = useState(1);
@@ -813,7 +815,8 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("review") === "media") {
-      setOnlyBrokenImages(true);
+      setOnlyNeedsReview(true);
+      setOnlyMediaReview(true);
     }
   }, []);
 
@@ -867,7 +870,7 @@ export default function AdminPage() {
     }).length;
     const needsReview = items.filter((i) => hasActiveReviewFlags(i)).length;
     const broken = items.filter(
-      (i) => brokenThumbs[i.id] === true || i.reviewFlags?.media === true
+      (i) => brokenThumbs[i.id] === true || hasStoredMediaProblem(i)
     ).length;
     return { noImage, unreviewed, duplicates, needsReview, broken };
   }, [items, duplicateMap, brokenThumbs]);
@@ -1043,9 +1046,12 @@ export default function AdminPage() {
     const base = items.filter((i) => {
       if (macroFilter !== "Todos" && i.macroType !== macroFilter) return false;
       if (onlyNoImage && i.thumbnailUrl) return false;
-      if (onlyBrokenImages && !brokenThumbs[i.id] && !i.reviewFlags?.media) return false;
+      if (onlyBrokenImages && !brokenThumbs[i.id] && !hasStoredMediaProblem(i)) return false;
       if (onlyUnreviewed && i.reviewedAt) return false;
-      if (onlyNeedsReview && !hasActiveReviewFlags(i)) return false;
+      if (
+        onlyNeedsReview &&
+        (onlyMediaReview ? !i.reviewFlags?.media : !hasActiveReviewFlags(i))
+      ) return false;
 
       if (onlyDuplicates) {
         const k = normalizeUrl(i.url);
@@ -1140,6 +1146,7 @@ export default function AdminPage() {
     onlyUnreviewed,
     onlyDuplicates,
     onlyNeedsReview,
+    onlyMediaReview,
     macroFilter,
     duplicateMap,
     brokenThumbs,
@@ -1160,6 +1167,7 @@ export default function AdminPage() {
     onlyUnreviewed,
     onlyDuplicates,
     onlyNeedsReview,
+    onlyMediaReview,
     onlyBrokenImages,
     macroFilter,
   ]);
@@ -2116,7 +2124,10 @@ export default function AdminPage() {
                   <input
                     type="checkbox"
                     checked={onlyNeedsReview}
-                    onChange={(e) => setOnlyNeedsReview(e.target.checked)}
+                    onChange={(e) => {
+                      setOnlyNeedsReview(e.target.checked);
+                      setOnlyMediaReview(false);
+                    }}
                     className="peer sr-only"
                   />
                   <span className="absolute inset-0 rounded-full bg-zinc-800 transition peer-checked:bg-white/90" />
@@ -2181,7 +2192,9 @@ export default function AdminPage() {
               const isOpen = openId === i.id;
               const k = normalizeUrl(i.url);
               const dup = k && (duplicateMap.get(k) ?? 0) >= 2;
-              const brokenThumb = Boolean(brokenThumbs[i.id] || i.reviewFlags?.media);
+              const brokenThumb = Boolean(
+                brokenThumbs[i.id] || hasStoredMediaProblem(i)
+              );
               const isLocationNA = Boolean(i.locationNA);
 
               return (

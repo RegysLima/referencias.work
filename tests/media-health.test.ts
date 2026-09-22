@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   isRecognizedVideoUrl,
+  hasStoredMediaProblem,
   validateMediaResponse,
 } from "../src/lib/mediaHealth";
 
@@ -59,4 +60,19 @@ test("rejects empty, HTML, and failed media responses", () => {
     }).reason,
     "http_error"
   );
+});
+
+test("distinguishes reviewable replacements from broken or missing media", () => {
+  assert.equal(
+    hasStoredMediaProblem({
+      thumbnailUrl: "https://cdn.example.com/replacement.mp4",
+      mediaReview: { outcome: "replaced" },
+    }),
+    false
+  );
+  assert.equal(
+    hasStoredMediaProblem({ thumbnailUrl: null, mediaReview: { outcome: "missing" } }),
+    true
+  );
+  assert.equal(hasStoredMediaProblem({ thumbnailUrl: "", mediaReview: undefined }), true);
 });
