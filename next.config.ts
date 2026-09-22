@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: ["playwright-core", "@browserbasehq/sdk", "@onkernel/sdk"],
 };
 
 export default nextConfig;

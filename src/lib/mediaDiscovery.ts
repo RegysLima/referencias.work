@@ -494,10 +494,24 @@ export async function discoverMediaCandidatesDetailed(
     return { candidates: reachable, strategy: "static", browserAttempted: false };
   }
 
-  const browserDiscover =
-    options.browserDiscover ||
-    (await import("./browserMediaDiscovery")).discoverMediaWithBrowser;
-  const browserResult = await browserDiscover(referenceUrl);
+  let browserResult: Awaited<ReturnType<NonNullable<MediaDiscoveryOptions["browserDiscover"]>>>;
+  try {
+    const browserDiscover =
+      options.browserDiscover ||
+      (await import("./browserMediaDiscovery")).discoverMediaWithBrowser;
+    browserResult = await browserDiscover(referenceUrl);
+  } catch (error) {
+    console.error("media_browser_fallback_failed", {
+      name: error instanceof Error ? error.name : "UnknownError",
+      message: error instanceof Error ? error.message : "unknown_error",
+    });
+    return {
+      candidates: [],
+      strategy: "static",
+      browserAttempted: true,
+      browserError: "session-failed",
+    };
+  }
   const browserRanked = rankMediaCandidates(browserResult.candidates, excludedUrls).slice(0, 80);
   const browserCandidates = await validateCandidates(browserRanked, limit);
   return {
